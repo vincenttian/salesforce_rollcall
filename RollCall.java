@@ -2,10 +2,21 @@ public class RollCall{
 
 
     // For debugging purposes
-    public void inspect_tables() {
-        Event__c[] table = [SELECT Name__c, Description__c, Time__c FROM Event__c WHERE Name__c=:event_name];
+    public void inspect_event_table() {
+        Event__c[] table = [SELECT Name__c, Description__c, Time__c FROM Event__c];
         System.Debug(table);
     }
+
+    public void inspect_event_attendee_table() {
+        Event_Attendee__c[] table = [SELECT Attendee__c, Event__c, Status__c FROM Event_Attendee__c];
+        System.Debug(table);
+    }
+
+    public void inspect_attendee_table() {
+        Attendee__c[] table = [SELECT First_Name__c, Last_Name__c, Company__c, email__c FROM Attendee__c];
+        System.Debug(table);
+    }
+
 
 
 
@@ -16,10 +27,10 @@ public class RollCall{
     }
 
 
-    public void edit_event(String event_name, String field_name, Object value) {
+    public void edit_event(String event_name, String field_name, String value) {
         Event__c event = [SELECT Name__c, Description__c, Time__c FROM Event__c WHERE Name__c=:event_name];
         if (field_name == 'description') {
-            event.Description__c = (String) value;
+            event.Description__c = value;
         }
         update event;
     }
@@ -39,14 +50,13 @@ public class RollCall{
 
     public void check_in(String event_name, String email) {        
         Event__c event = [SELECT Name__c FROM Event__c WHERE Name__c=:event_name];
-        temp_event_name = event.Name__c;
+        String temp_event_name = event.Name__c;
         Attendee__c name = [SELECT Email__c FROM Attendee__c WHERE Email__c=:email];
         if (name == null) { // considers if person is a drop-in that is not in the master Attendee table
             // redirect to add_attendee() so that user enters first name, last name, email, company
-            return 'not checked in'
         } else { // the user is already in the master Attendee table
-            temp_email = name.Email__c;
-            Event_Attendee__c event_attendee = [SELECT Event_Attendee__c FROM Attendee__c WHERE Attendee__c=:email, Event__c=:temp_event_name];            
+            String temp_email = name.Email__c;
+            Event_Attendee__c event_attendee = [SELECT Status__c FROM Event_Attendee__c WHERE Attendee__c=:email AND Event__c=:temp_event_name];            
             event_attendee.Status__c = 'checked in';
             update event_attendee;
         }
@@ -54,7 +64,7 @@ public class RollCall{
 
     public void delete_event_attendee(String email, String event) {
         // needs testing
-        Event_Attendee__c event_attendee = [SELECT Event_Attendee__c FROM Event__Attendee_c WHERE Attendee__c=:email, Event__c=:event];
+        Event_Attendee__c event_attendee = [SELECT Attendee__c, Event__c FROM Event_Attendee__c WHERE Attendee__c=:email AND Event__c=:event];
         delete event_attendee;
     }
 
@@ -62,7 +72,7 @@ public class RollCall{
 
     // METHODS THAT INTERACT WITH ATTENDEE TABLE
     public void add_attendee(String first_name, String last_name, String email, String company) {
-        Attendee__c new_attendee = new Attendee__c(First_Name__c=first_name, Last_Name__c=last_name, Email__c=email, Comapny__c=company);
+        Attendee__c new_attendee = new Attendee__c(First_Name__c=first_name, Last_Name__c=last_name, Email__c=email, Company__c=company);
         insert new_attendee;
     }
 
@@ -71,7 +81,7 @@ public class RollCall{
         Attendee__c attendee = [SELECT First_Name__c, Last_Name__c, Company__c FROM Attendee__c WHERE Email__c=:email];
         attendee.First_Name__c = first_name;
         attendee.Last_Name__c = last_name;
-        attendee.Comapny__c = company;
+        attendee.Company__c = company;
         update attendee;
     }
 
