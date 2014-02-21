@@ -209,9 +209,30 @@
             <div id="select_event">
                 <p id="sub_title"> Select Event </p>
             </div>
+
+            <!-- Gets data from Apex database -->
+            <a class="link" data-section="two" href="#"> 
+                <apex:pageBlock>
+                    <apex:pageBlockSection columns="2">
+                        <apex:pageBlockTable value="{!events}" var="event">
+                            <apex:column>
+                                <apex:outputText value="{!event.Name__c}"/>
+                            </apex:column>
+                            <apex:column>
+                                <apex:outputText value="{!event.Time__c}"/>
+                            </apex:column>
+                            <!-- <apex:column>
+                                <apex:outputText value="{!event.Description__c}"/>
+                            </apex:column> -->
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </a>
+            <!--
             <a class="link" data-section="two" href="#"> Salesforce Workday </a>
             <a class="link" data-section="two" href="#"> Internship Party </a>
             <a class="link" data-section="two" href="#"> Mobile Brainstorm </a>
+            -->
             <div class="button_container">
                 <div class="button">
                     <p class="button_text"> ADD NEW EVENT </p>
@@ -223,24 +244,6 @@
             <div id="manage_banner">
                 <p id="manage_blurb"> You are now managing: <br> </br> <span class="color"> Event Name </span> </p>
             </div>
-
-            <!-- Gets data from Apex database -->
-            <apex:pageBlock>
-                <apex:pageBlockSection columns="1">
-                <apex:pageBlockTable value="{!events}" var="event">
-                        <apex:column>
-                            <apex:outputText value="{!event.Name__c}"/>
-                        </apex:column>
-                        <apex:column>
-                            <apex:outputText value="{!event.Time__c}"/>
-                        </apex:column>
-                        <apex:column>
-                            <apex:outputText value="{!event.Description__c}"/>
-                        </apex:column>
-                </apex:pageBlockTable>
-                </apex:pageBlockSection>
-            </apex:pageBlock>
-
 
             <a class="link option" data-section="three" href="#"> Statistics </a>
             <a class="link option" data-section="four" href="#"> Edit Info </a>

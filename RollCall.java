@@ -12,7 +12,7 @@ public class RollCall{
 
     // For debugging purposes
     public void inspect_event_table() {
-        Event[] table = [SELECT Name, Description, StartDate FROM Event];
+        Campaign[] table = [SELECT Name, Description, StartDate FROM Event];
         System.Debug(table);
     }
 
