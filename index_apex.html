@@ -2,7 +2,7 @@
     sidebar="false" 
     showheader="false"
     standardStylesheets="false"
-    standardController="Event__c" recordSetVar="events" 
+    standardController="Campaign" recordSetVar="campaigns" 
     applyHtmlTag="false"
     applyBodyTag="false"   
     id="todo"
@@ -214,12 +214,12 @@
             <a class="link" data-section="two" href="#"> 
                 <apex:pageBlock>
                     <apex:pageBlockSection columns="2">
-                        <apex:pageBlockTable value="{!events}" var="event">
+                        <apex:pageBlockTable value="{!campaigns}" var="campaign">
                             <apex:column>
-                                <apex:outputText value="{!event.Name__c}"/>
+                                <apex:outputText value="{!campaign.Name}"/>
                             </apex:column>
                             <apex:column>
-                                <apex:outputText value="{!event.Time__c}"/>
+                                <apex:outputText value="{!campaign.StartDate}"/>
                             </apex:column>
                             <!-- <apex:column>
                                 <apex:outputText value="{!event.Description__c}"/>
