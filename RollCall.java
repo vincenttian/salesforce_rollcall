@@ -12,7 +12,7 @@ public class RollCall{
 
     // For debugging purposes
     public void inspect_event_table() {
-        Campaign[] table = [SELECT Name, Description, StartDate FROM Event];
+        Campaign[] table = [SELECT Name, Description, StartDate FROM Campaign];
         System.Debug(table);
     }
 
@@ -21,6 +21,10 @@ public class RollCall{
         System.Debug(table);
     }
 
+    public void inspect_event_table(Campaign event) {
+        CampaignMember[] table = [SELECT Email, FirstName, LastName, Campaign, Status FROM CampaignMember WHERE Campaign=:event];
+        System.Debug(table);
+    }
 
 
     // METHODS THAT INTERACT WITH EVENT TABLE
@@ -70,14 +74,10 @@ public class RollCall{
 }
 
 // custom exception for handling Event_Attendee checkins
-public class Checkin_Exception extends Exception {
-
-}
+public class Checkin_Exception extends Exception {}
 
 // Debug script
-Rollcall test = new Rollcall();
-test.create_event('party', datetime.now(), 'crazy party', True);
-// test.edit_event('party', 'description', 'changed description');
+
 
 
 
