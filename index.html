@@ -2,241 +2,54 @@
 <html>
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('a').on('click', function(event) 
-            {
-                event.preventDefault();
-                var sectionId = $(this).attr("data-section"),
-                    $toSlide= $("#container section#"+sectionId),
-                    $fromSlide= $('.active');
-                if (!($toSlide.hasClass("active")))
-                {  
-                    $fromSlide.animate({"left":"-100%"},100,'linear')
-                    $toSlide.animate({"left":"0%"},100,'linear',function()
-                    {    
-                        $fromSlide.css("left","100%");
-                        $fromSlide.removeClass("active");    
-                        $toSlide.addClass("active");    
-                    });
-                }
-            });
-        });
-    </script>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
-    <style>
-        /** * Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/) * http://cssreset.com */html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video {    margin: 0;  padding: 0; border: 0;  font-size: 100%;    font: inherit;  vertical-align: baseline;}/* HTML5 display-role reset for older browsers */article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {    display: block;}body {  line-height: 1;}ol, ul {    list-style: none;}blockquote, q {   quotes: none;}blockquote:before, blockquote:after,q:before, q:after {   content: '';    content: none;}table {  border-collapse: collapse;  border-spacing: 0;}
-        #container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #container section {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 100%;
-        }
-
-        #container section:nth-child(1) {
-            left: 0%;
-        }
-
-        p {
-            font-family: Montserrat, sans-serif;
-            font-size: 1em;
-            font-weight: 400;
-        }
-
-        #rollcall {
-            float: left;
-            text-align: center;
-            width: 100%;
-            height: 400px;
-        }
-
-        #title {
-            margin-top: 150px;
-            font-size: 5.5em;
-        }
-
-        #sub_title {
-            font-size: 2em;
-            color: white;
-        }
-
-        .color {
-            color: #77CCEE;
-        }
-
-        #select_event {
-            float: left;
-            text-align: center;
-            width: 100%;
-            padding-top: 38px;
-            height: 72px;
-            background: #77CCEE;
-        }
-
-        .link {
-            box-sizing: border-box;
-            float: left;
-            text-align: center;
-            font-family: Lato, sans-serif;
-            font-size: 3em;
-            font-weight: 300;
-            color: #999999;
-            text-decoration: none;
-            padding-top: 30px;
-            width: 100%;
-            height: 110px;
-            border-bottom: 1px solid #EEEEEE;
-        }
-
-        .event_static {
-            float:left;
-            text-align: center;
-            font-family: Lato, sans-serif;
-            font-size: 3em;
-            font-weight: 300;
-            color: #999999;
-            text-decoration: none;
-            padding-top: 30px;
-            width: 100%;
-            height: 80px;
-            border-bottom: 1px solid #EEEEEE;
-            background: #FFFFFF;
-            z-index: 2;
-        }
-
-        .link:hover {
-            background-color: #EEEEEE;
-            cursor: pointer;
-        }
-
-        .button_container {
-            float: left;
-            box-sizing: border-box;
-            width: 100%;
-            padding: 15px;
-            height: 140px;
-            text-decoration: none;
-        }
-
-        .button {
-            text-align: center;
-            padding-top: 40px;
-            height: 70px;
-            border-radius: 10px;
-            border: 2px solid #77CCEE;
-            width: 100%;
-            color: #77CCEE;
-        }
-
-        .button:hover {
-            cursor: pointer;
-            color: #FFFFFF;
-            background: #77CCEE;
-        }
-
-        .button_text {
-            font-size: 1.5em;
-        }
-
-        #manage_banner {
-            float: left;
-            box-sizing: border-box;
-            width: 100%;
-            padding: 50px;
-            padding-top: 100px;
-            height: 300px;
-            border-bottom: 1px solid #EEEEEE;
-        }
-
-        #manage_blurb {
-            font-size: 2em;
-            line-height: 1.25em;
-            color: #999999;
-        }
-
-        .option {
-            text-align: left;
-            font-family: Montserrat, sans-serif;
-            padding-left: 50px;
-            padding-top: 40px;
-            font-size: 2em;
-            background: url('img/arrow.svg');
-            background-size: contain;
-            background-position: right;
-            background-repeat: no-repeat;
-        }
-
-        .back {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 110px;
-            height: 110px;
-            border-bottom: none;
-            background: url(img/back.svg);
-            background-size: cover;
-        }
-
-        .manage {
-            background: url(img/manage.svg);
-            background-size: cover;
-        }
-    </style>
+    <script type="text/javascript" src="scroll.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
     <title>RollCall</title>
 </head>
 <body>
-    <div id="container">
- 		<section id="one" class="active">
-            <div id="rollcall">
-                <p id="title"> <span class="color">ROLL</span>CALL </p>
-            </div>
-            <div id="select_event">
-                <p id="sub_title"> Select Event </p>
-            </div>
-            <a class="link" data-section="two" href="#"> Salesforce Workday </a>
-            <a class="link" data-section="two" href="#"> Internship Party </a>
-            <a class="link" data-section="two" href="#"> Mobile Brainstorm </a>
-            <div class="button_container">
-                <div class="button">
-                    <p class="button_text"> ADD NEW EVENT </p>
-                </div>
-            </div>
- 		</section>
- 		<section id="two">
-            <div class="event_static"> Event Home </div>
-            <div id="manage_banner">
-                <p id="manage_blurb"> You are now managing: <br> <span class="color"> Event Name </span> </p>
-            </div>
-            <a class="link option" data-section="three" href="#"> Statistics </a>
-            <a class="link option" data-section="four" href="#"> Edit Info </a>
-            <a class="link option" data-section="five" href="#"> Check In </a>
-            <a class="link back manage" data-section="one" href="#"></a>
-            <div class="button_container">
-                <div class="button">
-                    <p class="button_text"> DELETE </p>
-                </div>
-            </div>
- 		</section>
- 		<section id="three">
-            <div class="event_static"> Statistics </div>
-            <a class="link back" data-section="two" href="#"></a>
- 		</section>
- 		<section id="four">
-            <div class="event_static"> Information </div>
-            <a class="link back" data-section="two" href="#"></a>
- 		</section>
-        <section id="five">
-            <div class="event_static"> Check In </div>
-            <a class="link back" data-section="two" href="#"></a>
- 		</section>
- 	</div>
+    <div id="select_event">
+        <p> Select An <span class="bold"> Event </span> </p>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title">
+            <p> Salesforce Workday </p>
+        </div>
+        <div class="date">
+            <p> 2/17 </p>
+        </div>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title" >
+            <p> Internship Party </p>
+        </div>
+        <div class="date">
+            <p> 3/10 </p>
+        </div>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title">
+            <p> CS 70 Study </p>
+        </div>
+        <div class="date">
+            <p> 4/1 </p>
+        </div>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title">
+            <p> Mobile Brainstorm </p>
+        </div>
+        <div class="date">
+            <p> 4/4 </p>
+        </div>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title">
+            <p> Helix Consulting </p>
+        </div>
+        <div class="date">
+            <p> 4/28 </p>
+        </div>
+    </div>
 </body>
 </html>

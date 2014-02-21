@@ -1,11 +1,86 @@
+body {
+    margin: 0px;
+    background: #F8F8F8;
+    overflow: hidden;
+}
+
+p {
+    font-family: Lato, sans-serif;
+    margin: 0px;
+}
+
+div {
+    box-sizing: border-box;
+    float: left;
+}
+
+#select_event {
+    text-align: left;
+    width: 100%;
+    padding-left: 25px;
+    padding-top: 100px;
+    height: 200px;
+    font-size: 3em;
+    color: #FFFFFF;
+    background: #77DDFF;
+    margin-bottom: 50px;
+    font-weight: 300;
+    box-shadow: 0px 5px 5px 0px #E0E0E0;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.card {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 308px;
+    height: 200px;
+    box-shadow: 0px 5px 5px 2px #EEEEEE;
+    background: #FFFFFF;
+    overflow: hidden;
+}
+
+.card:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    background: #77DDFF;
+    padding-top: 22px;
+    height: 75px;
+    color: #FFFFFF;
+    font-weight: 300;
+    font-size: 1.5em;
+}
+
+.date {
+    text-align: center;
+    width: 100%;
+    font-size: 4em;
+    font-weight: 300;
+    color: #E5E5E5;
+    padding-top: 22px;
+}
+
 #container {
     position: absolute;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: hidden;
 }
 
 #container section {
+    box-sizing: border-box;
+    padding: 25px;
+    padding-left: 325px;
     position: absolute;
 	width: 100%;
 	height: 100%;
@@ -16,147 +91,144 @@
 	left: 0%;
 }
 
-p {
-    font-family: Montserrat, sans-serif;
-    font-size: 1em;
-    font-weight: 400;
-}
-
-#rollcall {
-    float: left;
-    text-align: center;
-    width: 100%;
-    height: 400px;
-}
-
-#title {
-    margin-top: 150px;
-    font-size: 5.5em;
-}
-
-#sub_title {
-    font-size: 2em;
-    color: white;
-}
-
-.color {
-    color: #77CCEE;
-}
-
-#select_event {
-    float: left;
-    text-align: center;
-    width: 100%;
-    padding-top: 38px;
-    height: 72px;
-    background: #77CCEE;
-}
-
-.link {
-    box-sizing: border-box;
-    float: left;
-    text-align: center;
-    font-family: Lato, sans-serif;
-    font-size: 3em;
-    font-weight: 300;
-    color: #999999;
-    text-decoration: none;
-    padding-top: 30px;
-    width: 100%;
-    height: 110px;
-    border-bottom: 1px solid #EEEEEE;
-}
-
-.event_static {
-    float:left;
-    text-align: center;
-    font-family: Lato, sans-serif;
-    font-size: 3em;
-    font-weight: 300;
-    color: #999999;
-    text-decoration: none;
-    padding-top: 30px;
-    width: 100%;
-    height: 80px;
-    border-bottom: 1px solid #EEEEEE;
-    background: #FFFFFF;
-    z-index: 2;
-}
-
-.link:hover {
-    background-color: #EEEEEE;
-    cursor: pointer;
-}
-
-.button_container {
-    float: left;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 15px;
-    height: 140px;
-    text-decoration: none;
-}
-
-.button {
-    text-align: center;
-    padding-top: 40px;
-    height: 70px;
-    border-radius: 10px;
-    border: 2px solid #77CCEE;
-    width: 100%;
-    color: #77CCEE;
-}
-
-.button:hover {
-    cursor: pointer;
-    color: #FFFFFF;
-    background: #77CCEE;
-}
-
-.button_text {
-    font-size: 1.5em;
-}
-
-#manage_banner {
-    float: left;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 50px;
-    padding-top: 100px;
-    height: 300px;
-    border-bottom: 1px solid #EEEEEE;
-}
-
-#manage_blurb {
-    font-size: 2em;
-    line-height: 1.25em;
-    color: #999999;
-}
-
-.option {
-    text-align: left;
-    font-family: Montserrat, sans-serif;
-    padding-left: 50px;
-    padding-top: 40px;
-    font-size: 2em;
-    background: url('img/arrow.svg');
-    background-size: contain;
-    background-position: right;
-    background-repeat: no-repeat;
-}
-
-.back {
+#navbar {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 110px;
-    height: 110px;
-    border-bottom: none;
-    background: url(img/back.svg);
-    background-size: cover;
+    width: 300px;
+    height: 100%;
+    background: #FFFFFF;
+    box-shadow: 5px 0px 5px 0px #EEEEEE;
+    z-index: 1;
 }
 
-.manage {
-    background: url(img/manage.svg);
-    background-size: cover;
+#title {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    text-decoration: none;
+    font-size: 1.5em;
+    color: #AAAAAA;
+    border-bottom: 1px solid #F3F3F3;
+    padding-top: 60px;
+    padding-left: 25px;
+    width: 300px;
+    height: 200px;
+}
+
+.color {
+    color: #77DDFF;
+}
+
+.tab {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    text-decoration: none;
+    font-size: 1.5em;
+    color: #AAAAAA;
+    border-bottom: 1px solid #F3F3F3;
+    padding-top: 25px;
+    padding-left: 25px;
+    width: 300px;
+    height: 80px;
+}
+
+.tab:hover {
+    cursor: pointer;
+    background: #F3F3F3;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 5px 5px 2px #EEEEEE;
+    background: #FFFFFF;
+    overflow: hidden;
+}
+
+#checkin {
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    left: 0px;
+    padding: 25px;
+    width: 1024px;
+    height: 768px;
+    background: #F8F8F8;
+}
+
+#checkin_title {
+    margin-top: 300px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    color: #CCCCCC;
+}
+
+#email {
+    box-sizing: border-box;
+    margin-top: 25px;
+    padding: 20px;
+    height: 90px;
+    width: 600px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    opacity: 0.5;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
+}
+
+#email:focus {
+    outline: none;
+    opacity: 1;
+}
+
+#submit {
+    border-style: none;
+    background: #77DDFF;
+    padding: 20px;
+    height: 90px;
+    width: 600px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    color: #FFFFFF;
+    box-shadow: 0px 5px 5px 2px #EEEEEE;
+}
+
+#submit:hover {
+    cursor: pointer;
+    background: #6DCFF6;
+}
+
+#exit {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    color: #EEEEEE;
+    text-decoration: none;
+    z-index: 1;
+}
+
+#exit:hover {
+    cursor: pointer;
+    color: #77DDFF;
+}
+
+#checkin_banner {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding-left: 25px;
+    padding-top: 100px;
+    height: 200px;
+    font-size: 3em;
+    color: #FFFFFF;
+    background: #77DDFF;
+    margin-bottom: 50px;
+    font-weight: 300;
+    box-shadow: 0px 5px 5px 0px #E0E0E0;
+    z-index: 1;
 }

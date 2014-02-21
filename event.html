@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scroll.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
+    <title>RollCall</title>
+</head>
+<body>
+    <div id="navbar">
+        <div id="title">
+            <p> You are managing: <span class="color"> Salesforce Workday </span> </p>
+        </div>
+        <a class="tab" data-section="one" href="#">
+            <p> Home </p>
+        </a>
+        <a class="tab" data-section="two" href="#">
+            <p> Statistics </p>
+        </a>
+        <a class="tab" data-section="three" href="#">
+            <p> Edit Info </p>
+        </a>
+        <div class="tab" onclick="javascript:window.location='checkin.html';">
+            <p> Check In </p>
+        </div>
+        <div class="tab" onclick="javascript:window.location='index.html';">
+            <p> Return </p>
+        </div>
+    </div>
+    <div id="container">
+ 		<section id="one" class="active">
+            <div class="page"></div>
+ 		</section>
+ 		<section id="two">
+            <div class="page"></div>
+ 		</section>
+ 		<section id="three">
+            <div class="page"></div>
+ 		</section>
+ 	</div>
+</body>
+</html>
