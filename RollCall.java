@@ -68,17 +68,17 @@ global class RollCall{
     // METHODS THAT INTERACT WITH EVENT_ATTENDEE TABLE
     // Tested
     // Case; Used when drop-ins come to an event
-    public void register_event_attendee(String email, String first_name, String last_name, Campaign event, String status) {
+    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id, String status) {
         // first create contact, then put it in
         Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name);
         insert tmp_contact;
-        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=event.id, Campaign = event, Status = status);
+        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = status);
         insert new_event_attendee;
     }
 
     // Tested
-    public void check_in(Campaign event, String email) {        
-        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE Contact.email=:email or Lead.email=:email];
+    public void check_in(String campaign_id, String email) {        
+        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
         if (event_attendee == null) {
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
@@ -88,35 +88,28 @@ global class RollCall{
         update event_attendee; 
     }
 
-    public void delete_event_attendee(String email, Campaign event) {
-        CampaignMember event_attendee = [SELECT Contact.Email, Lead.Email FROM CampaignMember WHERE Contact.Email=:email];
+    public void delete_event_attendee(String email, String campaign_id) {
+        CampaignMember event_attendee = [SELECT Contact.Email, Lead.Email FROM CampaignMember WHERE CampaignId=:campaign_id AND Contact.Email=:email];
         delete event_attendee;
     }
 
     // logic to check if a campaign member needs to register or just check in
     // first check if the person is registered or not
-    public void handle_parent_events(Campaign event, String email) {
+    public void handle_parent_events(String campaign_id, String email) {
         // Three scenarios:
         //      1. Event is a parent event that has no children; standalone event
         //      2. Event is child of a parent event
         //      3. Event is a parent that has children
 
-        Campaign[] campaign = [SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE Id=:event.Id];
-        // handles scenario 1
-        if (campaign.ParentId != null) {
-            // handles scenario 2
-            Campaign parent_campaign = [SELECT Name, Description, StartDate, Status, Id FROM Campaign WHERE ID=:campaign.ParentId];
-            check_in(parent_campaign, email);
+
+        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
+        CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
+        if (event_attendee.size() == 0) {
+            // register the attendee
         } else {
-            // I am guaranteed to have a parent event, so it could be scenario 1 or 3
-            Campaign[] potential_children = [SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:event.Id];
-            // handles scenario 3
-            for (Campaign campaign: potential_children) {
-                check_in(campaign, email);
-            }
+            check_in(campaign_id, email);
         }
-        // handles scenario 1
-        check_in(event, email);
+        
     }
 
 
@@ -124,7 +117,7 @@ global class RollCall{
     // METHODS FOR JAVASCRIPT REMOTING
     @RemoteAction
     global static Campaign[] get_events() {
-        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True]; 
+        Campaign[] events = [SELECT Name, Description, StartDate, ParentId FROM Campaign WHERE isActive=True AND parentId=null]; 
         // AND Status in ('Open', 'In Progress') ];
         return events;
     }
