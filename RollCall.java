@@ -117,7 +117,7 @@ global class RollCall{
     // METHODS FOR JAVASCRIPT REMOTING
     @RemoteAction
     global static Campaign[] get_events() {
-        Campaign[] events = [SELECT Name, Description, StartDate, ParentId FROM Campaign WHERE isActive=True AND parentId=null]; 
+        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST]; 
         // AND Status in ('Open', 'In Progress') ];
         return events;
     }
