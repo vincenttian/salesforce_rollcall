@@ -2,7 +2,7 @@
     sidebar="false" 
     showheader="false"
     standardStylesheets="false"
-    standardController="Campaign" recordSetVar="campaigns" 
+    Controller="RollCall" 
     applyHtmlTag="false"
     applyBodyTag="false"   
     id="todo"
@@ -201,6 +201,9 @@
     <title>RollCall</title>
 </head>
 <body>
+
+    <body onload="list_events()"> </body>
+    
     <div id="container">
         <section id="one" class="active">
             <div id="rollcall">
@@ -210,24 +213,12 @@
                 <p id="sub_title"> Select Event </p>
             </div>
 
-            <!-- Gets data from Apex database -->
-            <a class="link" data-section="two" href="#"> 
-                <apex:pageBlock>
-                    <apex:pageBlockSection columns="2">
-                        <apex:pageBlockTable value="{!campaigns}" var="campaign">
-                            <apex:column>
-                                <apex:outputText value="{!campaign.Name}"/>
-                            </apex:column>
-                            <apex:column>
-                                <apex:outputText value="{!campaign.StartDate}"/>
-                            </apex:column>
-                            <!-- <apex:column>
-                                <apex:outputText value="{!event.Description__c}"/>
-                            </apex:column> -->
-                        </apex:pageBlockTable>
-                    </apex:pageBlockSection>
-                </apex:pageBlock>
-            </a>
+            
+
+
+
+
+
             <!--
             <a class="link" data-section="two" href="#"> Salesforce Workday </a>
             <a class="link" data-section="two" href="#"> Internship Party </a>
@@ -269,5 +260,33 @@
         </section>
     </div>
 </body>
+
+<script type="text/javascript">
+        function list_events() {
+            Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.RollCall.get_events}',
+            function(result, event){
+                if (event.status) {
+                    // Get DOM IDs for HTML and Visualforce elements like this
+                    console.log(result);
+                    for (var i = 0; i < result.length; i++) {
+                        document.getElementById('one').innerHTML+="<br><a class='link' data-section='two' href='#''>"+result[i].Name+"</a>";
+                        document.getElementById('one').innerHTML+"\n";
+                    }
+                } else if (event.type === 'exception') {
+                    document.getElementById("responseErrors").innerHTML = 
+                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                } else {
+                    document.getElementById("responseErrors").innerHTML = event.message;
+                }
+            }, 
+            {escape: true}
+            );
+        }
+    </script>
+
 </html>
 </apex:page>
+
+
+

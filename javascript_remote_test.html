@@ -1,0 +1,45 @@
+<apex:page docType="html-5.0"
+    sidebar="false"
+    showheader="false"
+    standardStylesheets="false"
+    Controller="RollCall"
+    applyHtmlTag="false"
+    applyBodyTag="false"
+    id="todo"
+>
+
+    <!-- A simple function for changing the font. -->
+    <script type="text/javascript">
+        function list_events() {
+            Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.RollCall.get_events}',
+            function(result, event){
+                if (event.status) {
+                    // Get DOM IDs for HTML and Visualforce elements like this
+                    console.log(result);
+                    for (var i = 0; i < result.length; i++) {
+                        // document.getElementById('{!$Component.thePanel}').innerHTML+="<br>"+result[i].Name;
+                        // document.getElementById('{!$Component.thePanel}').innerHTML+"\n";
+                        document.getElementById('thePanel').innerHTML+="<br>"+result[i].Name;
+                        document.getElementById('thePanel').innerHTML+"\n";
+                    }
+                } else if (event.type === 'exception') {
+                    document.getElementById("responseErrors").innerHTML = 
+                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                } else {
+                    document.getElementById("responseErrors").innerHTML = event.message;
+                }
+            }, 
+            {escape: true}
+            );
+        }
+    </script>
+
+    <!-- This outputPanel calls the function, passing in the
+         checkbox itself, and the DOM ID of the target component. -->
+    <div id="thePanel" layout="block">
+    </div>
+
+    <body onload="list_events()"> </body>
+
+</apex:page>
