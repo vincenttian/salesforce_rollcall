@@ -215,15 +215,16 @@
 
             
 
-
-
-
+            <div id="list_events">
+                <!-- Generated events go here -->
+            </div>
 
             <!--
             <a class="link" data-section="two" href="#"> Salesforce Workday </a>
             <a class="link" data-section="two" href="#"> Internship Party </a>
             <a class="link" data-section="two" href="#"> Mobile Brainstorm </a>
             -->
+            
             <div class="button_container">
                 <div class="button">
                     <p class="button_text"> ADD NEW EVENT </p>
@@ -270,8 +271,8 @@
                     // Get DOM IDs for HTML and Visualforce elements like this
                     console.log(result);
                     for (var i = 0; i < result.length; i++) {
-                        document.getElementById('one').innerHTML+="<br><a class='link' data-section='two' href='#''>"+result[i].Name+"</a>";
-                        document.getElementById('one').innerHTML+"\n";
+                        document.getElementById('list_events').innerHTML+="<br><a class='link' data-section='two' href='#''>"+result[i].Name+"</a>";
+                        document.getElementById('list_events').innerHTML+"\n";
                     }
                 } else if (event.type === 'exception') {
                     document.getElementById("responseErrors").innerHTML = 
