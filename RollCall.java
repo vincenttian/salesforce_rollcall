@@ -68,22 +68,22 @@ global class RollCall{
     // METHODS THAT INTERACT WITH EVENT_ATTENDEE TABLE
     // Tested
     // Case; Used when drop-ins come to an event
-    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id, String status) {
+    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id) {
         // first create contact, then put it in
         Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name);
         insert tmp_contact;
-        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = status);
+        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = 'Planned'); // NOT SETTING PICKLIST TO DEFAULT SPECIFIED VALUE
         insert new_event_attendee;
     }
 
     // Tested
-    public void check_in(String campaign_id, String email) {        
+    public static void check_in(String campaign_id, String email) {        
         CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
         if (event_attendee == null) {
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
         } else {
-            event_attendee.status = 'Received'; // temp status to signify checked in 
+            event_attendee.status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
         }
         update event_attendee; 
     }
@@ -95,7 +95,7 @@ global class RollCall{
 
     // logic to check if a campaign member needs to register or just check in
     // first check if the person is registered or not
-    public void handle_parent_events(String campaign_id, String email) {
+    public static void handle_parent_events(String campaign_id, String email) {
         // Three scenarios:
         //      1. Event is a parent event that has no children; standalone event
         //      2. Event is child of a parent event
@@ -106,8 +106,9 @@ global class RollCall{
         CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
         if (event_attendee.size() == 0) {
             // register the attendee
+            // MUST RAISE AN ERROR
         } else {
-            check_in(campaign_id, email);
+            Rollcall.check_in(string.valueof(campaign_id), email);
         }
         
     }
@@ -144,11 +145,12 @@ global class RollCall{
         update event;
     }
 
-    // // write remoteaction for checking in
-    // @RemoteAction
-    // global static check_in(String event_name, String email) {
-        
-    // }
+    // Checking in attendees for checkin page
+    @RemoteAction
+    global static void check_in_attendee(String event_name, String email) {
+        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
+        Rollcall.handle_parent_events(string.valueof(event.Id), email);
+    }
 
     // // Gives statistics on the number of attendees
     // @RemoteAction
