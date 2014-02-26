@@ -8,14 +8,16 @@
     id="todo"
 >
 
+
 <html>
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
-    <!-- Replaced with CSS below
-    <link rel="stylesheet" type="text/css" href="style.css"> </link> 
+    <!-- Added manually
+    <link rel="stylesheet" type="text/css" href="style.css"> </link>
     -->
     <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'> </link>
+
     <style>
         body {
     margin: 0px;
@@ -254,95 +256,43 @@ div {
 
 
 
-
-
     </style>
+
     <title>RollCall</title>
 </head>
 <body>
-    <body onload="list_events()"> </body>
-    <div id="select_event">
-        <p> Select An <span class="bold"> Event </span> </p>
-    </div>                        
-
-
-    <div id="list_events">
-    </div>
-
-
-    <!-- 
-    <div class="card" onclick="javascript:window.location='event.html';">
-        <div class="title">
-            <p> Salesforce Workday </p>
+    <div id="navbar">
+        <div id="title">
+            <p> You are managing: <span class="color"> Salesforce Workday </span> </p>
         </div>
-        <div class="date">
-            <p> 2/17 </p>
+        <a class="tab" data-section="one" href="#">
+            <p> Home </p>
+        </a>
+        <a class="tab" data-section="two" href="#">
+            <p> Statistics </p>
+        </a>
+        <a class="tab" data-section="three" href="#">
+            <p> Edit Info </p>
+        </a>
+        <div class="tab" onclick="javascript:window.location='checkin.html';">
+            <p> Check In </p>
         </div>
-    </div>
-    <div class="card" onclick="javascript:window.location='event.html';">
-        <div class="title" >
-            <p> Internship Party </p>
-        </div>
-        <div class="date">
-            <p> 3/10 </p>
+        <div class="tab" onclick="javascript:window.location='index.html';">
+            <p> Return </p>
         </div>
     </div>
-    <div class="card" onclick="javascript:window.location='event.html';">
-        <div class="title">
-            <p> CS 70 Study </p>
-        </div>
-        <div class="date">
-            <p> 4/1 </p>
-        </div>
-    </div>
-    <div class="card" onclick="javascript:window.location='event.html';">
-        <div class="title">
-            <p> Mobile Brainstorm </p>
-        </div>
-        <div class="date">
-            <p> 4/4 </p>
-        </div>
-    </div>
-    <div class="card" onclick="javascript:window.location='event.html';">
-        <div class="title">
-            <p> Helix Consulting </p>
-        </div>
-        <div class="date">
-            <p> 4/28 </p>
-        </div>
-    </div> 
-    -->
+    <div id="container">
+ 		<section id="one" class="active">
+            <div class="page"></div>
+ 		</section>
+ 		<section id="two">
+            <div class="page"></div>
+ 		</section>
+ 		<section id="three">
+            <div class="page"></div>
+ 		</section>
+ 	</div>
 </body>
-
-<script type="text/javascript">
-   function list_events() {
-       Visualforce.remoting.Manager.invokeAction(
-       '{!$RemoteAction.RollCall.get_events}',
-       function(result, event){
-           if (event.status) {
-               // Get DOM IDs for HTML and Visualforce elements like this
-               console.log(result);
-               for (var i = 0; i < result.length; i++) {
-                   var date = result[i].StartDate.toString();
-                   document.getElementById('list_events').innerHTML+="<div class='card' onclick='javascript:window.location='event.html';'> <div class='title'><p> "+
-                   result[i].Name + 
-                   " </p></div><div class='date'><p> " + 
-                   result[i].StartDate + 
-                   "</p> </div> </div>" + date;
-                   // date.charAt(7) + "/" + date.substring(5,6);
-                   // document.getElementById('list_events').innerHTML+"\n";
-               }
-           } else if (event.type === 'exception') {
-               document.getElementById("responseErrors").innerHTML = 
-                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
-           } else {
-               document.getElementById("responseErrors").innerHTML = event.message;
-           }
-       }, 
-       {escape: true}
-       );
-   }
-</script>
-
 </html>
+
 </apex:page>
