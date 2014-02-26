@@ -115,19 +115,47 @@ global class RollCall{
 
 
     // METHODS FOR JAVASCRIPT REMOTING
+    // Returns a list of all events for main page
     @RemoteAction
     global static Campaign[] get_events() {
         Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST]; 
-        // AND Status in ('Open', 'In Progress') ];
         return events;
     }
 
     // Returns a single campaign with parameter for detail view
     @RemoteAction
-    global static Campaign get_event(String name) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:name];
+    global static Campaign get_event(String event_name) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
         return event;         
     }
+
+    // Returns the date of a single campaign 
+    @RemoteAction
+    global static String get_event_date(String event_name) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+        return event.StartDate.format();         
+    }
+
+    // Edits event info
+    @RemoteAction
+    global static void edit_info(String event_name, String new_description) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+        event.Description = new_description;
+        update event;
+    }
+
+    // // write remoteaction for checking in
+    // @RemoteAction
+    // global static check_in(String event_name, String email) {
+        
+    // }
+
+    // // Gives statistics on the number of attendees
+    // @RemoteAction
+    // global static Array event_stats(String event_name) {
+        
+    // }
+
 
 }
 

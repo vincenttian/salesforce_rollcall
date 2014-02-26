@@ -261,7 +261,9 @@ div {
     <title>RollCall</title>
 </head>
 <body>
-    <body onload="list_event('Helix Consulting')"> </body>
+    <body onload="get_event('Helix Consulting'); get_event_date('Helix Consulting');" > </body>
+    <!-- <body onload="get_event_date('Helix Consulting')"> </body> -->
+
     <div id="navbar">
         <div id="title">
             <p> You are managing: <span class="color"> Salesforce Workday </span> </p>
@@ -302,7 +304,7 @@ div {
 </body>
 
 <script type="text/javascript">
-   function list_event(arg) {
+   function get_event(arg) {
        Visualforce.remoting.Manager.invokeAction(
        '{!$RemoteAction.RollCall.get_event}',
        arg,
@@ -313,8 +315,32 @@ div {
                
                document.getElementById('event').innerHTML+=
                "Event name: " + result.Name + "<br></br>" + 
-               "Event date: " + result.StartDate + "<br></br>" + 
                "Event description: " + result.Description;
+
+           } else if (event.type === 'exception') {
+               document.getElementById("event").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+           } else {
+               document.getElementById("event").innerHTML = event.message;
+           }
+       }, 
+       {escape: true}
+       );
+   }
+</script>
+
+<script type="text/javascript">
+   function get_event_date(arg) {
+       Visualforce.remoting.Manager.invokeAction(
+       '{!$RemoteAction.RollCall.get_event_date}',
+       arg,
+       function(result, event){
+           if (event.status) {
+               // Get DOM IDs for HTML and Visualforce elements like this
+               console.log(result);
+               
+               document.getElementById('event').innerHTML+=
+               "<br> </br>"+"Event date: " + result + "<br></br>";
 
            } else if (event.type === 'exception') {
                document.getElementById("event").innerHTML = 
