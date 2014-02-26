@@ -8,7 +8,6 @@
     id="todo"
 >
 
-
 <html>
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -253,16 +252,12 @@ div {
     box-shadow: 0px 5px 5px 0px #E0E0E0;
     z-index: 1;
 }
-
-
-
     </style>
 
     <title>RollCall</title>
 </head>
 <body>
     <body onload="get_event('Helix Consulting'); get_event_date('Helix Consulting');" > </body>
-    <!-- <body onload="get_event_date('Helix Consulting')"> </body> -->
 
     <div id="navbar">
         <div id="title">
@@ -287,11 +282,9 @@ div {
     <div id="container">
  		<section id="one" class="active">
             <div class="page"> 
-            <!-- Insert event here -->
-            <div id="event">
-            </div>
-
-
+                <div id="event">
+                    <!-- Insert event here -->
+                </div>
             </div>
  		</section>
  		<section id="two">
@@ -312,11 +305,9 @@ div {
            if (event.status) {
                // Get DOM IDs for HTML and Visualforce elements like this
                console.log(result);
-               
                document.getElementById('event').innerHTML+=
                "Event name: " + result.Name + "<br></br>" + 
                "Event description: " + result.Description;
-
            } else if (event.type === 'exception') {
                document.getElementById("event").innerHTML = 
                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
@@ -338,10 +329,8 @@ div {
            if (event.status) {
                // Get DOM IDs for HTML and Visualforce elements like this
                console.log(result);
-               
                document.getElementById('event').innerHTML+=
                "<br> </br>"+"Event date: " + result + "<br></br>";
-
            } else if (event.type === 'exception') {
                document.getElementById("event").innerHTML = 
                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
@@ -353,7 +342,5 @@ div {
        );
    }
 </script>
-
 </html>
-
 </apex:page>
