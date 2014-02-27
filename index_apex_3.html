@@ -1,0 +1,105 @@
+<apex:page docType="html-5.0"
+sidebar="false" 
+showheader="false"
+standardStylesheets="false"
+Controller="RollCall"
+applyHtmlTag="false"
+applyBodyTag="false"
+id="todo"
+>
+<apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+<html>
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'></link>
+    <title>RollCall</title>
+  </head>
+  <body>
+    <body onload="list_events()"> </body>
+    <div id="select_event">
+      <p> Select An Event </p>
+      <div id="rollcall"></div>
+      <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
+      <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
+    </div>
+    <div id="list_events">
+      <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title blue">
+          <p> Salesforce Workday </p>
+        </div>
+        <div class="info">
+          <p> Attending: <span class="blue_text"> 75 </span> </p>
+          <p> Registered: 100 </p>
+        </div>
+        <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img>
+        <p class="pic_data percentage blue_text"> 75% </p>
+      </div>
+    </div>
+  </body>
+
+
+  <script type="text/javascript">
+    function list_events() {
+      Visualforce.remoting.Manager.invokeAction(
+          '{!$RemoteAction.RollCall.get_events}',
+          function(result, event){
+          if (event.status) {
+          for (var i = 0; i < result.length; i++) {
+          document.getElementById('list_events').innerHTML+="<div class='card' onclick='javascript:window.location='event.html';'> <div class=" + get_color(i) + "><p> "+
+          result[i].Name + 
+          " </p></div><div class='info' id=" + i + "><p> "+
+          "</p> </div> </div>";
+          get_event_date(result[i].Name, i);
+          }
+          } else if (event.type === 'exception') {
+          document.getElementById("responseErrors").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                   } else {
+                   document.getElementById("responseErrors").innerHTML = event.message;
+                   }
+                   },
+                   {escape: true}
+          );
+   }
+  </script>
+
+  <script type="text/javascript">
+    function get_event_date(arg, n) {
+      Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.RollCall.get_event_date}',
+        arg,
+        function(result, event){
+        if (event.status) {
+        document.getElementById(n).innerHTML+=result;
+        } else if (event.type === 'exception') {
+        document.getElementById("event").innerHTML =
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                   } else {
+                   document.getElementById("event").innerHTML = event.message;
+                   }
+                   },
+                   {escape: true}
+        );
+    }
+  function get_color(x) {
+    if ((x % 5) == 0) {
+      return "'title blue'";
+    }
+    if ((x % 5) == 1) {
+      return "'title magenta'";
+    }
+    if ((x % 5) == 2) {
+      return "'title green'";
+    }
+    if ((x % 5) == 3) {
+      return "'title red'";
+    }
+    if ((x % 5) == 4) {
+      return "'title orange'";
+    }
+  }
+  </script>
+
+</html>
+</apex:page>
