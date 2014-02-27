@@ -33,7 +33,12 @@ global class RollCall{
     // METHODS THAT INTERACT WITH EVENT TABLE
     // Tested
     public void create_event(String name, Date start_date, String description, String open_status) {
-        Campaign new_event = new Campaign(Name = name, StartDate=start_date, Description=description, Status=open_status, isActive=True);
+        Campaign new_event = new Campaign(Name=name, StartDate=start_date, Description=description, Status=open_status, isActive=True);
+        insert new_event;
+    }
+
+    public void create_child_event(String name, Date start_date, String description, String open_status, Id parent_id) {
+        Campaign new_event = new Campaign(Name=name, StartDate=start_date, Description=description, Status=open_status, isActive=True, ParentId=parent_id);
         insert new_event;
     }
 
@@ -52,44 +57,107 @@ global class RollCall{
         delete event;
     }
 
+    public void end_event(String event_name) {
+        Campaign event = [SELECT Name, isActive FROM Campaign WHERE Name=:event_name];
+        event.isActive = False;
+        update event;
+    }
+
 
 
     // METHODS THAT INTERACT WITH EVENT_ATTENDEE TABLE
     // Tested
-    public void register_event_attendee(String email, String first_name, String last_name, Campaign event, String status) {
+    // Case; Used when drop-ins come to an event
+    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id) {
         // first create contact, then put it in
         Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name);
         insert tmp_contact;
-        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=event.id, Campaign = event, Status = status);
+        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = 'Planned'); // NOT SETTING PICKLIST TO DEFAULT SPECIFIED VALUE
         insert new_event_attendee;
     }
 
     // Tested
-    public void check_in(Campaign event, String email) {        
-        CampaignMember event_attendee = [SELECT ContactID, Status FROM CampaignMember WHERE Contact.email=:email or Lead.email=:email];
+    public static void check_in(String campaign_id, String email) {        
+        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
         if (event_attendee == null) {
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
         } else {
-            event_attendee.status = 'Received';
+            event_attendee.status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
         }
         update event_attendee; 
     }
 
-    public void delete_event_attendee(String email, Campaign event) {
-        CampaignMember event_attendee = [SELECT Contact.Email, Lead.Email FROM CampaignMember WHERE Contact.Email=:email];
+    public void delete_event_attendee(String email, String campaign_id) {
+        CampaignMember event_attendee = [SELECT Contact.Email, Lead.Email FROM CampaignMember WHERE CampaignId=:campaign_id AND Contact.Email=:email];
         delete event_attendee;
+    }
+
+    // logic to check if a campaign member needs to register or just check in
+    // first check if the person is registered or not
+    public static void handle_parent_events(String campaign_id, String email) {
+        // Three scenarios:
+        //      1. Event is a parent event that has no children; standalone event
+        //      2. Event is child of a parent event
+        //      3. Event is a parent that has children
+
+
+        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
+        CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
+        if (event_attendee.size() == 0) {
+            // register the attendee
+            // MUST RAISE AN ERROR
+        } else {
+            Rollcall.check_in(string.valueof(campaign_id), email);
+        }
+        
     }
 
 
 
     // METHODS FOR JAVASCRIPT REMOTING
+    // Returns a list of all events for main page
     @RemoteAction
     global static Campaign[] get_events() {
-        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True]; 
-        // AND Status in ('Open', 'In Progress') ];
+        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST]; 
         return events;
     }
+
+    // Returns a single campaign with parameter for detail view
+    @RemoteAction
+    global static Campaign get_event(String event_name) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+        return event;         
+    }
+
+    // Returns the date of a single campaign 
+    @RemoteAction
+    global static String get_event_date(String event_name) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+        return event.StartDate.format();         
+    }
+
+    // Edits event info
+    @RemoteAction
+    global static void edit_info(String event_name, String new_description) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+        event.Description = new_description;
+        update event;
+    }
+
+    // Checking in attendees for checkin page
+    @RemoteAction
+    global static void check_in_attendee(String event_name, String email) {
+        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
+        Rollcall.handle_parent_events(string.valueof(event.Id), email);
+    }
+
+    // // Gives statistics on the number of attendees
+    // @RemoteAction
+    // global static Array event_stats(String event_name) {
+        
+    // }
+
 
 }
 

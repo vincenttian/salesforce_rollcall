@@ -1,0 +1,346 @@
+<apex:page docType="html-5.0"
+    sidebar="false" 
+    showheader="false"
+    standardStylesheets="false"
+    Controller="RollCall" 
+    applyHtmlTag="false"
+    applyBodyTag="false"   
+    id="todo"
+>
+
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scroll.js"></script>
+    <!-- Added manually
+    <link rel="stylesheet" type="text/css" href="style.css"> </link>
+    -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'> </link>
+
+    <style>
+        body {
+    margin: 0px;
+    background: #F8F8F8;
+    overflow: hidden;
+}
+
+p {
+    font-family: Lato, sans-serif;
+    margin: 0px;
+}
+
+div {
+    box-sizing: border-box;
+    float: left;
+}
+
+#select_event {
+    text-align: left;
+    width: 100%;
+    padding-left: 25px;
+    padding-top: 100px;
+    height: 200px;
+    font-size: 3em;
+    color: #FFFFFF;
+    background: #77DDFF;
+    margin-bottom: 50px;
+    font-weight: 300;
+    box-shadow: 0px 5px 5px 0px #E0E0E0;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.card {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 308px;
+    height: 200px;
+    box-shadow: 0px 5px 5px 2px #EEEEEE;
+    background: #FFFFFF;
+    overflow: hidden;
+}
+
+.card:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    background: #77DDFF;
+    padding-top: 22px;
+    height: 75px;
+    color: #FFFFFF;
+    font-weight: 300;
+    font-size: 1.5em;
+}
+
+.date {
+    text-align: center;
+    width: 100%;
+    font-size: 4em;
+    font-weight: 300;
+    color: #E5E5E5;
+    padding-top: 22px;
+}
+
+#container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: hidden;
+}
+
+#container section {
+    box-sizing: border-box;
+    padding: 25px;
+    padding-left: 325px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 100%;
+}
+
+#container section:nth-child(1) {
+    left: 0%;
+}
+
+#navbar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px;
+    height: 100%;
+    background: #FFFFFF;
+    box-shadow: 5px 0px 5px 0px #EEEEEE;
+    z-index: 1;
+}
+
+#title {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    text-decoration: none;
+    font-size: 1.5em;
+    color: #AAAAAA;
+    border-bottom: 1px solid #F3F3F3;
+    padding-top: 60px;
+    padding-left: 25px;
+    width: 300px;
+    height: 200px;
+}
+
+.color {
+    color: #77DDFF;
+}
+
+.tab {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    text-decoration: none;
+    font-size: 1.5em;
+    color: #AAAAAA;
+    border-bottom: 1px solid #F3F3F3;
+    padding-top: 25px;
+    padding-left: 25px;
+    width: 300px;
+    height: 80px;
+}
+
+.tab:hover {
+    cursor: pointer;
+    background: #F3F3F3;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 5px 5px 2px #EEEEEE;
+    background: #FFFFFF;
+    overflow: hidden;
+}
+
+#checkin {
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    left: 0px;
+    padding: 25px;
+    width: 1024px;
+    height: 768px;
+    background: #F8F8F8;
+}
+
+#checkin_title {
+    margin-top: 300px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    color: #CCCCCC;
+}
+
+#email {
+    box-sizing: border-box;
+    margin-top: 25px;
+    padding: 20px;
+    height: 90px;
+    width: 600px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    opacity: 0.5;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
+}
+
+#email:focus {
+    outline: none;
+    opacity: 1;
+}
+
+#submit {
+    border-style: none;
+    background: #77DDFF;
+    padding: 20px;
+    height: 90px;
+    width: 600px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    color: #FFFFFF;
+    box-shadow: 0px 5px 5px 2px #EEEEEE;
+}
+
+#submit:hover {
+    cursor: pointer;
+    background: #6DCFF6;
+}
+
+#exit {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    font-family: Lato, sans-serif;
+    font-size: 2em;
+    color: #EEEEEE;
+    text-decoration: none;
+    z-index: 1;
+}
+
+#exit:hover {
+    cursor: pointer;
+    color: #77DDFF;
+}
+
+#checkin_banner {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding-left: 25px;
+    padding-top: 100px;
+    height: 200px;
+    font-size: 3em;
+    color: #FFFFFF;
+    background: #77DDFF;
+    margin-bottom: 50px;
+    font-weight: 300;
+    box-shadow: 0px 5px 5px 0px #E0E0E0;
+    z-index: 1;
+}
+    </style>
+
+    <title>RollCall</title>
+</head>
+<body>
+    <body onload="get_event('Helix Consulting'); get_event_date('Helix Consulting');" > </body>
+
+    <div id="navbar">
+        <div id="title">
+            <p> You are managing: <span class="color"> Salesforce Workday </span> </p>
+        </div>
+        <a class="tab" data-section="one" href="#">
+            <p> Home </p>
+        </a>
+        <a class="tab" data-section="two" href="#">
+            <p> Statistics </p>
+        </a>
+        <a class="tab" data-section="three" href="#">
+            <p> Edit Info </p>
+        </a>
+        <div class="tab" onclick="javascript:window.location='checkin.html';">
+            <p> Check In </p>
+        </div>
+        <div class="tab" onclick="javascript:window.location='index.html';">
+            <p> Return </p>
+        </div>
+    </div>
+    <div id="container">
+ 		<section id="one" class="active">
+            <div class="page"> 
+                <div id="event">
+                    <!-- Insert event here -->
+                </div>
+            </div>
+ 		</section>
+ 		<section id="two">
+            <div class="page"></div>
+ 		</section>
+ 		<section id="three">
+            <div class="page"></div>
+ 		</section>
+ 	</div>
+</body>
+
+<script type="text/javascript">
+   function get_event(arg) {
+       Visualforce.remoting.Manager.invokeAction(
+       '{!$RemoteAction.RollCall.get_event}',
+       arg,
+       function(result, event){
+           if (event.status) {
+               // Get DOM IDs for HTML and Visualforce elements like this
+               console.log(result);
+               document.getElementById('event').innerHTML+=
+               "Event name: " + result.Name + "<br></br>" + 
+               "Event description: " + result.Description;
+           } else if (event.type === 'exception') {
+               document.getElementById("event").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+           } else {
+               document.getElementById("event").innerHTML = event.message;
+           }
+       }, 
+       {escape: true}
+       );
+   }
+</script>
+
+<script type="text/javascript">
+   function get_event_date(arg) {
+       Visualforce.remoting.Manager.invokeAction(
+       '{!$RemoteAction.RollCall.get_event_date}',
+       arg,
+       function(result, event){
+           if (event.status) {
+               // Get DOM IDs for HTML and Visualforce elements like this
+               console.log(result);
+               document.getElementById('event').innerHTML+=
+               "<br> </br>"+"Event date: " + result + "<br></br>";
+           } else if (event.type === 'exception') {
+               document.getElementById("event").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+           } else {
+               document.getElementById("event").innerHTML = event.message;
+           }
+       }, 
+       {escape: true}
+       );
+   }
+</script>
+</html>
+</apex:page>
