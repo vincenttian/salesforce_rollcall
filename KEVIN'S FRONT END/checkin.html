@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scroll.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+    <title>RollCall</title>
+</head>
+<body>
+    <div id="select_event">
+        <p> Salesforce Workday </p>          
+    </div>
+    <div class="invisible" id="return" onclick="javascript:window.location='event.html';"></div>
+    <div id="container">
+ 		<section id="one" class="active">
+            <div class="checkin">
+                <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
+                <input type="text" name="email" id="email"/>
+                <a id="submit" data-section="two" href="#">  
+                    <p> Check In </p>
+                </a>
+            </div>
+ 		</section>
+ 		<section id="two">
+            <div class="checkin">
+                <div id="confirm_info">
+                    <p> You are checking in as... </p>
+                    <p> Name: <span class="blue_text"> Kevin TianXiang Wu </span> </p>
+                    <p> Email: <span class="blue_text"> kevintxwu@gmail.com </span> </p>
+                    <p> Company: <span class="blue_text"> Salesforce </span> </p>
+                </div>
+                <a id="confirm" data-section="three" href="#"> 
+                    <p> Confirm </p>
+                </a>
+                <p id="confirm_end"> If this is not you, please <a id="retry" data-section="one" href="#"> retry</a> or ask someone for help </p>
+            </div>
+ 		</section>
+        <section id="three">
+            <div class="checkin">
+                <img id="checkin_icon" src="checkin.svg">
+                <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
+                <a id="checkin_end" data-section="one" href="#"> 
+                    <p> Return </p>
+                </a>
+            </div>
+ 		</section>
+ 	</div>
+</body>
+</html>

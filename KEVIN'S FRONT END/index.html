@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+    <title>RollCall</title>
+</head>
+<body>
+    <div id="select_event">
+        <p> Select An Event </p>
+        <div id="rollcall"></div>
+        <img class="action" id="help" src="help.svg">
+        <img class="action" id="plus" src="plus.svg">
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title blue">
+            <p> Salesforce Workday </p>
+        </div>
+        <div class="info">
+            <p> Attending: <span class="blue_text"> 75 </span> </p>
+            <p> Registered: 100 </p>
+        </div>
+        <img class="pic" src="piechart.svg">
+        <p class="pic_data percentage blue_text"> 75% </p>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title magenta" >
+            <p> Internship Party </p>
+        </div>
+        <div class="info">
+            <p> Start Date: <span class="magenta_text"> 2/17 </span> </p>
+            <p> Registered: 45</span> </p>
+        </div>
+        <img class="pic" src="calendar_magenta.svg">
+        <p class="pic_data magenta_text"> 2/17 </p>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title green">
+            <p> CS 70 Study </p>
+        </div>
+        <div class="info">
+            <p> Start Date: <span class="green_text"> 2/17 </span> </p>
+            <p> Registered: 105</span> </p>
+        </div>
+        <img class="pic" src="calendar_green.svg">
+        <p class="pic_data green_text"> 2/17 </p>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title red">
+            <p> Mobile Brainstorm </p>
+        </div>
+        <div class="info">
+            <p> Start Date: <span class="red_text"> 2/24 </span> </p>
+            <p> Registered: 85</span> </p>
+        </div>
+        <img class="pic" src="calendar_red.svg">
+        <p class="pic_data red_text"> 2/24 </p>
+    </div>
+    <div class="card" onclick="javascript:window.location='event.html';">
+        <div class="title orange">
+            <p> Helix Consulting </p>
+        </div>
+        <div class="info">
+            <p> Start Date: <span class="orange_text"> 12/31 </span> </p>
+            <p> Registered: 70</span> </p>
+        </div>
+        <img class="pic" src="calendar_orange.svg">
+        <p class="pic_data orange_text"> 12/31 </p>
+        <p class="pic_data orange_text"> 12/31 </p>
+    </div>
+</body>
+</html>
