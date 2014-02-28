@@ -18,10 +18,13 @@
     <title>RollCall</title>
 </head>
 <body>
-    <body onload="get_event('Helix Consulting'); get_event_date('Helix Consulting');" > </body>
+    <body onload="get_event('event_name'); get_event_date('event_name');" > </body>
     <div id="navbar">
         <div class="blue_border" id="navbar_title">
-            <p> You are now managing: <br></br> <span class="blue_text"> Salesforce Workday </span> </p>
+            <p> You are now managing: <br></br> 
+              <span class="blue_text">  
+              {!$CurrentPage.parameters.event_name}
+              </span> </p>
         </div>
         <a class="tab magenta_border hover_magenta_text" data-section="one" href="#">
             <p> Information </p>
@@ -37,29 +40,29 @@
         </apex:outputLink>
 
         <apex:outputLink value="{!$Page.test}">
-          <div id="return" onclick="javascript:window.location='index.html';"></div>
+          <div id="return"></div>
         </apex:outputLink>
 
     </div>
     <div id="container">
- 		<section id="one" class="active">
+    <section id="one" class="active">
             <div class="page" id="page_one">
                 <div id="event">
                     <!-- Insert event here -->
                 </div>
             </div>
- 		</section>
- 		<section id="two">
+    </section>
+    <section id="two">
             <div class="page" id="page_two"></div>
- 		</section>
- 	</div>
+    </section>
+  </div>
 </body>
 
 <script type="text/javascript">
    function get_event(arg) {
        Visualforce.remoting.Manager.invokeAction(
        '{!$RemoteAction.RollCall.get_event}',
-       arg,
+       getParameterByName('event_name'),
        function(result, event){
            if (event.status) {
                // Get DOM IDs for HTML and Visualforce elements like this
@@ -83,7 +86,7 @@
    function get_event_date(arg) {
        Visualforce.remoting.Manager.invokeAction(
        '{!$RemoteAction.RollCall.get_event_date}',
-       arg,
+       getParameterByName('event_name'),
        function(result, event){
            if (event.status) {
                // Get DOM IDs for HTML and Visualforce elements like this
@@ -100,6 +103,15 @@
        {escape: true}
        );
    }
+</script>
+
+<script>
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 </script>
 
 </html>
