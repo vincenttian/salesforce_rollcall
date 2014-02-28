@@ -155,10 +155,19 @@ global class RollCall{
     }
 
     // // Gives statistics on the number of attendees
-    // @RemoteAction
-    // global static Array event_stats(String event_name) {
-        
-    // } 
+    @RemoteAction
+    global static Integer[] event_stats(String event_name) {
+        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
+        CampaignMember[] test = [SELECT ContactId FROM CampaignMember WHERE Status = 'Sent'];// AND CampaignId=:event.Id];
+        for (CampaignMember member: test) {
+            System.Debug(member.contactid);
+        }
+        Integer registered = [SELECT count() FROM CampaignMember WHERE Status = 'Sent'];// AND CampaignId=:event.Id];
+        Integer checked_in = [SELECT count() FROM CampaignMember WHERE Status = 'Received'];// AND CampaignId=:event.Id];
+        Integer[] data = new Integer[]{registered, checked_in};
+        System.debug(data);
+        return data;   
+    } 
 
 
 }

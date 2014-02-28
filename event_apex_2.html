@@ -18,7 +18,7 @@
     <title>RollCall</title>
 </head>
 <body>
-    <body onload="get_event('event_name'); get_event_date('event_name');" > </body>
+    <body onload="get_event('event_name'); get_event_date('event_name'); get_event_stats('event_name');" > </body>
     <div id="navbar">
         <div class="blue_border" id="navbar_title">
             <p> You are now managing: <br></br> 
@@ -94,6 +94,31 @@
                console.log(result);
                document.getElementById('event').innerHTML+=
                "<br> </br>"+"Event date: " + result + "<br></br>";
+           } else if (event.type === 'exception') {
+               document.getElementById("event").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+           } else {
+               document.getElementById("event").innerHTML = event.message;
+           }
+       }, 
+       {escape: true}
+       );
+   }
+</script>
+
+<!-- Statistics -->
+<script type="text/javascript">
+   function get_event_stats(arg) {
+       Visualforce.remoting.Manager.invokeAction(
+       '{!$RemoteAction.RollCall.event_stats}',
+       getParameterByName('event_name'),
+       function(result, event){
+           if (event.status) {
+               // Get DOM IDs for HTML and Visualforce elements like this
+               console.log(result);
+               document.getElementById('event').innerHTML+=
+               +"Registered number: " + result[0] + 
+               +"Checked in number: " + result[1] + "TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST" + "    Number registered: " + result[0] + "    Number checked in: " + result[1];
            } else if (event.type === 'exception') {
                document.getElementById("event").innerHTML = 
                    event.message + "<br/>\n<pre>" + event.where + "</pre>";

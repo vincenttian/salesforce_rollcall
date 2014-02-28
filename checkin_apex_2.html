@@ -31,7 +31,7 @@
             <div class="checkin">
                 <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
                 <input type="text" name="email" id="email"/>
-                <a id="submit" data-section="two" href="#" onclick="check_in_attendee_javascript(id)">  
+                <a id="submit" data-section="two" href="#" onclick="check_in_attendee_javascript(email)">  
                     <p> Check In </p>
                 </a>
             </div>
@@ -91,11 +91,11 @@ $(document).ready(function(){
        Visualforce.remoting.Manager.invokeAction(
        '{!$RemoteAction.RollCall.check_in_attendee}',
        getParameterByName('event_name'),
-       email,
+       document.getElementById("email").value,
        function(result, event){
            if (event.status) {
                // Get DOM IDs for HTML and Visualforce elements like this
-               document.getElementById("test").innerHTML += "TEST TEST TEST TEST TEST";
+               document.getElementById("test").innerHTML += "Received email: " + document.getElementById("email").value;
                console.log(result);
            } else if (event.type === 'exception') {
                document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
