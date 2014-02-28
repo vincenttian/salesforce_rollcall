@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
@@ -9,26 +10,88 @@
 </head>
 <body>
     <div id="navbar">
-        <div class="blue_border" id="navbar_title">
+        <div id="navbar_title">
             <p> You are now managing: <br> <span class="blue_text"> Salesforce Workday </span> </p>
         </div>
-        <a class="tab magenta_border hover_magenta_text" data-section="one" href="#">
+        <a class="tab blue_border hover_blue_text" data-section="one" href="#">
             <p> Information </p>
         </a>
-        <a class="tab green_border hover_green_text" data-section="two" href="#">
-            <p> Statistics </p>
+        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
+            <p> Capacity </p>
         </a>
-        <div class="tab red_border hover_red_text" onclick="javascript:window.location='checkin.html';">
+        <a class="tab green_border hover_green_text" data-section="three" href="#">
+            <p> Attendance </p>
+        </a>
+        <a class="tab red_border hover_red_text" data-section="four" href="#">
+            <p> Flow </p>
+        </a>
+        <div class="tab orange_border hover_orange_text" onclick="javascript:window.location='checkin.html';">
             <p> Check In </p>
         </div>
         <div id="return" onclick="javascript:window.location='index.html';"></div>
     </div>
     <div id="container">
  		<section id="one" class="active">
-            <div class="page" id="page_one"></div>
+            <div class="page">
+                <div class="information">
+                    <p class="blue_text"> Name: </p>
+                    <p> Salesforce Workday </p>
+                    <p class="blue_text"> Description: </p>
+                    <p> The first day for new employees where they check in, pick up laptops, and get their badges. </p>
+                </div>
+            </div>
  		</section>
  		<section id="two">
-            <div class="page" id="page_two"></div>
+            <div class="page"></div>
+ 		</section>
+        <section id="three">
+            <div class="page"></div>
+            <script>
+                var width = 125,
+                    height = 125,
+                    radius = Math.min(width, height) / 2;
+
+                var color = d3.scale.ordinal()
+                    .range(["#FFFFFF", "#0096ff"]);
+
+                var arc = d3.svg.arc()
+                    .outerRadius(radius - 5)
+                    .innerRadius(radius - 17);
+
+                var pie = d3.layout.pie()
+                    .sort(null)
+                    .value(function(d) { return d.num; });
+
+                var svg = d3.select("#card_salesforce_workday").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", "translate(" + 60 + "," + 62 + ")");
+
+                d3.csv("data_salesforce_workday.csv", function(error, data) {
+
+                  data.forEach(function(d) {
+                    d.num = +d.num;
+                  });
+
+                  var g = svg.selectAll(".arc")
+                      .data(pie(data))
+                    .enter().append("g")
+                      .attr("class", "arc");
+
+                  g.append("path")
+                      .attr("d", arc)
+                      .attr("transform", "rotate(" + 90 + ")")
+                      .style("fill", function(d) { return color(d.data.status); });
+
+                  g.append("text")
+                      .style("display", "none");
+
+                });    
+            </script>
+ 		</section>
+        <section id="four">
+            <div class="page"></div>
  		</section>
  	</div>
 </body>

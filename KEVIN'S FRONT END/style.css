@@ -93,12 +93,13 @@ input {
 }
 
 .pic {
-    width: 125px;
+    width: 150px;
     height: 125px;
 }
 
 .pic_data {
     color: #77DDFF;
+    text-align: center;
     font-size: 1.5em;
     margin-top: -70px;
     margin-bottom: 40px;
@@ -163,6 +164,7 @@ input {
     background: #FFFFFF;
     z-index: 1;
     border-right: 10px solid #CCCCCC;
+    box-shadow: 1px 0px 5px 0px #000000;
 }
 
 #navbar_title {
@@ -219,19 +221,17 @@ input {
 .page {
     width: 100%;
     height: 100%;
+    padding-left: 300px;
     overflow: hidden;
+    background: #FFFFFF;
 }
 
-#page_one {
-    background: url('doge.jpg');
-    background-size: cover;
-    background-position: center;
-}
-
-#page_two {
-    background: url('helix.jpg');
-    background-size: cover;
-    background-position: center;
+.information {
+    color: #CCCCCC;
+    text-align: left;
+    padding: 50px;
+    line-height: 1.5em;
+    font-size: 2em;
 }
 
 .checkin {
@@ -334,18 +334,14 @@ input {
     margin-top: 50px;
     text-align: left;
     margin-left: 190px;
-    font-size: 1em;
+    font-size: 1.25em;
     line-height: 1.5em;
     width: 600px;
     color: #CCCCCC;
 }
 
-#retry {
-    color: #0096ff;
-}
-
-#checkin_icon {
-    margin-top: 100px;
+.checkin_icon {
+    margin-top: 90px;
     width: 250px;
     height: 250px;
 }
@@ -356,7 +352,7 @@ input {
     color: #CCCCCC;
 }
 
-#checkin_end {
+.checkin_end {
     box-sizing: border-box;
     display: block;
     margin: auto;
@@ -372,8 +368,69 @@ input {
     border-radius: 10px;
 }
 
-#checkin_end:hover {
+.checkin_end:hover {
     background: #333333;
+}
+
+.column {
+    width: 39%;
+    padding-top: 65px;
+    float: left;
+}
+
+#update {
+    box-sizing: border-box;
+    display: block;
+    margin: auto;
+    border-style: none;
+    background: #0096ff;
+    text-align: center;
+    margin-top: 480px;
+    font-size: 2em;
+    padding: 25px;
+    height: 90px;
+    text-decoration: none;
+    width: 600px;
+    color: #FFFFFF;
+    border-radius: 10px;
+}
+
+#update:hover {
+    background: #333333;
+}
+
+#register_end {
+    margin-top: 25px;
+    text-align: center;
+    margin-left: 190px;
+    font-size: 1.25em;
+    width: 600px;
+    color: #CCCCCC;
+}
+
+.label {
+    box-sizing: border-box;
+    text-align: right;
+    margin-top: 25px;
+    padding: 5px;
+    padding-right: 15px;
+    height: 50px;
+    font-size: 2em;
+    color: #666666;
+}
+
+.input {
+    box-sizing: border-box;
+    text-align: left;
+    margin-top: 25px;
+    padding: 15px;
+    padding-top: 20px;
+    height: 50px;
+    width: 400px;
+    font-size: 1.5em;
+    color: #666666;
+    border-radius: 10px;
+    border: 1px solid #666666;
 }
 
 .blue {
