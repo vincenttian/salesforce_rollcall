@@ -23,7 +23,7 @@ id="todo"
       <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
     </div>
     <div id="list_events">
-      <apex:outputLink value="{!$Page.event}">
+      <apex:outputLink value='{!$Page.event}'>
         <div class="card">
           <div class="title blue">
             <p> Salesforce Workday </p>
@@ -35,7 +35,8 @@ id="todo"
           <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img>
           <p class="pic_data percentage blue_text"> 75% </p>
         </div>
-        <apex:param name="event_name" value="Salesforce Workday"/>
+        <apex:param name='event_name' value='Salesforce Workday'/>
+        <!-- ^Later change this to event id -->
       </apex:outputLink>
     </div>
   </body>
@@ -48,7 +49,7 @@ id="todo"
           function(result, event){
           if (event.status) {
           for (var i = 0; i < result.length; i++) {
-          document.getElementById('list_events').innerHTML+="<div class='card' onclick='javascript:window.location='event.html';'> <div class=" + get_color(i) + "><p> "+
+          document.getElementById('list_events').innerHTML+=" <div class='card' onclick='javascript:window.location='event.html';'> <div class=" + get_color(i) + "><p> "+
           result[i].Name + 
           " </p></div><div class='info' id=" + i + "><p> "+
           "</p> </div> </div>";
