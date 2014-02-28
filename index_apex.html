@@ -1,293 +1,106 @@
 <apex:page docType="html-5.0"
-    sidebar="false" 
-    showheader="false"
-    standardStylesheets="false"
-    Controller="RollCall" 
-    applyHtmlTag="false"
-    applyBodyTag="false"   
-    id="todo"
+sidebar="false" 
+showheader="false"
+standardStylesheets="false"
+Controller="RollCall"
+applyHtmlTag="false"
+applyBodyTag="false"
+id="todo"
 >
+<apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
 <html>
-<head>
+  <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('a').on('click', function(event) 
-            {
-                event.preventDefault();
-                var sectionId = $(this).attr("data-section"),
-                    $toSlide= $("#container section#"+sectionId),
-                    $fromSlide= $('.active');
-                if (!($toSlide.hasClass("active")))
-                {  
-                    $fromSlide.animate({"left":"-100%"},100,'linear')
-                    $toSlide.animate({"left":"0%"},100,'linear',function()
-                    {    
-                        $fromSlide.css("left","100%");
-                        $fromSlide.removeClass("active");    
-                        $toSlide.addClass("active");    
-                    });
-                }
-            });
-        });
-    </script>
-    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Montserrat:400"/>
-    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Lato:300" />
-    <style>
-        /** * Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/) * http://cssreset.com */html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video {    margin: 0;  padding: 0; border: 0;  font-size: 100%;    font: inherit;  vertical-align: baseline;}/* HTML5 display-role reset for older browsers */article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {    display: block;}body {  line-height: 1;}ol, ul {    list-style: none;}blockquote, q {   quotes: none;}blockquote:before, blockquote:after,q:before, q:after {   content: '';    content: none;}table {  border-collapse: collapse;  border-spacing: 0;}
-        #container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #container section {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 100%;
-        }
-
-        #container section:nth-child(1) {
-            left: 0%;
-        }
-
-        p {
-            font-family: Montserrat, sans-serif;
-            font-size: 1em;
-            font-weight: 400;
-        }
-
-        #rollcall {
-            float: left;
-            text-align: center;
-            width: 100%;
-            height: 400px;
-        }
-
-        #title {
-            margin-top: 150px;
-            font-size: 5.5em;
-        }
-
-        #sub_title {
-            font-size: 2em;
-            color: white;
-        }
-
-        .color {
-            color: #77CCEE;
-        }
-
-        #select_event {
-            float: left;
-            text-align: center;
-            width: 100%;
-            padding-top: 38px;
-            height: 72px;
-            background: #77CCEE;
-        }
-
-        .link {
-            box-sizing: border-box;
-            float: left;
-            text-align: center;
-            font-family: Lato, sans-serif;
-            font-size: 3em;
-            font-weight: 300;
-            color: #999999;
-            text-decoration: none;
-            padding-top: 30px;
-            width: 100%;
-            height: 110px;
-            border-bottom: 1px solid #EEEEEE;
-        }
-
-        .event_static {
-            float:left;
-            text-align: center;
-            font-family: Lato, sans-serif;
-            font-size: 3em;
-            font-weight: 300;
-            color: #999999;
-            text-decoration: none;
-            padding-top: 30px;
-            width: 100%;
-            height: 80px;
-            border-bottom: 1px solid #EEEEEE;
-            background: #FFFFFF;
-            z-index: 2;
-        }
-
-        .link:hover {
-            background-color: #EEEEEE;
-            cursor: pointer;
-        }
-
-        .button_container {
-            float: left;
-            box-sizing: border-box;
-            width: 100%;
-            padding: 15px;
-            height: 140px;
-            text-decoration: none;
-        }
-
-        .button {
-            text-align: center;
-            padding-top: 40px;
-            height: 70px;
-            border-radius: 10px;
-            border: 2px solid #77CCEE;
-            width: 100%;
-            color: #77CCEE;
-        }
-
-        .button:hover {
-            cursor: pointer;
-            color: #FFFFFF;
-            background: #77CCEE;
-        }
-
-        .button_text {
-            font-size: 1.5em;
-        }
-
-        #manage_banner {
-            float: left;
-            box-sizing: border-box;
-            width: 100%;
-            padding: 50px;
-            padding-top: 100px;
-            height: 300px;
-            border-bottom: 1px solid #EEEEEE;
-        }
-
-        #manage_blurb {
-            font-size: 2em;
-            line-height: 1.25em;
-            color: #999999;
-        }
-
-        .option {
-            text-align: left;
-            font-family: Montserrat, sans-serif;
-            padding-left: 50px;
-            padding-top: 40px;
-            font-size: 2em;
-            background: url('img/arrow.svg');
-            background-size: contain;
-            background-position: right;
-            background-repeat: no-repeat;
-        }
-
-        .back {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 110px;
-            height: 110px;
-            border-bottom: none;
-            background: url(img/back.svg);
-            background-size: cover;
-        }
-
-        .manage {
-            background: url(img/manage.svg);
-            background-size: cover;
-        }
-    </style>
+    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'></link>
     <title>RollCall</title>
-</head>
-<body>
-
+  </head>
+  <body>
     <body onload="list_events()"> </body>
-    
-    <div id="container">
-        <section id="one" class="active">
-            <div id="rollcall">
-                <p id="title"> <span class="color">ROLL</span>CALL </p>
-            </div>
-            <div id="select_event">
-                <p id="sub_title"> Select Event </p>
-            </div>
-
-            
-
-            <div id="list_events">
-                <!-- Generated events go here -->
-            </div>
-
-            <!--
-            <a class="link" data-section="two" href="#"> Salesforce Workday </a>
-            <a class="link" data-section="two" href="#"> Internship Party </a>
-            <a class="link" data-section="two" href="#"> Mobile Brainstorm </a>
-            -->
-            
-            <div class="button_container">
-                <div class="button">
-                    <p class="button_text"> ADD NEW EVENT </p>
-                </div>
-            </div>
-        </section>
-        <section id="two">
-            <div class="event_static"> Event Home </div>
-            <div id="manage_banner">
-                <p id="manage_blurb"> You are now managing: <br> </br> <span class="color"> Event Name </span> </p>
-            </div>
-
-            <a class="link option" data-section="three" href="#"> Statistics </a>
-            <a class="link option" data-section="four" href="#"> Edit Info </a>
-            <a class="link option" data-section="five" href="#"> Check In </a>
-            <a class="link back manage" data-section="one" href="#"></a>
-            <div class="button_container">
-                <div class="button">
-                    <p class="button_text"> DELETE </p>
-                </div>
-            </div>
-        </section>
-        <section id="three">
-            <div class="event_static"> Statistics </div>
-            <a class="link back" data-section="two" href="#"></a>
-        </section>
-        <section id="four">
-            <div class="event_static"> Information </div>
-            <a class="link back" data-section="two" href="#"></a>
-        </section>
-        <section id="five">
-            <div class="event_static"> Check In </div>
-            <a class="link back" data-section="two" href="#"></a>
-        </section>
+    <div id="select_event">
+      <p> Select An Event </p>
+      <div id="rollcall"></div>
+      <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
+      <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
     </div>
-</body>
+    <div id="list_events">
+      <apex:outputLink value="{!$Page.event}">
+        <div class="card">
+          <div class="title blue">
+            <p> Salesforce Workday </p>
+          </div>
+          <div class="info">
+            <p> Attending: <span class="blue_text"> 75 </span> </p>
+            <p> Registered: 100 </p>
+          </div>
+          <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img>
+          <p class="pic_data percentage blue_text"> 75% </p>
+        </div>
+      </apex:outputLink>
+    </div>
+  </body>
 
-<script type="text/javascript">
-        function list_events() {
-            Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.RollCall.get_events}',
-            function(result, event){
-                if (event.status) {
-                    // Get DOM IDs for HTML and Visualforce elements like this
-                    console.log(result);
-                    for (var i = 0; i < result.length; i++) {
-                        document.getElementById('list_events').innerHTML+="<br><a class='link' data-section='two' href='#''>"+result[i].Name+"</a>";
-                        document.getElementById('list_events').innerHTML+"\n";
-                    }
-                } else if (event.type === 'exception') {
-                    document.getElementById("responseErrors").innerHTML = 
-                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                } else {
-                    document.getElementById("responseErrors").innerHTML = event.message;
-                }
-            }, 
-            {escape: true}
-            );
-        }
-    </script>
+
+  <script type="text/javascript">
+    function list_events() {
+      Visualforce.remoting.Manager.invokeAction(
+          '{!$RemoteAction.RollCall.get_events}',
+          function(result, event){
+          if (event.status) {
+          for (var i = 0; i < result.length; i++) {
+          document.getElementById('list_events').innerHTML+="<div class='card' onclick='javascript:window.location='event.html';'> <div class=" + get_color(i) + "><p> "+
+          result[i].Name + 
+          " </p></div><div class='info' id=" + i + "><p> "+
+          "</p> </div> </div>";
+          get_event_date(result[i].Name, i);
+          }
+          } else if (event.type === 'exception') {
+          document.getElementById("responseErrors").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                   } else {
+                   document.getElementById("responseErrors").innerHTML = event.message;
+                   }
+                   },
+                   {escape: true}
+          );
+   }
+  </script>
+
+  <script type="text/javascript">
+    function get_event_date(arg, n) {
+      Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.RollCall.get_event_date}',
+        arg,
+        function(result, event){
+        if (event.status) {
+        document.getElementById(n).innerHTML+=result;
+        } else if (event.type === 'exception') {
+        document.getElementById("event").innerHTML =
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                   } else {
+                   document.getElementById("event").innerHTML = event.message;
+                   }
+                   },
+                   {escape: true}
+        );
+    }
+  function get_color(x) {
+    if ((x % 5) == 0) {
+      return "'title blue'";
+    }
+    if ((x % 5) == 1) {
+      return "'title magenta'";
+    }
+    if ((x % 5) == 2) {
+      return "'title green'";
+    }
+    if ((x % 5) == 3) {
+      return "'title red'";
+    }
+    if ((x % 5) == 4) {
+      return "'title orange'";
+    }
+  }
+  </script>
 
 </html>
 </apex:page>
-
-
-
