@@ -15,7 +15,7 @@ id="todo"
     <title>RollCall</title>
   </head>
   <body>
-    <body onload="list_events()"> </body>
+    <!-- <body onload="list_events()"> </body> -->
     <div id="select_event">
       <p> Select An Event </p>
       <div id="rollcall"></div>
@@ -23,68 +23,31 @@ id="todo"
       <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
     </div>
     <div id="list_events">
-      <apex:outputLink value='{!$Page.event}'>
-        <div class="card">
-          <div class="title blue">
-            <p> Salesforce Workday </p>
+      <apex:repeat value="{!events}" var="event" id="theRepeat">
+        <apex:outputLink value='{!$Page.event}'>
+          <div class="card">
+            <div class="title blue">
+              <p> 
+                <apex:outputText value="{!event.Name}"> </apex:outputText>
+              </p>
+            </div>
+            <div class="info">
+              <!-- <p> Attending: <span class="blue_text"> 75 </span> </p>
+              <p> Registered: 100 </p> -->
+              <apex:outputText value="{!event.StartDate}"> </apex:outputText>
+            </div>
+            <!-- <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img> -->
+            <!-- <p class="pic_data percentage blue_text"> 75% </p> -->
           </div>
-          <div class="info">
-            <p> Attending: <span class="blue_text"> 75 </span> </p>
-            <p> Registered: 100 </p>
-          </div>
-          <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img>
-          <p class="pic_data percentage blue_text"> 75% </p>
-        </div>
-        <apex:param name='event_name' value='Salesforce Workday'/>
-        <!-- ^Later change this to event id -->
-      </apex:outputLink>
+         <apex:param name='event_id' value="{!event.Id}"/>
+         <apex:param name='event_name' value="{!event.Name}"/>
+         </apex:outputLink> 
+      </apex:repeat>
     </div>
   </body>
 
 
-  <script type="text/javascript">
-    function list_events() {
-      Visualforce.remoting.Manager.invokeAction(
-          '{!$RemoteAction.RollCall.get_events}',
-          function(result, event){
-          if (event.status) {
-          for (var i = 0; i < result.length; i++) {
-          document.getElementById('list_events').innerHTML+=" <div class='card' onclick='javascript:window.location='event.html';'> <div class=" + get_color(i) + "><p> "+
-          result[i].Name + 
-          " </p></div><div class='info' id=" + i + "><p> "+
-          "</p> </div> </div>";
-          get_event_date(result[i].Name, i);
-          }
-          } else if (event.type === 'exception') {
-          document.getElementById("responseErrors").innerHTML = 
-                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                   } else {
-                   document.getElementById("responseErrors").innerHTML = event.message;
-                   }
-                   },
-                   {escape: true}
-          );
-   }
-  </script>
-
-  <script type="text/javascript">
-    function get_event_date(arg, n) {
-      Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.RollCall.get_event_date}',
-        arg,
-        function(result, event){
-        if (event.status) {
-        document.getElementById(n).innerHTML+=result;
-        } else if (event.type === 'exception') {
-        document.getElementById("event").innerHTML =
-                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                   } else {
-                   document.getElementById("event").innerHTML = event.message;
-                   }
-                   },
-                   {escape: true}
-        );
-    }
+  <script>
   function get_color(x) {
     if ((x % 5) == 0) {
       return "'title blue'";

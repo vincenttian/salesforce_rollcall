@@ -68,7 +68,7 @@ global class RollCall{
     // METHODS THAT INTERACT WITH EVENT_ATTENDEE TABLE
     // Tested
     // Case; Used when drop-ins come to an event
-    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id) {
+    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id) { // Later switch to just contact and campaign ID
         // first create contact, then put it in
         Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name);
         insert tmp_contact;
@@ -78,19 +78,19 @@ global class RollCall{
 
     // Tested
     public static void check_in(String campaign_id, String email) {        
-        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id] AND (Contact.email=:email or Lead.email=:email)];
+        CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id];// AND (Contact.email=:email or Lead.email=:email)];
         System.debug('in call');
-        if (event_attendee == null) {
+        if (event_attendee.size() == 0) {
             System.debug('in call');
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
         } else {
-            System.debug(event_attendee);
-            System.debug(event_attendee[0].status);
-            event_attendee.status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
-            System.debug(event_attendee[0].status);
+            System.debug(event_attendee[0]);
+            // System.debug(event_attendee[0].status);
+            event_attendee[0].status = 'Responded'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
+            System.debug(event_attendee[0]);
         }
-        update event_attendee;
+        update event_attendee[0];
     }
 
     public void delete_event_attendee(String email, String campaign_id) {
@@ -116,6 +116,15 @@ global class RollCall{
 
 
 
+    // For apex: repeat    
+    public Campaign[] getEvents() {
+        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST]; 
+        return events;
+    }
+
+
+
+
     // METHODS FOR JAVASCRIPT REMOTING
     // Returns a list of all events for main page
     @RemoteAction
@@ -126,40 +135,40 @@ global class RollCall{
 
     // Returns a single campaign with parameter for detail view
     @RemoteAction
-    global static Campaign get_event(String event_name) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+    global static Campaign get_event(String event_id) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Id=:event_id];
         return event;         
     }
 
     // Returns the date of a single campaign 
     @RemoteAction
-    global static String get_event_date(String event_name) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+    global static String get_event_date(String event_id) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Id=:event_id];
         return event.StartDate.format();         
     }
 
     // Edits event info
     @RemoteAction
-    global static void edit_info(String event_name, String new_description) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Name=:event_name];
+    global static void edit_info(String event_id, String new_description) {
+        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Id=:event_id];
         event.Description = new_description;
         update event;
     }
 
     // Checking in attendees for checkin page
     @RemoteAction
-    global static void check_in_attendee(String event_name, String email) {
-        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
+    global static void check_in_attendee(String event_id, String email) {
+        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         System.debug('Remote call');
         Rollcall.handle_parent_events(string.valueof(event.Id), email);
     }
 
     // // Gives statistics on the number of attendees
     @RemoteAction
-    global static Integer[] event_stats(String event_name) {
-        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
-        Integer registered = [SELECT count() FROM CampaignMember WHERE Status = 'Sent' AND CampaignId=:event.Id];
-        Integer checked_in = [SELECT count() FROM CampaignMember WHERE Status = 'Received' AND CampaignId=:event.Id];
+    global static Integer[] event_stats(String event_id) {
+        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
+        Integer registered = [SELECT count() FROM CampaignMember WHERE CampaignId=:event.Id];
+        Integer checked_in = [SELECT count() FROM CampaignMember WHERE Status = 'Responded' AND CampaignId=:event.Id];
         Integer[] data = new Integer[]{registered, checked_in};
         System.debug(data);
         return data;   
