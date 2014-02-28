@@ -78,14 +78,19 @@ global class RollCall{
 
     // Tested
     public static void check_in(String campaign_id, String email) {        
-        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
+        CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id]; //AND (Contact.email=:email or Lead.email=:email)];
+        System.debug('in call');
         if (event_attendee == null) {
+            System.debug('in call');
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
         } else {
-            event_attendee.status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
+            System.debug(event_attendee);
+            System.debug(event_attendee[0].status);
+            event_attendee[0].status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
+            System.debug(event_attendee[0].status);
         }
-        update event_attendee; 
+        update event_attendee;
     }
 
     public void delete_event_attendee(String email, String campaign_id) {
@@ -96,15 +101,11 @@ global class RollCall{
     // logic to check if a campaign member needs to register or just check in
     // first check if the person is registered or not
     public static void handle_parent_events(String campaign_id, String email) {
-        // Three scenarios:
-        //      1. Event is a parent event that has no children; standalone event
-        //      2. Event is child of a parent event
-        //      3. Event is a parent that has children
-
 
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
         CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
         if (event_attendee.size() == 0) {
+            System.debug('No Attendees');
             // register the attendee
             // MUST RAISE AN ERROR
         } else {
@@ -149,6 +150,7 @@ global class RollCall{
     @RemoteAction
     global static void check_in_attendee(String event_name, String email) {
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
+        System.debug('Remote call');
         Rollcall.handle_parent_events(string.valueof(event.Id), email);
     }
 
@@ -156,7 +158,7 @@ global class RollCall{
     // @RemoteAction
     // global static Array event_stats(String event_name) {
         
-    // }
+    // } 
 
 
 }
@@ -174,5 +176,3 @@ Rollcall.inspect_event_attendee_table();
 CampaignMember event_attendee = [SELECT Contact.Email, Lead.Email FROM CampaignMember WHERE Contact.Email=:email];
 
 */
-
-
