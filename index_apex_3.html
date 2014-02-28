@@ -23,17 +23,19 @@ id="todo"
       <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
     </div>
     <div id="list_events">
-      <div class="card" onclick="javascript:window.location='event.html';">
-        <div class="title blue">
-          <p> Salesforce Workday </p>
+      <apex:outputLink value="{!$Page.event}">
+        <div class="card">
+          <div class="title blue">
+            <p> Salesforce Workday </p>
+          </div>
+          <div class="info">
+            <p> Attending: <span class="blue_text"> 75 </span> </p>
+            <p> Registered: 100 </p>
+          </div>
+          <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img>
+          <p class="pic_data percentage blue_text"> 75% </p>
         </div>
-        <div class="info">
-          <p> Attending: <span class="blue_text"> 75 </span> </p>
-          <p> Registered: 100 </p>
-        </div>
-        <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img>
-        <p class="pic_data percentage blue_text"> 75% </p>
-      </div>
+      </apex:outputLink>
     </div>
   </body>
 

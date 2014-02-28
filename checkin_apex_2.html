@@ -20,7 +20,12 @@
     <div id="select_event">
         <p> Salesforce Workday </p>          
     </div>
-    <div class="invisible" id="return" onclick="javascript:window.location='event.html';"></div>
+
+    <apex:outputLink value="{!$Page.event}">    
+        <div class="invisible" id="return">
+        </div>
+    </apex:outputLink>
+
     <div id="container">
  		<section id="one" class="active">
             <div class="checkin">

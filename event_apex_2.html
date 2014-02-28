@@ -29,10 +29,17 @@
         <a class="tab green_border hover_green_text" data-section="two" href="#">
             <p> Statistics </p>
         </a>
-        <div class="tab red_border hover_red_text" onclick="javascript:window.location='checkin.html';">
-            <p> Check In </p>
-        </div>
-        <div id="return" onclick="javascript:window.location='index.html';"></div>
+
+        <apex:outputLink value="{!$Page.checkin}">
+          <div class="tab red_border hover_red_text">
+              <p> Check In </p>
+          </div>
+        </apex:outputLink>
+
+        <apex:outputLink value="{!$Page.test}">
+          <div id="return" onclick="javascript:window.location='index.html';"></div>
+        </apex:outputLink>
+
     </div>
     <div id="container">
  		<section id="one" class="active">
