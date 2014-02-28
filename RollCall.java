@@ -78,7 +78,7 @@ global class RollCall{
 
     // Tested
     public static void check_in(String campaign_id, String email) {        
-        CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id]; //AND (Contact.email=:email or Lead.email=:email)];
+        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id] AND (Contact.email=:email or Lead.email=:email)];
         System.debug('in call');
         if (event_attendee == null) {
             System.debug('in call');
@@ -87,7 +87,7 @@ global class RollCall{
         } else {
             System.debug(event_attendee);
             System.debug(event_attendee[0].status);
-            event_attendee[0].status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
+            event_attendee.status = 'Received'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
             System.debug(event_attendee[0].status);
         }
         update event_attendee;
@@ -158,12 +158,8 @@ global class RollCall{
     @RemoteAction
     global static Integer[] event_stats(String event_name) {
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Name=:event_name];
-        CampaignMember[] test = [SELECT ContactId FROM CampaignMember WHERE Status = 'Sent'];// AND CampaignId=:event.Id];
-        for (CampaignMember member: test) {
-            System.Debug(member.contactid);
-        }
-        Integer registered = [SELECT count() FROM CampaignMember WHERE Status = 'Sent'];// AND CampaignId=:event.Id];
-        Integer checked_in = [SELECT count() FROM CampaignMember WHERE Status = 'Received'];// AND CampaignId=:event.Id];
+        Integer registered = [SELECT count() FROM CampaignMember WHERE Status = 'Sent' AND CampaignId=:event.Id];
+        Integer checked_in = [SELECT count() FROM CampaignMember WHERE Status = 'Received' AND CampaignId=:event.Id];
         Integer[] data = new Integer[]{registered, checked_in};
         System.debug(data);
         return data;   
