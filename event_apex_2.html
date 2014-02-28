@@ -1,0 +1,99 @@
+<apex:page docType="html-5.0"
+    sidebar="false" 
+    showheader="false"
+    standardStylesheets="false"
+    Controller="RollCall" 
+    applyHtmlTag="false"
+    applyBodyTag="false"   
+    id="todo"
+>
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="scroll.js"></script> -->
+    <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'> </link>
+    
+    <title>RollCall</title>
+</head>
+<body>
+    <body onload="get_event('Helix Consulting'); get_event_date('Helix Consulting');" > </body>
+    <div id="navbar">
+        <div class="blue_border" id="navbar_title">
+            <p> You are now managing: <br></br> <span class="blue_text"> Salesforce Workday </span> </p>
+        </div>
+        <a class="tab magenta_border hover_magenta_text" data-section="one" href="#">
+            <p> Information </p>
+        </a>
+        <a class="tab green_border hover_green_text" data-section="two" href="#">
+            <p> Statistics </p>
+        </a>
+        <div class="tab red_border hover_red_text" onclick="javascript:window.location='checkin.html';">
+            <p> Check In </p>
+        </div>
+        <div id="return" onclick="javascript:window.location='index.html';"></div>
+    </div>
+    <div id="container">
+ 		<section id="one" class="active">
+            <div class="page" id="page_one">
+                <div id="event">
+                    <!-- Insert event here -->
+                </div>
+            </div>
+ 		</section>
+ 		<section id="two">
+            <div class="page" id="page_two"></div>
+ 		</section>
+ 	</div>
+</body>
+
+<script type="text/javascript">
+   function get_event(arg) {
+       Visualforce.remoting.Manager.invokeAction(
+       '{!$RemoteAction.RollCall.get_event}',
+       arg,
+       function(result, event){
+           if (event.status) {
+               // Get DOM IDs for HTML and Visualforce elements like this
+               console.log(result);
+               document.getElementById('event').innerHTML+=
+               "Event name: " + result.Name + "<br></br>" + 
+               "Event description: " + result.Description;
+           } else if (event.type === 'exception') {
+               document.getElementById("event").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+           } else {
+               document.getElementById("event").innerHTML = event.message;
+           }
+       }, 
+       {escape: true}
+       );
+   }
+</script>
+
+<script type="text/javascript">
+   function get_event_date(arg) {
+       Visualforce.remoting.Manager.invokeAction(
+       '{!$RemoteAction.RollCall.get_event_date}',
+       arg,
+       function(result, event){
+           if (event.status) {
+               // Get DOM IDs for HTML and Visualforce elements like this
+               console.log(result);
+               document.getElementById('event').innerHTML+=
+               "<br> </br>"+"Event date: " + result + "<br></br>";
+           } else if (event.type === 'exception') {
+               document.getElementById("event").innerHTML = 
+                   event.message + "<br/>\n<pre>" + event.where + "</pre>";
+           } else {
+               document.getElementById("event").innerHTML = event.message;
+           }
+       }, 
+       {escape: true}
+       );
+   }
+</script>
+
+</html>
+</apex:page>
