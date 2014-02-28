@@ -15,7 +15,6 @@ id="todo"
     <title>RollCall</title>
   </head>
   <body>
-    <!-- <body onload="list_events()"> </body> -->
     <div id="select_event">
       <p> Select An Event </p>
       <div id="rollcall"></div>
@@ -24,24 +23,18 @@ id="todo"
     </div>
     <div id="list_events">
       <apex:repeat value="{!events}" var="event" id="theRepeat">
-        <apex:outputLink value='{!$Page.event}'>
+        <a href="/apex/event?event_id={!event.Id}">
           <div class="card">
             <div class="title blue">
               <p> 
-                <apex:outputText value="{!event.Name}"> </apex:outputText>
+                {!event.Name}
               </p>
             </div>
             <div class="info">
-              <!-- <p> Attending: <span class="blue_text"> 75 </span> </p>
-              <p> Registered: 100 </p> -->
-              <apex:outputText value="{!event.StartDate}"> </apex:outputText>
+               {!event.StartDate}
             </div>
-            <!-- <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img> -->
-            <!-- <p class="pic_data percentage blue_text"> 75% </p> -->
           </div>
-         <apex:param name='event_id' value="{!event.Id}"/>
-         <apex:param name='event_name' value="{!event.Name}"/>
-         </apex:outputLink> 
+       </a>
       </apex:repeat>
     </div>
   </body>
