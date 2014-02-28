@@ -4,6 +4,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <title>RollCall</title>
 </head>
 <body>
@@ -13,7 +14,7 @@
         <img class="action" id="help" src="help.svg">
         <img class="action" id="plus" src="plus.svg">
     </div>
-    <div class="card" onclick="javascript:window.location='event.html';">
+    <div id="card_salesforce_workday" class="card" onclick="javascript:window.location='event.html';">
         <div class="title blue">
             <p> Salesforce Workday </p>
         </div>
@@ -21,7 +22,52 @@
             <p> Attending: <span class="blue_text"> 75 </span> </p>
             <p> Registered: 100 </p>
         </div>
-        <img class="pic" src="piechart.svg">
+        <script>
+            var width = 125,
+                height = 125,
+                radius = Math.min(width, height) / 2;
+            
+            var color = d3.scale.ordinal()
+                .range(["#FFFFFF", "#0096ff"]);
+            
+            var arc = d3.svg.arc()
+                .outerRadius(radius - 5)
+                .innerRadius(radius - 17);
+            
+            var pie = d3.layout.pie()
+                .sort(null)
+                .value(function(d) { return d.num; });
+            
+            var svg = d3.select("#card_salesforce_workday").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + 60 + "," + 62 + ")");
+            
+            d3.csv("data_salesforce_workday.csv", function(error, data) {
+            
+              data.forEach(function(d) {
+                d.num = +d.num;
+              });
+            
+              var g = svg.selectAll(".arc")
+                  .data(pie(data))
+                .enter().append("g")
+                  .attr("class", "arc");
+            
+              g.append("path")
+                  .attr("d", arc)
+                  .attr("transform", "rotate(" + 90 + ")")
+                  .style("fill", function(d) { return color(d.data.status); });
+            
+              g.append("text")
+                  .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+                  .attr("dy", ".35em")
+                  .style("display", "none")
+                  .text(function(d) { return d.data.status; });
+            
+            });    
+        </script>
         <p class="pic_data percentage blue_text"> 75% </p>
     </div>
     <div class="card" onclick="javascript:window.location='event.html';">
