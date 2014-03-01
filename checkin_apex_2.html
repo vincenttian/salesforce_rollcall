@@ -2,7 +2,7 @@
     sidebar="false" 
     showheader="false"
     standardStylesheets="false"
-    Controller="RollCall" 
+    Controller="CheckInController" 
     applyHtmlTag="false"
     applyBodyTag="false"   
     id="todo"
@@ -89,7 +89,7 @@ $(document).ready(function(){
 <script type="text/javascript">
    function check_in_attendee_javascript(email) {
        Visualforce.remoting.Manager.invokeAction(
-       '{!$RemoteAction.RollCall.check_in_attendee}',
+       '{!$RemoteAction.CheckInController.check_in_attendee}',
        getParameterByName('event_name'),
        document.getElementById("email").value,
        function(result, event){
