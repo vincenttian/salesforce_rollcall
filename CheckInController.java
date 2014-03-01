@@ -9,7 +9,7 @@ global class CheckInController{
 
     public Campaign event {get;set;}
 
-    public EventController() {
+    public CheckInController() {
         event = [SELECT Id, Name, Description, StartDate FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
     }
 

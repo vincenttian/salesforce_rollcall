@@ -1,120 +1,122 @@
 <apex:page docType="html-5.0"
-    sidebar="false" 
-    showheader="false"
-    standardStylesheets="false"
-    Controller="CheckInController" 
-    applyHtmlTag="false"
-    applyBodyTag="false"   
-    id="todo"
+sidebar="false" 
+showheader="false"
+standardStylesheets="false"
+Controller="CheckInController" 
+applyHtmlTag="false"
+applyBodyTag="false"   
+id="todo"
 >
 <html>
 <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <!-- <script type="text/javascript" src="scroll.js"></script> -->
-    <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'> </link>
-    <title>RollCall</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <!-- <script type="text/javascript" src="scroll.js"></script> -->
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+  <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'> </link>
+  <title>RollCall</title>
 </head>
 <body>
-    <div id="select_event">
-        <p> Salesforce Workday </p>          
+  <div id="select_event">
+    <p> Salesforce Workday </p>          
+  </div>
+
+  <apex:outputLink value="{!$Page.event}"> 
+  <div class="invisible" id="return">
+  </div>
+</apex:outputLink>
+
+<div id="container">
+ <section id="one" class="active">
+  <div class="checkin">
+    <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
+    <input type="text" name="email" id="email"/>
+    <a id="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()">  
+      <p> Check In </p>
+    </a>
+  </div>
+</section>
+<section id="two">
+  <div class="checkin">
+    <div id="confirm_info">
+      <p> You are checking in as... </p>
+      <p> Name: <span class="blue_text"> Kevin TianXiang Wu </span> </p>
+      <p> Email: <span class="blue_text"> kevintxwu@gmail.com </span> </p>
+      <p> Company: <span class="blue_text"> Salesforce </span> </p>
+
+      <div id="test"> </div>  <!-- A div for injecting tests into -->
+
     </div>
-
-    <apex:outputLink value="{!$Page.event}">    
-        <div class="invisible" id="return">
-        </div>
-    </apex:outputLink>
-
-    <div id="container">
- 		<section id="one" class="active">
-            <div class="checkin">
-                <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-                <input type="text" name="email" id="email"/>
-                <a id="submit" data-section="two" href="#" onclick="check_in_attendee_javascript(email)">  
-                    <p> Check In </p>
-                </a>
-            </div>
- 		</section>
- 		<section id="two">
-            <div class="checkin">
-                <div id="confirm_info">
-                    <p> You are checking in as... </p>
-                    <p> Name: <span class="blue_text"> Kevin TianXiang Wu </span> </p>
-                    <p> Email: <span class="blue_text"> kevintxwu@gmail.com </span> </p>
-                    <p> Company: <span class="blue_text"> Salesforce </span> </p>
-
-                    <div id="test"> </div>  <!-- A div for injecting tests into -->
-
-                </div>
-                <a id="confirm" data-section="three" href="#"> 
-                    <p> Confirm </p>
-                </a>
-                <p id="confirm_end"> If this is not you, please <a id="retry" data-section="one" href="#"> retry</a> or ask someone for help </p>
-            </div>
- 		</section>
-        <section id="three">
-            <div class="checkin">
-                <img id="checkin_icon" src="checkin.svg"> </img>
-                <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
-                <a id="checkin_end" data-section="one" href="#"> 
-                    <p> Return </p>
-                </a>
-            </div>
- 		</section>
- 	</div>
+    <a id="confirm" data-section="three" href="#"> 
+      <p> Confirm </p>
+    </a>
+    <p id="confirm_end"> If this is not you, please <a id="retry" data-section="one" href="#"> retry</a> or ask someone for help </p>
+  </div>
+</section>
+<section id="three">
+  <div class="checkin">
+    <img id="checkin_icon" src="checkin.svg"> </img>
+    <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
+    <a id="checkin_end" data-section="one" href="#"> 
+      <p> Return </p>
+    </a>
+  </div>
+</section>
+</div>
 </body>
 <script>
 $(document).ready(function(){
-    $('a').on('click', function(event) 
-    {
-        event.preventDefault();
-        var sectionId = $(this).attr("data-section"),
-            $toSlide= $("#container section#"+sectionId),
-            $fromSlide= $('.active');
-        if (!($toSlide.hasClass("active")))
-        {  
-            $fromSlide.animate({"left":"-100%"},100,'linear')
-            $toSlide.animate({"left":"0%"},100,'linear',function()
-            {    
-                $fromSlide.css("left","100%");
-                $fromSlide.removeClass("active");    
-                $toSlide.addClass("active");    
-            });
-        }
-    });
+  $('a').on('click', function(event) 
+  {
+    event.preventDefault();
+    var sectionId = $(this).attr("data-section"),
+    $toSlide= $("#container section#"+sectionId),
+    $fromSlide= $('.active');
+    if (!($toSlide.hasClass("active")))
+    {  
+      $fromSlide.animate({"left":"-100%"},100,'linear')
+      $toSlide.animate({"left":"0%"},100,'linear',function()
+      {    
+        $fromSlide.css("left","100%");
+        $fromSlide.removeClass("active");    
+        $toSlide.addClass("active");    
+      });
+    }
+  });
 });
 </script>
 
 <script type="text/javascript">
-   function check_in_attendee_javascript(email) {
-       Visualforce.remoting.Manager.invokeAction(
-       '{!$RemoteAction.CheckInController.check_in_attendee}',
-       getParameterByName('event_name'),
-       document.getElementById("email").value,
-       function(result, event){
-           if (event.status) {
+function check_in_attendee_javascript() {
+ console.log("swag");
+ Visualforce.remoting.Manager.invokeAction(
+   '{!$RemoteAction.CheckInController.check_in_attendee}',
+   '{!event.id}',
+   document.getElementById("email").value,
+   function(result, event){
+     if (event.status) {
                // Get DOM IDs for HTML and Visualforce elements like this
                document.getElementById("test").innerHTML += "Received email: " + document.getElementById("email").value;
                console.log(result);
-           } else if (event.type === 'exception') {
+             } else if (event.type === 'exception') {
                document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
-           } else {
+               console.log('swag');
+             } else {
                document.getElementById("test").innerHTML +=event.message;
-           }
-       }, 
-       {escape: true}
-       );
-   }
+             }
+           }, 
+           {escape: true}
+           );
+}
 </script>
 
 
 <script>
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+  results = regex.exec(location.search);
+  return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 </script>
 
