@@ -6,6 +6,8 @@ global class Event{
     public Integer checkedIn {get;set;}
     public Integer registered {get;set;}
     public Decimal maxCapacity {get;set;}
+    public String titleColor {get;set;}
+    public ID cid {get;set;}
     
     
     public Event (Campaign c) {
@@ -21,6 +23,8 @@ global class Event{
                      WHERE CampaignId in :potential_children.keySet() AND
                      (Status='Responded')];
         maxCapacity = c.MaxCapacity__c;
+        titleColor = 'title blue';
+        cid = c.id;
         
     }
 
