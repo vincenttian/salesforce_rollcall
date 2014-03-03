@@ -9,10 +9,12 @@
 
 global class EventController{
 
-    public Campaign event {get;set;}
+    public Event event{get; set;} 
+
 
     public EventController() {
-        event = [SELECT Id, Name, Description, StartDate FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
+        Campaign c = [SELECT Id, Name, Description, StartDate FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
+        event = new Event(c);
     }
 
     // For debugging purposes
@@ -124,13 +126,13 @@ global class EventController{
     @RemoteAction
     global static Integer[] event_stats(String event_id) {
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
-        Integer registered = [SELECT count() FROM CampaignMember WHERE CampaignId=:event.Id];
-        Integer checked_in = [SELECT count() FROM CampaignMember WHERE Status = 'Responded' AND CampaignId=:event.Id];
+        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:event_id OR Id=:event_id]);
+        Integer registered = [SELECT Count() FROM CampaignMember WHERE CampaignId in :potential_children.keySet()];
+        Integer checked_in = [SELECT Count() FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Status='Responded')];
         Integer[] data = new Integer[]{registered, checked_in};
         System.debug(data);
         return data;   
     } 
-
 
 }
 
