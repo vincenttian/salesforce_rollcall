@@ -65,6 +65,37 @@ global class EventController{
         update event;
     }
 
+    // Tested
+    public static void check_in(String campaign_id, String email) {        
+        CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id];// AND (Contact.email=:email or Lead.email=:email)];
+        System.debug('in call');
+        if (event_attendee.size() == 0) {
+            System.debug('in call');
+            // THROW ERROR
+            // throw new Checkin_Exception('Attendee is not registered for the event');
+        } else {
+            System.debug(event_attendee[0]);
+            // System.debug(event_attendee[0].status);
+            event_attendee[0].status = 'Responded'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
+            System.debug(event_attendee[0]);
+        }
+        update event_attendee[0];
+    }
+
+    // logic to check if a campaign member needs to register or just check in
+    // first check if the person is registered or not
+    public static void handle_parent_events(String campaign_id, String email) {
+        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
+        CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
+        if (event_attendee.size() == 0) {
+            System.debug('No Attendees');
+            // register the attendee
+            // MUST RAISE AN ERROR
+        } else {
+            EventController.check_in(string.valueof(campaign_id), email);
+        }
+    }
+
 
     // METHODS FOR JAVASCRIPT REMOTING
     // Returns a single campaign with parameter for detail view

@@ -62,7 +62,6 @@ global class CheckInController{
     // logic to check if a campaign member needs to register or just check in
     // first check if the person is registered or not
     public static void handle_parent_events(String campaign_id, String email) {
-
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
         CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
         if (event_attendee.size() == 0) {
@@ -72,7 +71,6 @@ global class CheckInController{
         } else {
             EventController.check_in(string.valueof(campaign_id), email);
         }
-        
     }
 
     // Checking in attendees for checkin page

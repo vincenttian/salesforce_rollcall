@@ -50,7 +50,7 @@ id="todo"
     <a id="confirm" data-section="three" href="#"> 
       <p> Confirm </p>
     </a>
-    <p id="confirm_end"> If this is not you, please <a id="retry" data-section="one" href="#"> retry</a> or ask someone for help </p>
+    <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#"> update</a> this information </p>
   </div>
 </section>
 <section id="three">
@@ -62,8 +62,40 @@ id="todo"
     </a>
   </div>
 </section>
+<section id="four">
+    <div class="checkin">
+        <div class="column">
+            <p class="label"> First Name: </p>
+            <p class="label"> Middle Name: </p>
+            <p class="label"> Last Name: </p>
+            <p class="label"> Email: </p>
+            <p class="label"> Company: </p>
+        </div>
+        <div class="column">
+            <input type="text" name="firstname" class="input" placeholder="Kevin"/>
+            <input type="text" name="middlename" class="input" placeholder="TianXiang"/> 
+            <input type="text" name="lastname" class="input" placeholder="Wu"/>
+            <input type="text" name="email" class="input" placeholder="kevintxwu@gmail.com"/>
+            <input type="text" name="company" class="input" placeholder="Salesforce"/>
+        </div>
+        <a id="update" data-section="three" href="#"> 
+            <p> Confirm </p>
+        </a>
+    </div>
+</section>
+<section id="five">
+    <div class="checkin">
+        <img class="checkin_icon" src="help_alt.svg"> </img>
+        <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
+        <a class="checkin_end" data-section="four" href="#"> 
+            <p> Register </p>
+        </a>
+        <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
+    </div>
+</section>
 </div>
 </body>
+
 <script>
 $(document).ready(function(){
   $('a').on('click', function(event) 
