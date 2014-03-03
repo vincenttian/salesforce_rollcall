@@ -43,13 +43,14 @@ global class CheckInController{
     }
 
     // Tested
-    public static void check_in(String campaign_id, String email) {        
+    public static String[] check_in(String campaign_id, String email) {        
         CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id];// AND (Contact.email=:email or Lead.email=:email)];
         System.debug('in call');
         if (event_attendee.size() == 0) {
             System.debug('in call');
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
+            return new String[0];
         } else {
             System.debug(event_attendee[0]);
             // System.debug(event_attendee[0].status);
@@ -57,28 +58,36 @@ global class CheckInController{
             System.debug(event_attendee[0]);
         }
         update event_attendee[0];
+        Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee[0].ContactId];
+        String[] info = new String[3];
+        // String[] info = new String{contact_event_attendee.FirstName, contact_event_attendee.LastName, contact_event_attendee.Company__c};
+        info[0] = contact_event_attendee.FirstName;
+        info[1] = contact_event_attendee.LastName;
+        info[2] = contact_event_attendee.Company__c;
+        return info;
     }
 
     // logic to check if a campaign member needs to register or just check in
     // first check if the person is registered or not
-    public static void handle_parent_events(String campaign_id, String email) {
+    public static String[] handle_parent_events(String campaign_id, String email) {
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
         CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
         if (event_attendee.size() == 0) {
             System.debug('No Attendees');
             // register the attendee
             // MUST RAISE AN ERROR
+            return new String[0];
         } else {
-            EventController.check_in(string.valueof(campaign_id), email);
+            return CheckInController.check_in(string.valueof(campaign_id), email);
         }
     }
 
     // Checking in attendees for checkin page
     @RemoteAction
-    global static void check_in_attendee(String event_id, String email) {
+    global static String[] check_in_attendee(String event_id, String email) {
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         System.debug('Remote call');
-        EventController.handle_parent_events(string.valueof(event.Id), email);
+        return CheckInController.handle_parent_events(string.valueof(event.Id), email);
     }
 
 }
