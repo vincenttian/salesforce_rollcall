@@ -1,64 +1,71 @@
 <apex:page docType="html-5.0"
-sidebar="false" 
-showheader="false"
-standardStylesheets="false"
-Controller="RollCall"
-applyHtmlTag="false"
-applyBodyTag="false"
-id="todo"
->
-<apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-<html>
-  <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'></link>
-    <title>RollCall</title>
-  </head>
-  <body>
-    <div id="select_event">
-      <p> Select An Event </p>
-      <div id="rollcall"></div>
-      <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
-      <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
-    </div>
-    <div id="list_events">
-      <apex:repeat value="{!events}" var="event" id="theRepeat">
-        <a href="/apex/event?event_id={!event.Id}">
-          <div class="card">
-            <div class="title blue">
-              <p> 
-                {!event.Name}
-              </p>
-            </div>
-            <div class="info">
-               {!event.StartDate}
-            </div>
-          </div>
-       </a>
-      </apex:repeat>
-    </div>
-  </body>
-
-
-  <script>
-  function get_color(x) {
-    if ((x % 5) == 0) {
-      return "'title blue'";
-    }
-    if ((x % 5) == 1) {
-      return "'title magenta'";
-    }
-    if ((x % 5) == 2) {
-      return "'title green'";
-    }
-    if ((x % 5) == 3) {
-      return "'title red'";
-    }
-    if ((x % 5) == 4) {
-      return "'title orange'";
-    }
-  }
-  </script>
-
-</html>
+   sidebar="false" 
+   showheader="false"
+   standardStylesheets="false"
+   Controller="RollCall"
+   applyHtmlTag="false"
+   applyBodyTag="false"
+   id="todo"
+   >
+   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+   <html>
+      <head>
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+         <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+         </link>
+         <title>RollCall</title>
+      </head>
+      <body>
+         <div id="select_event">
+            <p> Select An Event </p>
+            <div id="rollcall"></div>
+            <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
+            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
+         </div>
+         <div id="list_events">
+            <apex:repeat value="{!events}" var="event" id="theRepeat">
+               <a href="/apex/event?event_id={!event.cId}">
+                  <div class="card">
+                     <div class="title blue">
+                        <p> 
+                           {!event.Name}
+                        </p>
+                     </div>
+                     <div class="info">
+                        {!event.Start}
+                     </div>
+                     <div class="info">
+                        Max Capactiy: {!event.maxCapacity}
+                     </div>
+                     <div class="info">
+                        Registered : {!event.registered}
+                     </div>
+                     <div class="info">
+                        Checked In: {!event.checkedin}
+                     </div>
+                  </div>
+               </a>
+            </apex:repeat>
+         </div>
+      </body>
+      <script>
+         function get_color(x) {
+           if ((x % 5) == 0) {
+             return "'title blue'";
+           }
+           if ((x % 5) == 1) {
+             return "'title magenta'";
+           }
+           if ((x % 5) == 2) {
+             return "'title green'";
+           }
+           if ((x % 5) == 3) {
+             return "'title red'";
+           }
+           if ((x % 5) == 4) {
+             return "'title orange'";
+           }
+         }
+      </script>
+   </html>
 </apex:page>

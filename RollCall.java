@@ -55,8 +55,13 @@ global class RollCall{
     }
 
     // For apex: repeat    
-    public Campaign[] getEvents() {
-        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST]; 
+    public Event[] getEvents() {
+        Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
+        Integer count = [SELECT count() FROM Campaign WHERE IsActive = True AND ParentId = null];
+        Event[] events = new Event[count];
+        for (Integer i = 0; i < count; i ++) {
+            events[i] = new Event(campaigns[i]);
+        }
         return events;
     }
 
@@ -64,8 +69,13 @@ global class RollCall{
     // METHODS FOR JAVASCRIPT REMOTING
     // Returns a list of all events for main page
     @RemoteAction
-    global static Campaign[] get_events() {
-        Campaign[] events = [SELECT Name, Description, StartDate FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST]; 
+    global static Event[] get_events() {
+        Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
+        Integer count = [SELECT count() FROM Campaign WHERE IsActive = True AND ParentId = null];
+        Event[] events = new Event[count];
+        for (Integer i = 0; i < count; i ++) {
+            events[i] = new Event(campaigns[i]);
+        }
         return events;
     }
 
