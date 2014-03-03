@@ -1,129 +1,70 @@
 <apex:page docType="html-5.0"
-  sidebar="false" 
-  showheader="false"
-  standardStylesheets="false"
-  Controller="EventController" 
-  applyHtmlTag="false"
-  applyBodyTag="false"   
-  id="todo"
-  >
-  <html>
-    <head>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-      <!-- <script type="text/javascript" src="scroll.js"></script> -->
-      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-      <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-      <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
-      </link>
-      <style>
-        .page {
-        padding-left: 300px;
-        }
-      </style>
-      <title>RollCall</title>
-    </head>
-    <body>
-      <body onload="get_event('event_id'); get_event_date('event_id'); get_event_stats('event_id');" > 
-    </body>
-    <div id="navbar">
-      <div id="navbar_title">
-        <p> You are now managing: <br></br> <span class="blue_text">  
-          {!event.name}
-          </span> 
-        </p>
-      </div>
-      <a class="tab blue_border hover_blue_text" data-section="one" href="#">
-        <p> Information </p>
-      </a>
-      <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
-        <p> Capacity </p>
-      </a>
-      <a class="tab green_border hover_green_text" data-section="three" href="#">
-        <p> Attendance </p>
-      </a>
-      <apex:outputLink value="{!$Page.checkin}">
-        <div class="tab red_border hover_red_text">
-          <p> Check In </p>
-        </div>
-        <apex:param name="event_id" value= '{!$CurrentPage.parameters.event_id}'/>
-      </apex:outputLink>
-      <apex:outputLink value="{!$Page.test}">
-        <div id="return"></div>
-      </apex:outputLink>
-    </div>
-    <input type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
-    <div id="container">
-      <section id="one" class="active">
-        <div class="page">
-          <div id="event">
-            <div class="information">
-              <p class="blue_text"> Name: </p>
-              <p> {!event.name} </p>
-              <p class="blue_text"> Description: </p>
-              <p> {!event.description} </p>
-              <p class="blue_text"> Date: </p>
-              <p> {!event.start} </p>
-              <p class="blue_text"> Number Registered: </p>
-              <p> {!event.registered} </p>
-              <p class="blue_text"> Number Checked In: </p>
-              <p> {!event.checkedIn} </p>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section id="two">
-        <div class="page" id="page_two"></div>
-      </section>
-      <section id="three">
-        <div class="page"></div>
-        <script>
-          var width = 125,
-              height = 125,
-              radius = Math.min(width, height) / 2;
-          
-          var color = d3.scale.ordinal()
-              .range(["#FFFFFF", "#0096ff"]);
-          
-          var arc = d3.svg.arc()
-              .outerRadius(radius - 5)
-              .innerRadius(radius - 17);
-          
-          var pie = d3.layout.pie()
-              .sort(null)
-              .value(function(d) { return d.num; });
-          
-          var svg = d3.select("#card_salesforce_workday").append("svg")
-              .attr("width", width)
-              .attr("height", height)
-              .append("g")
-              .attr("transform", "translate(" + 60 + "," + 62 + ")");
-          
-          d3.csv("data_salesforce_workday.csv", function(error, data) {
-          
-            data.forEach(function(d) {
-              d.num = +d.num;
-            });
-          
-            var g = svg.selectAll(".arc")
-                .data(pie(data))
-              .enter().append("g")
-                .attr("class", "arc");
-          
-            g.append("path")
-                .attr("d", arc)
-                .attr("transform", "rotate(" + 90 + ")")
-                .style("fill", function(d) { return color(d.data.status); });
-          
-            g.append("text")
-                .style("display", "none");
-          
-          });    
-        </script>
-      </section>
-      <section id="four">
-        <div class="page"></div>
-      </section>
-    </div>
-    </body>
-  </html>
+   sidebar="false" 
+   showheader="false"
+   standardStylesheets="false"
+   Controller="RollCall"
+   applyHtmlTag="false"
+   applyBodyTag="false"
+   id="todo"
+   >
+   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Hammersmith+One"/>
+   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+   <html>
+      <head>
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+         <title>RollCall</title>
+      </head>
+      <body>
+         <div id="select_event">
+            <p> Select An Event </p>
+            <div id="rollcall"></div>
+            <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
+            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
+         </div>
+         <div id="list_events">
+            <apex:repeat value="{!events}" var="event" id="theRepeat">
+               <a href="/apex/event?event_id={!event.cId}">
+                  <div class="card">
+                     <div class="{!event.titlecolor}">
+                        <p> 
+                           {!event.Name}
+                        </p>
+                     </div>
+                     <div class="info">
+                        <span class="{!event.textcolor}"> {!event.Start} </span>
+                     </div>
+                     <div class="info">
+                        Max Capactiy: <span class="{!event.textcolor}">{!event.maxCapacity}</span>
+                     </div>
+                     <div class="info">
+                        Registered : <span class="{!event.textcolor}">{!event.registered}</span>
+                     </div>
+                     <div class="info">
+                        Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span>
+                     </div>
+                  </div>
+               </a>
+            </apex:repeat>
+         </div>
+      </body>
+      <script>
+         function get_color(x) {
+           if ((x % 5) == 0) {
+             return "'title blue'";
+           }
+           if ((x % 5) == 1) {
+             return "'title magenta'";
+           }
+           if ((x % 5) == 2) {
+             return "'title green'";
+           }
+           if ((x % 5) == 3) {
+             return "'title red'";
+           }
+           if ((x % 5) == 4) {
+             return "'title orange'";
+           }
+         }
+      </script>
+   </html>
 </apex:page>
