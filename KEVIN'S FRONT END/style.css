@@ -123,15 +123,7 @@ input {
     right: 0px;
     bottom: 0px;
     overflow: hidden;
-}
-
-#container_event {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    overflow: hidden;
+    background: transparent;
 }
 
 #container section {
@@ -142,16 +134,7 @@ input {
 	left: 100%;
 }
 
-#container_event section {
-    padding-left: 300px;
-    background: #FFFFFF;
-}
-
 #container section:nth-child(1) {
-	left: 0%;
-}
-
-#container_event section:nth-child(1) {
 	left: 0%;
 }
 
@@ -232,6 +215,25 @@ input {
     padding: 50px;
     line-height: 1.5em;
     font-size: 2em;
+}
+
+
+#chart_one {
+    float: left;
+    width: 100%;
+    height: 384px;
+}
+
+#chart_two {
+    float: left;
+    width: 50%;
+    height: 384px;
+}
+
+#chart_three {
+    float: left;
+    width: 50%;
+    height: 384px;
 }
 
 .checkin {
@@ -431,6 +433,15 @@ input {
     color: #666666;
     border-radius: 10px;
     border: 1px solid #666666;
+}
+
+#multiple {
+    color: #CCCCCC;
+    width: 600px;
+    margin: auto;
+    margin-top: 50px;
+    text-align: left;
+    font-size: 1.5em;
 }
 
 .blue {
