@@ -1,71 +1,71 @@
 <apex:page docType="html-5.0"
-sidebar="false" 
-showheader="false"
-standardStylesheets="false"
-Controller="RollCall"
-applyHtmlTag="false"
-applyBodyTag="false"
-id="todo"
->
-<apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-<html>
-  <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'></link>
-    <title>RollCall</title>
-  </head>
-  <body>
-    <!-- <body onload="list_events()"> </body> -->
-    <div id="select_event">
-      <p> Select An Event </p>
-      <div id="rollcall"></div>
-      <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
-      <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
-    </div>
-    <div id="list_events">
-      <apex:repeat value="{!events}" var="event" id="theRepeat">
-        <apex:outputLink value='{!$Page.event}'>
-          <div class="card">
-            <div class="title blue">
-              <p> 
-                <apex:outputText value="{!event.Name}"> </apex:outputText>
-              </p>
-            </div>
-            <div class="info">
-              <!-- <p> Attending: <span class="blue_text"> 75 </span> </p>
-              <p> Registered: 100 </p> -->
-              <apex:outputText value="{!event.StartDate}"> </apex:outputText>
-            </div>
-            <!-- <img class="pic" src="{!URLFOR($Resource.RollCallAssets, 'piechart.svg')}"></img> -->
-            <!-- <p class="pic_data percentage blue_text"> 75% </p> -->
-          </div>
-         <apex:param name='event_id' value="{!event.Id}"/>
-         <apex:param name='event_name' value="{!event.Name}"/>
-         </apex:outputLink> 
-      </apex:repeat>
-    </div>
-  </body>
-
-
-  <script>
-  function get_color(x) {
-    if ((x % 5) == 0) {
-      return "'title blue'";
-    }
-    if ((x % 5) == 1) {
-      return "'title magenta'";
-    }
-    if ((x % 5) == 2) {
-      return "'title green'";
-    }
-    if ((x % 5) == 3) {
-      return "'title red'";
-    }
-    if ((x % 5) == 4) {
-      return "'title orange'";
-    }
-  }
-  </script>
-
-</html>
+   sidebar="false" 
+   showheader="false"
+   standardStylesheets="false"
+   Controller="RollCall"
+   applyHtmlTag="false"
+   applyBodyTag="false"
+   id="todo"
+   >
+   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+   <html>
+      <head>
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+         <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+         </link>
+         <title>RollCall</title>
+      </head>
+      <body>
+         <div id="select_event">
+            <p> Select An Event </p>
+            <div id="rollcall"></div>
+            <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}">
+            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img></img>
+         </div>
+         <div id="list_events">
+            <apex:repeat value="{!events}" var="event" id="theRepeat">
+               <a href="/apex/event?event_id={!event.cId}">
+                  <div class="card">
+                     <div class="title blue">
+                        <p> 
+                           {!event.Name}
+                        </p>
+                     </div>
+                     <div class="info">
+                        <span class="blue_text"> {!event.Start} </span>
+                     </div>
+                     <div class="info">
+                        Max Capactiy: <span class="blue_text">{!event.maxCapacity}</span>
+                     </div>
+                     <div class="info">
+                        Registered : <span class="blue_text">{!event.registered}</span>
+                     </div>
+                     <div class="info">
+                        Checked In: <span class="blue_text">{!event.checkedin}</span>
+                     </div>
+                  </div>
+               </a>
+            </apex:repeat>
+         </div>
+      </body>
+      <script>
+         function get_color(x) {
+           if ((x % 5) == 0) {
+             return "'title blue'";
+           }
+           if ((x % 5) == 1) {
+             return "'title magenta'";
+           }
+           if ((x % 5) == 2) {
+             return "'title green'";
+           }
+           if ((x % 5) == 3) {
+             return "'title red'";
+           }
+           if ((x % 5) == 4) {
+             return "'title orange'";
+           }
+         }
+      </script>
+   </html>
 </apex:page>
