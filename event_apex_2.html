@@ -26,16 +26,22 @@
 <body>
     <body onload="get_event('event_id'); get_event_date('event_id'); get_event_stats('event_id');" > </body>
     <div id="navbar">
-        <div class="blue_border" id="navbar_title">
+        <div id="navbar_title">
             <p> You are now managing: <br></br> <span class="blue_text">  
               {!event.name}
             </span> </p>
         </div>
-        <a class="tab magenta_border hover_magenta_text" data-section="one" href="#">
+        <a class="tab blue_border hover_blue_text" data-section="one" href="#">
             <p> Information </p>
         </a>
-        <a class="tab green_border hover_green_text" data-section="two" href="#">
-            <p> Statistics </p>
+        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
+            <p> Capacity </p>
+        </a>
+        <a class="tab green_border hover_green_text" data-section="three" href="#">
+            <p> Attendance </p>
+        </a>
+        <a class="tab red_border hover_red_text" data-section="four" href="#">
+            <p> Flow </p>
         </a>
 
         <apex:outputLink value="{!$Page.checkin}">
@@ -55,7 +61,7 @@
     
     <div id="container">
     <section id="one" class="active">
-            <div class="page" id="page_one">
+            <div class="page">
                 <div id="event">
                     <!-- Insert event here -->
                 </div>
@@ -63,6 +69,55 @@
     </section>
     <section id="two">
             <div class="page" id="page_two"></div>
+    </section>
+    <section id="three">
+            <div class="page"></div>
+            <script>
+                var width = 125,
+                    height = 125,
+                    radius = Math.min(width, height) / 2;
+
+                var color = d3.scale.ordinal()
+                    .range(["#FFFFFF", "#0096ff"]);
+
+                var arc = d3.svg.arc()
+                    .outerRadius(radius - 5)
+                    .innerRadius(radius - 17);
+
+                var pie = d3.layout.pie()
+                    .sort(null)
+                    .value(function(d) { return d.num; });
+
+                var svg = d3.select("#card_salesforce_workday").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", "translate(" + 60 + "," + 62 + ")");
+
+                d3.csv("data_salesforce_workday.csv", function(error, data) {
+
+                  data.forEach(function(d) {
+                    d.num = +d.num;
+                  });
+
+                  var g = svg.selectAll(".arc")
+                      .data(pie(data))
+                    .enter().append("g")
+                      .attr("class", "arc");
+
+                  g.append("path")
+                      .attr("d", arc)
+                      .attr("transform", "rotate(" + 90 + ")")
+                      .style("fill", function(d) { return color(d.data.status); });
+
+                  g.append("text")
+                      .style("display", "none");
+
+                });    
+            </script>
+    </section>
+        <section id="four">
+            <div class="page"></div>
     </section>
   </div>
 </body>
