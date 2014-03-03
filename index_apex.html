@@ -26,22 +26,22 @@
             <apex:repeat value="{!events}" var="event" id="theRepeat">
                <a href="/apex/event?event_id={!event.cId}">
                   <div class="card">
-                     <div class="title blue">
+                     <div class="{!event.titlecolor}">
                         <p> 
                            {!event.Name}
                         </p>
                      </div>
                      <div class="info">
-                        <span class="blue_text"> {!event.Start} </span>
+                        <span class="{!event.textcolor}"> {!event.Start} </span>
                      </div>
                      <div class="info">
-                        Max Capactiy: <span class="blue_text">{!event.maxCapacity}</span>
+                        Max Capactiy: <span class="{!event.textcolor}">{!event.maxCapacity}</span>
                      </div>
                      <div class="info">
-                        Registered : <span class="blue_text">{!event.registered}</span>
+                        Registered : <span class="{!event.textcolor}">{!event.registered}</span>
                      </div>
                      <div class="info">
-                        Checked In: <span class="blue_text">{!event.checkedin}</span>
+                        Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span>
                      </div>
                   </div>
                </a>

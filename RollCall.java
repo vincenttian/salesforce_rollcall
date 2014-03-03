@@ -60,7 +60,7 @@ global class RollCall{
         Integer count = [SELECT count() FROM Campaign WHERE IsActive = True AND ParentId = null];
         Event[] events = new Event[count];
         for (Integer i = 0; i < count; i ++) {
-            events[i] = new Event(campaigns[i]);
+            events[i] = new Event(campaigns[i], i);
         }
         return events;
     }
