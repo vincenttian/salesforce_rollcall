@@ -166,7 +166,8 @@ function check_in_attendee_javascript() {
           last_name = result[1];
           company = result[2];
           setSection($("#container section#"+"#two"), $('.active'));
-
+       } else if (result.length == 2){
+          setSection($("#container section#"+"#six"), $('.active'));
        } else { // could not find match in database
           document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
 
