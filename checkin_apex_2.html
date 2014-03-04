@@ -13,7 +13,7 @@ id="todo"
   <!-- <script type="text/javascript" src="scroll.js"></script> -->
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-  <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'> </link>
+  <apex:stylesheet value="http://fonts.googleapis.com/css?family=Hammersmith+One"/>
   <title>RollCall</title>
 </head>
 <body>
@@ -31,15 +31,15 @@ id="todo"
   <div class="checkin">
     <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
     <input type="text" name="email" id="email"/>
-    <a id="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()">  
-      <p> Check In </p>
-    </a>
+    <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
   </div>
 </section>
 <section id="two">
   <div class="checkin">
     <div id="confirm_info">
       <p> You are checking in as... </p>
+      <div id='error'>
+      </div>
       <div id="checkin_name">
         <p> Name: <span class="blue_text"> </span> </p>
       </div>
@@ -55,15 +55,15 @@ id="todo"
       <div id="test"> </div>  <!-- A div for injecting tests into -->
 
     </div>
-    <a id="confirm" data-section="three" href="#"> 
+    <a id="confirm" data-section="three" href="#" onclick="update_placeholders()"> 
       <p> Confirm </p>
     </a>
-    <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#"> update</a> this information </p>
+    <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_placeholders()"> update</a> this information </p>
   </div>
 </section>
 <section id="three">
   <div class="checkin">
-    <img id="checkin_icon" src="checkin.svg"> </img>
+    <img id="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'checkin.svg')}"> </img>
     <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
     <a id="checkin_end" data-section="one" href="#"> 
       <p> Return </p>
@@ -74,32 +74,44 @@ id="todo"
     <div class="checkin">
         <div class="column">
             <p class="label"> First Name: </p>
-            <p class="label"> Middle Name: </p>
             <p class="label"> Last Name: </p>
-            <p class="label"> Email: </p>
             <p class="label"> Company: </p>
+            <p class="label"> Email: </p>
         </div>
         <div class="column">
-            <input type="text" name="firstname" class="input" placeholder="Kevin"/>
-            <input type="text" name="middlename" class="input" placeholder="TianXiang"/> 
-            <input type="text" name="lastname" class="input" placeholder="Wu"/>
-            <input type="text" name="email" class="input" placeholder="kevintxwu@gmail.com"/>
-            <input type="text" name="company" class="input" placeholder="Salesforce"/>
+            <input id="update_firstname" type="text" name="firstname" class="input" placeholder=""/>
+            <input id="update_lastname" type="text" name="lastname" class="input" placeholder=""/>
+            <input id="update_company" type="text" name="company" class="input" placeholder=""/>
+            <input id="update_email" type="text" name="email" class="input" placeholder=""/>
         </div>
-        <a id="update" data-section="three" href="#"> 
-            <p> Confirm </p>
-        </a>
+        <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee_javascript()" value="Confirm"> </input>
     </div>
 </section>
 <section id="five">
     <div class="checkin">
-        <img class="checkin_icon" src="help_alt.svg"> </img>
+        <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'help_alt.svg')}"> </img>
+
         <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
-        <a class="checkin_end" data-section="four" href="#"> 
+        <a class="checkin_end" data-section="four" href="#" onclick="static_placeholders()"> 
             <p> Register </p>
         </a>
         <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
     </div>
+</section>
+<section id="six">
+<div class="checkin">
+    <p id="multiple"> There seem to be multiple kevintxwu@gmail.com's. Which of these do you want to check in as? </p>
+    <a class="checkin_end" data-section="two" href="#"> 
+        <p> Kevin TianXiang Wu, Salesforce </p>
+    </a>
+    <a class="checkin_end" data-section="two" href="#"> 
+        <p> Kevin Potato Wu, Salesforce </p>
+    </a>
+    <a class="checkin_end" data-section="two" href="#"> 
+        <p> Kevin Cool Wu, Salesforce </p>
+    </a>
+    <p id="confirm_end"> If none of these are you then please <a class="blue_text" data-section="one" href="#"> retry</a> </p>
+</div>
 </section>
 </div>
 </body>
@@ -127,6 +139,9 @@ $(document).ready(function(){
 </script>
 
 <script type="text/javascript">
+var first_name;
+var last_name;
+var company;
 function check_in_attendee_javascript() {
  Visualforce.remoting.Manager.invokeAction(
    '{!$RemoteAction.CheckInController.check_in_attendee}',
@@ -138,13 +153,19 @@ function check_in_attendee_javascript() {
        // Get DOM IDs for HTML and Visualforce elements like this
        // document.getElementById("test").innerHTML += "Received email: " + document.getElementById("email").value;
        if (result.length != 0) { // successfully found match in database !
-          document.getElementById('error').innerHTML = "";
+          document.getElementById('error').innerHTML = "<p></p>";
           document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
           document.getElementById("checkin_name").innerHTML = "<p> Name: <span class='blue_text'>"  + result[0] + " " + result[1] + "</span> </p>"; 
-          document.getElementById("checkin_company").innerHTML = "<p> Company: <span class='blue_text'>"  + result[2] + "</span> </p>"; 
+          document.getElementById("checkin_company").innerHTML = "<p> Company: <span class='blue_text'>"  + result[2] + "</span> </p>";  
+          first_name = result[0];
+          last_name = result[1];
+          company = result[2];
+          setSection($("#container section#"+"#two"), $('.active'));
 
        } else { // could not find match in database
           document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
+
+          setSection($("#container section#"+"#five"), $('.active'));
        }
      } else if (event.type === 'exception') {
        document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
@@ -155,6 +176,47 @@ function check_in_attendee_javascript() {
    }, 
    {escape: true}
    );
+}
+
+function update_attendee_javascript() {
+ Visualforce.remoting.Manager.invokeAction(
+   '{!$RemoteAction.CheckInController.update_attendee}',
+   '{!event.id}',
+   document.getElementById("update_firstname").value,
+   document.getElementById("update_lastname").value,
+   document.getElementById("update_email").value,
+   document.getElementById("update_company").value,
+   function(result, event){
+     console.log('result: ' + result);
+     if (event.status) {
+       // Get DOM IDs for HTML and Visualforce elements like this
+       // document.getElementById("test").innerHTML += "Received email: " + document.getElementById("email").value;
+        setSection($("#container section#"+"#three"), $('.active'));
+     } else if (event.type === 'exception') {
+       document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
+       console.log('swag');
+     } else {
+       document.getElementById("test").innerHTML +=event.message;
+     }
+   }, 
+   {escape: true}
+  );
+}
+
+function update_placeholders() {
+  console.log('testtesttest');
+   document.getElementById('update_email').value = document.getElementById("email").value;
+   document.getElementById('update_firstname').value = first_name;
+   document.getElementById('update_lastname').value = last_name;
+   document.getElementById('update_company').value = company;
+}
+
+function static_placeholders() {
+  console.log('testtesttest');
+   document.getElementById('update_email').value = document.getElementById("email").value;
+   document.getElementById('update_firstname').value = "";
+   document.getElementById('update_lastname').value = "";
+   document.getElementById('update_company').value = "";
 }
 </script>
 

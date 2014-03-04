@@ -34,12 +34,24 @@ global class CheckInController{
 
 
     // Case; Used when drop-ins come to an event
-    public void register_event_attendee(String email, String first_name, String last_name, String campaign_id) { // Later switch to just contact and campaign ID
+    public static void register_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { // Later switch to just contact and campaign ID
         // first create contact, then put it in
-        Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name);
+        Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name, Company__c=company);
         insert tmp_contact;
         CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = 'Planned'); // NOT SETTING PICKLIST TO DEFAULT SPECIFIED VALUE
         insert new_event_attendee;
+    }
+
+    public static void update_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { // Later switch to just contact and campaign ID
+        // first create contact, then put it in
+        
+        // NEEDS WORK FIX THIS 
+        CampaignMember member = [SELECT ContactId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.Email=:email or Lead.Email=:email)];
+        Contact updated_contact = [SELECT firstname, lastname, Company__c FROM Contact WHERE Id=:member.ContactId];
+        updated_contact.firstname = first_name;
+        updated_contact.lastname = last_name;
+        updated_contact.Company__c = company;
+        update updated_contact;
     }
 
     // Tested
@@ -88,6 +100,19 @@ global class CheckInController{
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         System.debug('Remote call');
         return CheckInController.handle_parent_events(string.valueof(event.Id), email);
+    }
+
+    // Checking in attendees for checkin page
+    @RemoteAction
+    global static void update_attendee(String event_id, String first_name, String last_name, String email, String company) {
+        Integer attendee_size = [SELECT count() FROM CampaignMember WHERE CampaignId=:event_Id AND (Contact.Email=:email or Lead.Email=:email)];
+        if (attendee_size == 0) {
+            // register attendee
+            CheckInController.register_event_attendee(email, first_name, last_name, company, event_id);
+        } else {
+            // update attendee
+            CheckInController.update_event_attendee(email, first_name, last_name, company, event_id);
+        }
     }
 
 }
