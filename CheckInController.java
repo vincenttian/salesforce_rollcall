@@ -38,7 +38,7 @@ global class CheckInController{
         // first create contact, then put it in
         Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name, Company__c=company);
         insert tmp_contact;
-        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = 'Planned'); // NOT SETTING PICKLIST TO DEFAULT SPECIFIED VALUE
+        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = 'Responded'); // NOT SETTING PICKLIST TO DEFAULT SPECIFIED VALUE
         insert new_event_attendee;
     }
 
