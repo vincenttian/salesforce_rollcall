@@ -84,10 +84,14 @@
         <div class="page">
           <div id="attendee_list">
             <apex:repeat value="{!attendees}" var="attendee" id="theRepeat">
-              <p> First Name: {!attendee.Contact.Firstname} </p>
-              <p> Last Name: {!attendee.Contact.Lastname}  </p>
-              <p> Email : {!attendee.Contact.Email} </p>
-              <p> Company: {!attendee.Contact.Company__c} </p>
+              <br> </br>
+              <ul> 
+                <li> <p> First Name: {!attendee.Contact.Firstname} </p>
+                     <p> Last Name: {!attendee.Contact.Lastname} </p> 
+                     <p> Email : {!attendee.Contact.Email} </p>
+                     <p> Company: {!attendee.Contact.Company__c} </p>
+                </li>
+              </ul>
             </apex:repeat>
           </div>
         </div>
