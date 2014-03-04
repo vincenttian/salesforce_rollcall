@@ -143,6 +143,7 @@ var first_name;
 var last_name;
 var company;
 function check_in_attendee_javascript() {
+ console.log(document.getElementById("email").value);
  Visualforce.remoting.Manager.invokeAction(
    '{!$RemoteAction.CheckInController.check_in_attendee}',
    '{!event.id}',
@@ -153,6 +154,10 @@ function check_in_attendee_javascript() {
        // Get DOM IDs for HTML and Visualforce elements like this
        // document.getElementById("test").innerHTML += "Received email: " + document.getElementById("email").value;
        if (result.length != 0) { // successfully found match in database !
+          console.log(document.getElementById("email").value);
+          console.log(result[0]);
+          console.log(result[1]);
+          console.log(result[2]);
           document.getElementById('error').innerHTML = "<p></p>";
           document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
           document.getElementById("checkin_name").innerHTML = "<p> Name: <span class='blue_text'>"  + result[0] + " " + result[1] + "</span> </p>"; 

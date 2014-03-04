@@ -56,21 +56,23 @@ global class CheckInController{
 
     // Tested
     public static String[] check_in(String campaign_id, String email) {        
-        CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id];// AND (Contact.email=:email or Lead.email=:email)];
+        CampaignMember event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
         System.debug('in call');
-        if (event_attendee.size() == 0) {
+        if (event_attendee == null) {
             System.debug('in call');
             // THROW ERROR
             // throw new Checkin_Exception('Attendee is not registered for the event');
             return new String[0];
         } else {
-            System.debug(event_attendee[0]);
+            System.debug(event_attendee);
             // System.debug(event_attendee[0].status);
-            event_attendee[0].status = 'Responded'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
-            System.debug(event_attendee[0]);
+            event_attendee.status = 'Responded'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
+            System.debug(event_attendee);
         }
-        update event_attendee[0];
-        Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee[0].ContactId];
+        update event_attendee;
+
+
+        Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee.ContactId];
         String[] info = new String[3];
         // String[] info = new String{contact_event_attendee.FirstName, contact_event_attendee.LastName, contact_event_attendee.Company__c};
         info[0] = contact_event_attendee.FirstName;
