@@ -17,15 +17,18 @@
       <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
       </link>
       <style>
-        .page {
-        padding-left: 300px;
+        #container section:nth-child(1) {
+          left:100%;
         }
+
+        #container section:nth-child(3) {
+          left:0%;
+        }
+
       </style>
       <title>RollCall</title>
     </head>
     <body>
-      <body onload="get_event('event_id'); get_event_date('event_id'); get_event_stats('event_id');" > 
-    </body>
     <div id="navbar">
       <div id="navbar_title">
         <p> You are now managing: <br></br> <span class="blue_text">  
@@ -37,10 +40,10 @@
         <p> Information </p>
       </a>
       <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
-        <p> Capacity </p>
+        <p> Statistics </p>
       </a>
       <a class="tab green_border hover_green_text" data-section="three" href="#">
-        <p> Attendance </p>
+        <p> Attendees </p>
       </a>
       <apex:outputLink value="{!$Page.checkin}">
         <div class="tab red_border hover_red_text">
@@ -72,57 +75,22 @@
           </div>
         </div>
       </section>
+      <!-- Statistics -->
       <section id="two">
         <div class="page" id="page_two"></div>
       </section>
+      <!-- Attendees -->
       <section id="three">
-        <div class="page"></div>
-        <script>
-          var width = 125,
-              height = 125,
-              radius = Math.min(width, height) / 2;
-          
-          var color = d3.scale.ordinal()
-              .range(["#FFFFFF", "#0096ff"]);
-          
-          var arc = d3.svg.arc()
-              .outerRadius(radius - 5)
-              .innerRadius(radius - 17);
-          
-          var pie = d3.layout.pie()
-              .sort(null)
-              .value(function(d) { return d.num; });
-          
-          var svg = d3.select("#card_salesforce_workday").append("svg")
-              .attr("width", width)
-              .attr("height", height)
-              .append("g")
-              .attr("transform", "translate(" + 60 + "," + 62 + ")");
-          
-          d3.csv("data_salesforce_workday.csv", function(error, data) {
-          
-            data.forEach(function(d) {
-              d.num = +d.num;
-            });
-          
-            var g = svg.selectAll(".arc")
-                .data(pie(data))
-              .enter().append("g")
-                .attr("class", "arc");
-          
-            g.append("path")
-                .attr("d", arc)
-                .attr("transform", "rotate(" + 90 + ")")
-                .style("fill", function(d) { return color(d.data.status); });
-          
-            g.append("text")
-                .style("display", "none");
-          
-          });    
-        </script>
-      </section>
-      <section id="four">
-        <div class="page"></div>
+        <div class="page">
+          <div id="attendee_list">
+            <apex:repeat value="{!attendees}" var="attendee" id="theRepeat">
+              <p> First Name: {!attendee.Contact.Firstname} </p>
+              <p> Last Name: {!attendee.Contact.Lastname}  </p>
+              <p> Email : {!attendee.Contact.Email} </p>
+              <p> Company: {!attendee.Contact.Company__c} </p>
+            </apex:repeat>
+          </div>
+        </div>
       </section>
     </div>
     </body>
