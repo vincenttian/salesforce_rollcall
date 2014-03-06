@@ -39,9 +39,8 @@
           </div>
           <apex:param name="event_id" value="{!$CurrentPage.parameters.event_id}"/>
         </apex:outputLink>
-        <apex:outputLink value="{!$Page.test}">
-          <div id="return"></div>
-        </apex:outputLink>
+
+        <div id="return" onclick="javascript:window.location='{!$Page.test}';"></div>
       </div>
       <input type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
       <div id="container">
