@@ -16,11 +16,14 @@
  		<section id="one" class="active">
             <div class="checkin">
                 <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
+                <form>
                 <input type="text" name="email" id="email"/>
-                <input type="submit" id="submit" value="Check In" href="#"/>
+                <a id="submit" data-section="six" href="#">  
+                    <p> Check In </p>
+                </a>
+                </form>
             </div>
  		</section>
-        <!-- CASE 1: IF THE EMAIL PASSES -->
  		<section id="two">
             <div class="checkin">
                 <div id="confirm_info">
@@ -65,7 +68,6 @@
                 </a>
             </div>
         </section>
-        <!-- CASE 2: IF THE EMAIL IS NOT FOUN -->
         <section id="five">
             <div class="checkin">
                 <img class="checkin_icon" src="help_alt.svg">
@@ -76,7 +78,6 @@
                 <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
             </div>
         </section>
-        <!-- CASE 3: IF THERE ARE MULTIPLE ACCOUNTs -->
         <section id="six">
             <div class="checkin">
                 <p id="multiple"> There seem to be multiple kevintxwu@gmail.com's. Which of these do you want to check in as? </p>
