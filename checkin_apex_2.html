@@ -11,7 +11,7 @@ id="todo"
 <head>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <!-- <script type="text/javascript" src="scroll.js"></script> -->
-  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+  <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
   <apex:stylesheet value="http://fonts.googleapis.com/css?family=Hammersmith+One"/>
   <title>RollCall</title>
@@ -21,10 +21,8 @@ id="todo"
     <p> Salesforce Workday </p>          
   </div>
 
-  <apex:outputLink value="{!$Page.event}"> 
-  <div class="invisible" id="return">
-  </div>
-</apex:outputLink>
+  <div id="return" class ="invisible" onclick="javascript:window.location='{!$Page.event}?event_id={!event.id}';"></div>
+
 
 <div id="container">
  <section id="one" class="active">
