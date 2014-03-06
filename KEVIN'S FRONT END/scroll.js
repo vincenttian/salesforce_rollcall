@@ -18,7 +18,6 @@ function setSection(to, from)
 $(document).ready(function(){
 	$('a').on('click', function(event) 
 	{
-		event.preventDefault();
 	 	var sectionId = $(this).attr("data-section"),
 		  	$toSlide= $("#container section#"+sectionId),
 		  	$fromSlide= $('.active');
