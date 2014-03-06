@@ -4,11 +4,53 @@
     <title>RollCall</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="gauge.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
+    <script>
+    var gauges = [];
+    function createGauge(name, label, min, max)
+    {
+        var config = 
+        {
+            size: 250,
+            label: label,
+            min: undefined != min ? min : 0,
+            max: undefined != max ? max : 100,
+            minorTicks: 5
+        }
+
+        var range = config.max - config.min;
+        config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
+        config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+
+        gauges[name] = new Gauge(name + "GaugeContainer", config);
+        gauges[name].render();
+    }
+
+    function createGauges()
+    {
+        createGauge("test", "Test", -200, 200 );
+    }
+
+    function updateGauges()
+    {
+        for (var key in gauges)
+        {
+            var value = 100;
+            gauges[key].redraw(value);
+        }
+    }
+
+    function initialize()
+    {
+        createGauges();
+        setInterval(updateGauges, 1000);
+    }
+    </script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 </head>
-<body>
+<body onload="initialize()">
     <div id="navbar">
         <div id="navbar_title">
             <p> You are now managing: <br> <span class="blue_text"> Salesforce Workday </span> </p>
@@ -46,7 +88,9 @@
             <div class="page">
                 <div id="chart_one"></div>
                 <div id="chart_two"></div>
-                <div id="chart_three"></div>
+                <div id="chart_three">
+		          <span id="testGaugeContainer"></span>
+	            </div>
             </div>
  		</section>
         <section id="three">
@@ -77,9 +121,8 @@
     }
     </style>
     <script>
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 724 - margin.left - margin.right,
-        height = 384 - margin.top - margin.bottom;
+    var width = 624,
+        height = 284;
 
     var parseTime = d3.time.format("%H:%M:%S").parse;
 
@@ -102,10 +145,10 @@
         .y(function(d) { return y(d.close); });
 
     var svg = d3.select("#chart_one").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + 100)
+        .attr("height", height + 100)
       .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + 50 + "," + 50 + ")");
 
     d3.json("data.json", function(error, data) {
         data = d3.zip(data.close, data.date).map(function(d) {
@@ -119,7 +162,7 @@
 
       svg.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
+          .attr("transform", "translate(0," + 284 + ")")
           .call(xAxis);
 
       svg.append("g")

@@ -1,98 +1,62 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<html>
+  	<head>
+    	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+    	<title>d3.js gauges</title>	
+		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+		<script type="text/javascript" src="gauge.js"></script>
 
-body {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.x.axis path {
-  display: none;
-}
-
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
-
-</style>
-<body>
-<script src="http://d3js.org/d3.v3.js"></script>
-<script>
-
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 724 - margin.left - margin.right,
-    height = 384 - margin.top - margin.bottom;
-
-// You have times instead of dates. So we need a time formatter.
-var parseTime = d3.time.format("%H:%M:%S").parse;
-
-var x = d3.time.scale()
-    .range([0, width]);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-var line = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.close); });
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.json("data.json", function(error, data) {
-  
-  // 1) Zip the close value with their corresponding date/time
-  //    Results in an array of arrays: 
-  //
-  //    [[582.13, "02:30:00"], [583.98, "02:45:00"], ...]
-  //
-  data = d3.zip(data.close, data.date).map(function(d) {
-    // 2) Format each close and date/time value so d3 understands what each represents.
-    close = +d[0];
-    
-    // If your data source can't be changed at all, I'd rename `date` to `time` here.
-    date = parseTime(d[1]);
-    
-    // 3) Return an object for each close and date/time pair.
-    return {close: close, date: date};
-  });
-
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-  y.domain(d3.extent(data, function(d) { return d.close; }));
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
-
-  svg.append("path")
-      .datum(data)
-      .attr("class", "line")
-      .attr("d", line);
-});
-
-</script>
+		<script>
+						
+				
+			var gauges = [];
+			
+			function createGauge(name, label, min, max)
+			{
+				var config = 
+				{
+					size: 120,
+					label: label,
+					min: undefined != min ? min : 0,
+					max: undefined != max ? max : 100,
+					minorTicks: 5
+				}
+				
+				var range = config.max - config.min;
+				config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
+				config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+				
+				gauges[name] = new Gauge(name + "GaugeContainer", config);
+				gauges[name].render();
+			}
+			
+			function createGauges()
+			{
+				createGauge("test", "Test", -200, 200 );
+			}
+            
+            function updateGauges()
+			{
+				for (var key in gauges)
+				{
+					var value = 100;
+				    gauges[key].redraw(value);
+				}
+			}
+			
+			function initialize()
+			{
+				createGauges();
+                setInterval(updateGauges, 1000);
+			}
+			
+		</script>
+		
+		
+	</head>
+	
+	<body onload="initialize()">
+		<span id="testGaugeContainer"></span>
+	</body>
+	
+</html>

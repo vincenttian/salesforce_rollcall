@@ -85,12 +85,23 @@ global class CheckInController{
     // first check if the person is registered or not
     public static String[] handle_parent_events(String campaign_id, String email) {
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
-        CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
+        CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
         if (event_attendee.size() == 0) {
             System.debug('No Attendees');
             // register the attendee
             // MUST RAISE AN ERROR
             return new String[0];
+        } else if (event_attendee.size() != 1) {
+            // String[] info = new String[3*event_attendee.size()];
+            String[] info = new String[6];
+            Contact[] contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE (Id=:event_attendee[0].ContactId or Id=:event_attendee[1].ContactId)];
+            info[0] = contact_event_attendee[0].FirstName;
+            info[1] = contact_event_attendee[0].LastName;
+            info[2] = contact_event_attendee[0].Company__c;
+            info[3] = contact_event_attendee[1].FirstName;
+            info[4] = contact_event_attendee[1].LastName;
+            info[5] = contact_event_attendee[1].Company__c;
+            return info;
         } else {
             return CheckInController.check_in(string.valueof(campaign_id), email);
         }
@@ -102,6 +113,15 @@ global class CheckInController{
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         System.debug('Remote call');
         return CheckInController.handle_parent_events(string.valueof(event.Id), email);
+    }
+
+    // Checking in attendees for checkin page
+    @RemoteAction
+    global static void multiple_login(String event_id, String company, String email) {
+        // login person that has specific attributes above 
+        CampaignMember event_attendee = [SELECT ContactId FROM CampaignMember WHERE Contact.Company__c=:company AND Contact.email=:email AND CampaignId=:event_id];
+        event_attendee.status = 'Responded'; 
+        update event_attendee;
     }
 
     // Checking in attendees for checkin page
