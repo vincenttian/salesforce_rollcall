@@ -15,8 +15,7 @@
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
 
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.gauge, 'gauge.js')}"/>
-
+      <apex:includeScript value="{!$Resource.gauge}"/>
 
       <title>RollCall</title>
       <!-- CHART IMPLEMENTATION : requires gauge.js -->
@@ -43,14 +42,14 @@
 
         function createGauges()
         {
-            createGauge("test", "Test", -200, 200 );
+            createGauge("test", "Test", 0, {!event.maxCapacity} );
         }
 
         function updateGauges()
         {
             for (var key in gauges)
             {
-                var value = 100;
+                var value = {!event.checkedIn};
                 gauges[key].redraw(value);
             }
         }
@@ -62,7 +61,7 @@
         }
         </script>
     </head>
-    <body onload="initialize();">
+    <body onload="initialize(); line_chart_info();">
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">  
@@ -114,7 +113,7 @@
             <div id="chart_one"></div>
             <div id="chart_two"></div>
             <div id="chart_three">
-                 CHART IMPLEMENTATION : requires gauge.js
+                 <!-- CHART IMPLEMENTATION : requires gauge.js -->
                 <span id="testGaugeContainer"></span>
             </div>
           </div>
@@ -139,7 +138,7 @@
           </div>
         </section>
       </div>
-    <!-- CHART IMPLEMENTATION: requires data.json
+    <!-- CHART IMPLEMENTATION: requires data.json -->
     <style>
     .axis path,
     .axis line {
@@ -188,31 +187,75 @@
       .append("g")
         .attr("transform", "translate(" + 50 + "," + 50 + ")");
 
-    d3.json("data.json", function(error, data) {
-        data = d3.zip(data.close, data.date).map(function(d) {
-        close = +d[0];
-        date = parseTime(d[1]);
-        return {close: close, date: date};
-      });
+    var data = {
+                  "close": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "date": [
+                    "03:30:00",
+                    "03:30:00",
+                    "03:32:00",
+                    "03:35:00",
+                    "03:36:00",
+                    "03:38:00",
+                    "03:45:00",
+                    "03:46:00",
+                    "04:00:00"
+                  ]
+                }
 
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain(d3.extent(data, function(d) { return d.close; }));
+    // Begin SOQL query for data
+    function line_chart_info() {
+        Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.EventController.getCheckedInTimes}',
+        '{!event.cid}',
+        function(result, event){
+            console.log("result: " + result.toString());
+            if (event.status) {
+                // Get DOM IDs for HTML and Visualforce elements like this
+                console.log(result);
+                //     break;
+            } else if (event.type === 'exception') {
+                document.getElementById("responseErrors").innerHTML = 
+                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+                document.getElementById("responseErrors").innerHTML = event.message;
+            }
+        }, 
+        {escape: true}
+        );
+    }      
 
-      svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + 284 + ")")
-          .call(xAxis);
-
-      svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis);
-
-      svg.append("path")
-          .datum(data)
-          .attr("class", "line")
-          .attr("d", line);
+      data = d3.zip(data.close, data.date).map(function(d) {
+      close = +d[0];
+      date = parseTime(d[1]);
+      return {close: close, date: date};
     });
-    </script> -->
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain(d3.extent(data, function(d) { return d.close; }));
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + 284 + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
+    </script>
     <script>
     var checked_in = {!event.checkedin};
     var registered = {!event.registered};
