@@ -184,30 +184,52 @@
       .append("g")
         .attr("transform", "translate(" + 50 + "," + 50 + ")");
 
-    d3.json("data.json", function(error, data) {
-        data = d3.zip(data.close, data.date).map(function(d) {
-        close = +d[0];
-        date = parseTime(d[1]);
-        return {close: close, date: date};
-      });
+    var data = {
+                  "close": [
+                    13,
+                    20,
+                    36,
+                    72,
+                    60,
+                    84,
+                    10,
+                    30,
+                    70
+                  ],
+                  "date": [
+                    "02:30:00",
+                    "02:45:00",
+                    "03:00:00",
+                    "03:15:00",
+                    "03:30:00",
+                    "03:45:00",
+                    "04:00:00",
+                    "04:15:00",
+                    "04:30:00"
+                  ]
+                }
 
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain(d3.extent(data, function(d) { return d.close; }));
-
-      svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + 284 + ")")
-          .call(xAxis);
-
-      svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis);
-
-      svg.append("path")
-          .datum(data)
-          .attr("class", "line")
-          .attr("d", line);
+      data = d3.zip(data.close, data.date).map(function(d) {
+      close = +d[0];
+      date = parseTime(d[1]);
+      return {close: close, date: date};
     });
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain(d3.extent(data, function(d) { return d.close; }));
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + 284 + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
     </script>
     <script>
     var checked_in = {!event.checkedin};
