@@ -11,7 +11,9 @@
     <head>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}">
+      <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
+
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.gauge, 'gauge.js')}"/>
 
@@ -121,7 +123,7 @@
         <section id="three">
           <div class="page">
             <div id="attendee_list">
-              <apex:repeat value="{!attendees}" var="attendee" id="theRepeat">
+              <apex:dataList value="{!attendees}" var="attendee" id="theRepeat">
                 <br> </br>
                 <ul>
                   <li>
@@ -131,7 +133,7 @@
                     <p> Company: {!attendee.Contact.Company__c} </p>
                   </li>
                 </ul>
-              </apex:repeat>
+              </apex:dataList>
             </div>
           </div>
         </section>
