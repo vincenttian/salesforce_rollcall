@@ -13,8 +13,7 @@
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.gauge, 'gauge.js')}"/>
-
+      <apex:includeScript value="{!$Resource.gauge}"/>
 
       <title>RollCall</title>
       <!-- CHART IMPLEMENTATION : requires gauge.js -->
@@ -41,14 +40,14 @@
 
         function createGauges()
         {
-            createGauge("test", "Test", -200, 200 );
+            createGauge("test", "Test", 0, {!event.maxCapacity} );
         }
 
         function updateGauges()
         {
             for (var key in gauges)
             {
-                var value = 100;
+                var value = {!event.checkedIn};
                 gauges[key].redraw(value);
             }
         }
@@ -60,7 +59,7 @@
         }
         </script>
     </head>
-    <body onload="initialize();">
+    <body onload="initialize()">
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">  
@@ -112,7 +111,7 @@
             <div id="chart_one"></div>
             <div id="chart_two"></div>
             <div id="chart_three">
-                 CHART IMPLEMENTATION : requires gauge.js
+                 <!-- CHART IMPLEMENTATION : requires gauge.js -->
                 <span id="testGaugeContainer"></span>
             </div>
           </div>
@@ -136,7 +135,7 @@
           </div>
         </section>
       </div>
-    <!-- CHART IMPLEMENTATION: requires data.json
+    <!-- CHART IMPLEMENTATION: requires data.json -->
     <style>
     .axis path,
     .axis line {
@@ -209,7 +208,7 @@
           .attr("class", "line")
           .attr("d", line);
     });
-    </script> -->
+    </script>
     <script>
     var checked_in = {!event.checkedin};
     var registered = {!event.registered};
