@@ -59,7 +59,7 @@
         }
         </script>
     </head>
-    <body onload="initialize()">
+    <body onload="initialize(); line_chart_info();">
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">  
@@ -184,30 +184,55 @@
       .append("g")
         .attr("transform", "translate(" + 50 + "," + 50 + ")");
 
-    var data = {
-                  "close": [
-                    13,
-                    20,
-                    36,
-                    72,
-                    60,
-                    84,
-                    10,
-                    30,
-                    70
-                  ],
-                  "date": [
-                    "02:30:00",
-                    "02:45:00",
-                    "03:00:00",
-                    "03:15:00",
-                    "03:30:00",
-                    "03:45:00",
-                    "04:00:00",
-                    "04:15:00",
-                    "04:30:00"
-                  ]
-                }
+    // var data = {
+    //               "close": [
+    //                 13,
+    //                 20,
+    //                 36,
+    //                 72,
+    //                 60,
+    //                 84,
+    //                 10,
+    //                 30,
+    //                 70
+    //               ],
+    //               "date": [
+    //                 "02:30:00",
+    //                 "02:45:00",
+    //                 "03:00:00",
+    //                 "03:15:00",
+    //                 "03:30:00",
+    //                 "03:45:00",
+    //                 "04:00:00",
+    //                 "04:15:00",
+    //                 "04:30:00"
+    //               ]
+    //             }
+
+    // Begin SOQL query for data
+    var data;
+    function line_chart_info() {
+        Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.EventController.getCheckedInTimes}',
+        '{!event.cid}',
+        function(result, event){
+            console.log("result: " + result);
+            if (event.status) {
+                // Get DOM IDs for HTML and Visualforce elements like this
+                console.log(result);
+                // for (var i = 0; i < result.length; i++) {
+                //     break;
+                // }
+            } else if (event.type === 'exception') {
+                document.getElementById("responseErrors").innerHTML = 
+                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+                document.getElementById("responseErrors").innerHTML = event.message;
+            }
+        }, 
+        {escape: true}
+        );
+    }      
 
       data = d3.zip(data.close, data.date).map(function(d) {
       close = +d[0];
