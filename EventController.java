@@ -143,54 +143,14 @@ global class EventController{
 
     // For d3    
     @RemoteAction
-    public static List<List<String>> getCheckedInTimes(String event_id) {
+    public static List<String> getCheckedInTimes(String event_id) {
         Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
         CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet()];
-        
-        List<List<String>> data = new List<List<String>>();
-        List<String> times = new List<String>();
-        List<Integer> number_data = new List<Integer>();
-        List<String> time_data = new List<String>();
-        List<String> return_number_data = new List<String>();
-        
-        // creating a list of rounded times in times
-        for (Integer i=0; i<checked_in.size(); i++) {
-            Datetime last_modified = checked_in[i].LastModifiedDate;
-            Integer minutes = last_modified.minute();
-            Integer hours = last_modified.hour();
-            Integer rounded_minute = minutes;
-            Integer rounded_hour = hours;
-            String new_time = string.valueOf(rounded_hour) + ':'+ string.valueOf(rounded_minute); 
-            times.add(new_time);
+        List<String> data = new List<String>();
+        for (CampaignMember check_in: checked_in) {
+            data.add(check_in.LastModifiedDate.format());
         }
-
-        // counting the number of times for each unique time
-        Map<String, Integer> hash = new Map<String, Integer>();
-        for (Integer x=0; x<times.size(); x++) {
-            String key = times[x];
-            if (hash.containsKey(key)) {
-                hash.put(key, hash.get(key) + 1);
-            } else {
-                hash.put(times[x], 1);
-            }
-        }
-
-        // storing data in time_data and number_data variables
-        Integer counter = 0;
-        for (String key: hash.keySet()) {
-            time_data.add(key);
-            number_data.add(hash.get(key));
-            counter++;
-        }
-
-        // make number_data all strings
-        for (Integer y=0; y<number_data.size(); y++) {
-            return_number_data.add(string.valueOf(number_data[y]));
-        }
-
-        data.add(time_data);
-        data.add(return_number_data);
         return data;
     }
 

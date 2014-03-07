@@ -184,45 +184,42 @@
       .append("g")
         .attr("transform", "translate(" + 50 + "," + 50 + ")");
 
-    // var data = {
-    //               "close": [
-    //                 13,
-    //                 20,
-    //                 36,
-    //                 72,
-    //                 60,
-    //                 84,
-    //                 10,
-    //                 30,
-    //                 70
-    //               ],
-    //               "date": [
-    //                 "02:30:00",
-    //                 "02:45:00",
-    //                 "03:00:00",
-    //                 "03:15:00",
-    //                 "03:30:00",
-    //                 "03:45:00",
-    //                 "04:00:00",
-    //                 "04:15:00",
-    //                 "04:30:00"
-    //               ]
-    //             }
+    var data = {
+                  "close": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "date": [
+                    "03:30:00",
+                    "03:30:00",
+                    "03:32:00",
+                    "03:35:00",
+                    "03:36:00",
+                    "03:38:00",
+                    "03:45:00",
+                    "03:46:00",
+                    "04:00:00"
+                  ]
+                }
 
     // Begin SOQL query for data
-    var data;
     function line_chart_info() {
         Visualforce.remoting.Manager.invokeAction(
         '{!$RemoteAction.EventController.getCheckedInTimes}',
         '{!event.cid}',
         function(result, event){
-            console.log("result: " + result);
+            console.log("result: " + result.toString());
             if (event.status) {
                 // Get DOM IDs for HTML and Visualforce elements like this
                 console.log(result);
-                // for (var i = 0; i < result.length; i++) {
                 //     break;
-                // }
             } else if (event.type === 'exception') {
                 document.getElementById("responseErrors").innerHTML = 
                     event.message + "<br/>\n<pre>" + event.where + "</pre>";
