@@ -123,6 +123,7 @@
         <section id="three">
           <div class="page">
             <div id="attendee_list">
+               <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
               <apex:dataList value="{!attendees}" var="attendee" id="theRepeat">
                 <br> </br>
                 <ul>
@@ -245,6 +246,55 @@
         .enter().append("path")
         .attr("fill", function(d, i) { return color(i); })
         .attr("d", arc);
+    </script>
+
+    <script type="text/javascript">
+        function createListElement(attendee) {
+          var first_name = attendee.Contact.Firstname
+          var last_name = attendee.Contact.Lastname
+          var email = attendee.Contact.Email
+          var Company = attendee.Contact.Contact
+        }
+        function getAttendees(paginate, searchTerm) {
+          var searchName = searchTerm ? searchTerm : document.getElementById("search_name").value;       
+          var offset = 0;
+          Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.EventController.attendee_search}',
+                    '{!event.cid}', searchName, offset, 
+                    function(result, event){
+                        var objlist = document.getElementById("search_name");
+                        var fragment = document.createDocumentFragment();
+                        if (event.status) {
+                            // Get DOM IDs for HTML and Visualforce elements like this
+                            if(!paginate){
+                                while (objlist.hasChildNodes()) {
+                                    objlist.removeChild(objlist.lastChild);
+                                }
+                            }
+                            for (var i = 0; i < result.length; i += 1) {
+                                //fragment.appendChild(createListElement(result[i]));
+                                console.log(result[0])
+                                fragment.appendChild(result[i]);
+                            }
+                            if (result.length < 30){
+                                $("#showmore").addClass("hidden");
+                            } else {
+                                $("#showmore").removeClass("hidden");
+                            }
+                            objlist.appendChild(fragment);
+                        } else if (event.type === 'exception') {
+                            document.getElementById("responseErrors").innerHTML = 
+                                event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                        } else {
+                            document.getElementById("responseErrors").innerHTML = event.message;
+                        }
+                    }, 
+                        {escape: true}
+                    );
+        }
+
+
+
     </script>
     </body>
   </html>
