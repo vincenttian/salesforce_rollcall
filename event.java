@@ -32,8 +32,9 @@ global class Event{
         CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet()];
         List<String> data = new List<String>();
         for (CampaignMember check_in: checked_in) {
-            data.add(check_in.LastModifiedDate.format());
+            data.add('\'' + check_in.LastModifiedDate.format('HH:mm:ss') + '\'');
         }
+        String[] arr = String[data.size()];
         checkedInTimes = data;
     }
 

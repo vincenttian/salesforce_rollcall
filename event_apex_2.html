@@ -11,9 +11,7 @@
     <head>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}">
-      <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
-
+      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <apex:includeScript value="{!$Resource.gauge}"/>
 
@@ -122,8 +120,7 @@
         <section id="three">
           <div class="page">
             <div id="attendee_list">
-               <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
-              <apex:dataList value="{!attendees}" var="attendee" id="theRepeat">
+              <apex:repeat value="{!attendees}" var="attendee" id="theRepeat">
                 <br> </br>
                 <ul>
                   <li>
@@ -133,7 +130,7 @@
                     <p> Company: {!attendee.Contact.Company__c} </p>
                   </li>
                 </ul>
-              </apex:dataList>
+              </apex:repeat>
             </div>
           </div>
         </section>
@@ -190,13 +187,13 @@
     var data = {
                   "close": [
                     0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
                     0
                   ],
                   "date": [
@@ -211,6 +208,7 @@
                     "04:00:00"
                   ]
                 }
+    var arr = {};
 
     // Begin SOQL query for data
     function line_chart_info() {
@@ -222,6 +220,13 @@
             if (event.status) {
                 // Get DOM IDs for HTML and Visualforce elements like this
                 console.log(result);
+                console.log(result.length)
+                for (var i = 0; arr < result.length; i++) {
+                  arr[i] = i;
+                }
+                data.close = arr;
+                data.date = result;
+                console.log(data.close);
                 //     break;
             } else if (event.type === 'exception') {
                 document.getElementById("responseErrors").innerHTML = 
@@ -233,7 +238,8 @@
         {escape: true}
         );
     }      
-
+      console.log('swag')
+      console.log(data);
       data = d3.zip(data.close, data.date).map(function(d) {
       close = +d[0];
       date = parseTime(d[1]);
@@ -289,55 +295,6 @@
         .enter().append("path")
         .attr("fill", function(d, i) { return color(i); })
         .attr("d", arc);
-    </script>
-
-    <script type="text/javascript">
-        function createListElement(attendee) {
-          var first_name = attendee.Contact.Firstname
-          var last_name = attendee.Contact.Lastname
-          var email = attendee.Contact.Email
-          var Company = attendee.Contact.Contact
-        }
-        function getAttendees(paginate, searchTerm) {
-          var searchName = searchTerm ? searchTerm : document.getElementById("search_name").value;       
-          var offset = 0;
-          Visualforce.remoting.Manager.invokeAction(
-                    '{!$RemoteAction.EventController.attendee_search}',
-                    '{!event.cid}', searchName, offset, 
-                    function(result, event){
-                        var objlist = document.getElementById("search_name");
-                        var fragment = document.createDocumentFragment();
-                        if (event.status) {
-                            // Get DOM IDs for HTML and Visualforce elements like this
-                            if(!paginate){
-                                while (objlist.hasChildNodes()) {
-                                    objlist.removeChild(objlist.lastChild);
-                                }
-                            }
-                            for (var i = 0; i < result.length; i += 1) {
-                                //fragment.appendChild(createListElement(result[i]));
-                                console.log(result[0])
-                                fragment.appendChild(result[i]);
-                            }
-                            if (result.length < 30){
-                                $("#showmore").addClass("hidden");
-                            } else {
-                                $("#showmore").removeClass("hidden");
-                            }
-                            objlist.appendChild(fragment);
-                        } else if (event.type === 'exception') {
-                            document.getElementById("responseErrors").innerHTML = 
-                                event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                        } else {
-                            document.getElementById("responseErrors").innerHTML = event.message;
-                        }
-                    }, 
-                        {escape: true}
-                    );
-        }
-
-
-
     </script>
     </body>
   </html>
