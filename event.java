@@ -8,6 +8,7 @@ global class Event{
     public Decimal maxCapacity {get;set;}
     public String titleColor {get;set;}
     public String textColor {get;set;}
+    public List<String> checkedInTimes {get;set;}
     public ID cid {get;set;}
     
    
@@ -28,6 +29,13 @@ global class Event{
         titleColor = 'title blue';
         textColor = 'blue_text';
         cid = c.id;
+        CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet()];
+        List<String> data = new List<String>();
+        for (CampaignMember check_in: checked_in) {
+            data.add('\'' + check_in.LastModifiedDate.format('HH:mm:ss') + '\'');
+        }
+        String[] arr = String[data.size()];
+        checkedInTimes = data;
     }
 
     /** Special constructor for an event to add color. */
