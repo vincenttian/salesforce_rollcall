@@ -124,17 +124,17 @@
           <div class="page">
             <div id="attendee_list">
                <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
+               <div id="the_list">
               <apex:dataList value="{!attendees}" var="attendee" id="theRepeat">
                 <br> </br>
                 <ul>
-                  <li>
                     <p> First Name: {!attendee.Contact.Firstname} </p>
                     <p> Last Name: {!attendee.Contact.Lastname} </p>
                     <p> Email : {!attendee.Contact.Email} </p>
                     <p> Company: {!attendee.Contact.Company__c} </p>
-                  </li>
                 </ul>
               </apex:dataList>
+            </div>
             </div>
           </div>
         </section>
@@ -250,14 +250,15 @@
 
     <script type="text/javascript">
         function createListElement(attendee) {
-          console.log(attendee);
-          var first_name = attendee.Firstname
-          var last_name = attendee.Lastname
+          console.log(attendee.FirstName);
+          var first_name = attendee.FirstName
+          var last_name = attendee.LastName
           var email = attendee.Email
           var Company = attendee.Company
-          var element = document.createElement("li")
-          console.log('element');
-          element.innerHTML = first_name;
+          var element = document.createElement("p")
+          console.log(element);
+          element.innerHTML = 'First Name: ' + first_name;
+          element.innerHTML += 'Last Name: ' + last_name;
           return element;
         }
         function getAttendees(paginate, searchTerm) {
@@ -268,7 +269,7 @@
                     '{!$RemoteAction.EventController2.attendee_search}',
                     '{!event.cid}', searchName, offset, 
                     function(result, event){
-                        var objlist = document.getElementById("search_name");
+                        var objlist = document.getElementById("the_list");
                         var fragment = document.createDocumentFragment();
                         if (event.status) {
                             // Get DOM IDs for HTML and Visualforce elements like this
@@ -279,8 +280,9 @@
                             }
                             console.log('in')
                             for (var i = 0; i < result.length; i += 1) {
-                                console.log('go');
+                                console.log(result[i]);
                                 fragment.appendChild(createListElement(result[i]));
+                                console.log(fragment);
                                 //fragment.appendChild(result[i]);
                             }
                             //if (result.length < 30){
