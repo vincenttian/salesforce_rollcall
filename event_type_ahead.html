@@ -125,15 +125,7 @@
             <div id="attendee_list">
                <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <div id="the_list">
-              <apex:dataList value="{!attendees}" var="attendee" id="theRepeat">
-                <br> </br>
-                <ul>
-                    <p> First Name: {!attendee.Contact.Firstname} </p>
-                    <p> Last Name: {!attendee.Contact.Lastname} </p>
-                    <p> Email : {!attendee.Contact.Email} </p>
-                    <p> Company: {!attendee.Contact.Company__c} </p>
-                </ul>
-              </apex:dataList>
+
             </div>
             </div>
           </div>
@@ -250,15 +242,20 @@
 
     <script type="text/javascript">
         function createListElement(attendee) {
-          console.log(attendee.FirstName);
-          var first_name = attendee.FirstName
-          var last_name = attendee.LastName
-          var email = attendee.Email
-          var Company = attendee.Company
-          var element = document.createElement("p")
+          var element = document.createElement("ul")
+          var f = document.createElement('p');
+          var l = document.createElement('p');
+          var e = document.createElement('p');
+          var c = document.createElement('p');
           console.log(element);
-          element.innerHTML = 'First Name: ' + first_name;
-          element.innerHTML += 'Last Name: ' + last_name;
+          f.innerHTML = 'First Name: ' + attendee.FirstName;
+          l.innerHTML = 'Last Name: ' + attendee.LastName;
+          e.innerHTML = 'Email: ' + attendee.Email;
+          c.innerHTML = 'Company: ' + attendee.Company__c;
+          element.appendChild(f);
+          element.appendChild(l);
+          element.appendChild(e);
+          element.appendChild(c);
           return element;
         }
         function getAttendees(paginate, searchTerm) {
