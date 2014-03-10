@@ -55,7 +55,7 @@
         function initialize()
         {
             createGauges();
-            // setInterval(updateGauges, 1000);
+            setInterval(updateGauges, 1000);
         }
         </script>
     </head>
@@ -201,7 +201,7 @@
               var width = 624,
                   height = 284;
 
-              var parseTime = d3.time.format("%H:%M:%S").parse;
+              var parseTime = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
 
               var x = d3.time.scale()
                   .range([0, width]);
@@ -234,17 +234,16 @@
             } 
             data += (i+1) + '], "date": ["';
             for (var i=0; i<result.length - 1; i++) {
+                console.log('date: ' + result[i]);
                 temp_date = new Date(result[i]);
                 // CHANGE THE DATE FORMAT HERE
-                date_format = d3.time.format("%H:%M:%S");
+                date_format = d3.time.format("%a %b %e %H:%M:%S %Y");
                 temp_date = date_format(temp_date);
                 data += temp_date + '", "';
-                // data += result[1] + ",";
             } 
             temp_date = new Date(result[result.length-1]);
             temp_date = date_format(temp_date);
             data += temp_date + '"]}';
-            // data += result[result.length-1] + '"]}';
             console.log('data: ' + data);
             
             data = jQuery.parseJSON(data);
@@ -256,7 +255,7 @@
             var date_list = [];
             data = d3.zip(data.close, data.date).map(function(d) {
               close = d[0];
-              date_format = d3.time.format("%H:%M:%S").parse;
+              date_format = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
               date = date_format(d[1]);
               // console.log('date_list: ' + date_list);
               return {close: close, date: date};
