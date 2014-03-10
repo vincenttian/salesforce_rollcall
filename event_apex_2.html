@@ -155,34 +155,34 @@
     }
     </style>
     <script>
-    var width = 624,
-        height = 284;
+    // var width = 624,
+    //     height = 284;
 
-    var parseTime = d3.time.format("%H:%M:%S").parse;
+    // var parseTime = d3.time.format("%H:%M:%S").parse;
 
-    var x = d3.time.scale()
-        .range([0, width]);
+    // var x = d3.time.scale()
+    //     .range([0, width]);
 
-    var y = d3.scale.linear()
-        .range([height, 0]);
+    // var y = d3.scale.linear()
+    //     .range([height, 0]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+    // var xAxis = d3.svg.axis()
+    //     .scale(x)
+    //     .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+    // var yAxis = d3.svg.axis()
+    //     .scale(y)
+    //     .orient("left");
 
-    var line = d3.svg.line()
-        .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.close); });
+    // var line = d3.svg.line()
+    //     .x(function(d) { return x(d.date); })
+    //     .y(function(d) { return y(d.close); });
 
-    var svg = d3.select("#chart_one").append("svg")
-        .attr("width", width + 100)
-        .attr("height", height + 100)
-      .append("g")
-        .attr("transform", "translate(" + 50 + "," + 50 + ")");
+    // var svg = d3.select("#chart_one").append("svg")
+    //     .attr("width", width + 100)
+    //     .attr("height", height + 100)
+    //   .append("g")
+    //     .attr("transform", "translate(" + 50 + "," + 50 + ")");
 
     var data = {
                   "close": [
@@ -205,53 +205,33 @@
                     "03:38:00",
                     "03:45:00",
                     "03:46:00",
-                    "04:00:00"
+                    "16:00:00"
                   ]
                 }
+    console.log('data.close2: ' + data.close);
+    console.log('data.date2: ' + data.date);
 
-    // Begin SOQL query for data
-    function line_chart_info() {
-        Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.EventController.getCheckedInTimes}',
-        '{!event.cid}',
-        function(result, event){
-            console.log("result: " + result.toString());
-            if (event.status) {
-                // Get DOM IDs for HTML and Visualforce elements like this
-                console.log(result);
-                //     break;
-            } else if (event.type === 'exception') {
-                document.getElementById("responseErrors").innerHTML = 
-                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
-            } else {
-                document.getElementById("responseErrors").innerHTML = event.message;
-            }
-        }, 
-        {escape: true}
-        );
-    }      
+    // data = d3.zip(data.close, data.date).map(function(d) {
+    //   close = +d[0];
+    //   date = parseTime(d[1]);
+    //   return {close: close, date: date};
+    // });
+    // x.domain(d3.extent(data, function(d) { return d.date; }));
+    // y.domain(d3.extent(data, function(d) { return d.close; }));
 
-      data = d3.zip(data.close, data.date).map(function(d) {
-      close = +d[0];
-      date = parseTime(d[1]);
-      return {close: close, date: date};
-    });
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain(d3.extent(data, function(d) { return d.close; }));
+    // svg.append("g")
+    //     .attr("class", "x axis")
+    //     .attr("transform", "translate(0," + 284 + ")")
+    //     .call(xAxis);
 
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + 284 + ")")
-        .call(xAxis);
+    // svg.append("g")
+    //     .attr("class", "y axis")
+    //     .call(yAxis);
 
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-
-    svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("d", line);
+    // svg.append("path")
+    //     .datum(data)
+    //     .attr("class", "line")
+    //     .attr("d", line);
     </script>
     <script>
     var checked_in = {!event.checkedin};
@@ -286,6 +266,102 @@
         .enter().append("path")
         .attr("fill", function(d, i) { return color(i); })
         .attr("d", arc);
+
+    // Begin SOQL query for data
+    function line_chart_info() {
+        Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.EventController.getCheckedInTimes}',
+        '{!event.cid}',
+        function(result, event){
+
+            if (event.status) {
+              console.log('result: ' + result);
+                // Get DOM IDs for HTML and Visualforce elements like this
+              var width = 624,
+                  height = 284;
+
+              var parseTime = d3.time.format("%H:%M:%S").parse;
+
+              var x = d3.time.scale()
+                  .range([0, width]);
+
+              var y = d3.scale.linear()
+                  .range([height, 0]);
+
+              var xAxis = d3.svg.axis()
+                  .scale(x)
+                  .orient("bottom");
+
+              var yAxis = d3.svg.axis()
+                  .scale(y)
+                  .orient("left");
+
+              var line = d3.svg.line()
+                  .x(function(d) { return x(d.date); })
+                  .y(function(d) { return y(d.close); });
+
+              var svg = d3.select("#chart_one").append("svg")
+                  .attr("width", width + 100)
+                  .attr("height", height + 100)
+                .append("g")
+                  .attr("transform", "translate(" + 50 + "," + 50 + ")");
+
+            // Formatting response to JSON object
+            var data = '{"close": "';
+            for (var i=0; i<result.length - 1; i++) {
+                data += (i + 1) + ",";
+            } 
+            data += (i+1) + '", "date": " ';
+            for (var i=0; i<result.length - 1; i++) {
+                temp_date = new Date(result[1]);
+                // CHANGE THE DATE FORMAT HERE
+                date_format = d3.time.format("%H:%M:%S");
+                temp_date = date_format(temp_date);
+                data += temp_date + ",";
+            } 
+            temp_date = new Date(result[result.length-1]);
+            temp_date = date_format(temp_date);
+            data += temp_date + '"}';
+            console.log('data: ' + data);
+            
+            data = jQuery.parseJSON(data);
+
+            console.log('data.close: ' + data.close);
+            console.log('data.date: ' + data.date);
+
+            data = d3.zip(data.close, data.date).map(function(d) {
+              close = +d[0];
+              date = d[1];
+              // console.log('date: ' + date);
+              return {close: close, date: date};
+            });
+            x.domain(d3.extent(data, function(d) { return d.date; }));
+            y.domain(d3.extent(data, function(d) { return d.close; }));
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + 284 + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+            svg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line);
+                
+            } else if (event.type === 'exception') {
+                document.getElementById("responseErrors").innerHTML = 
+                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+                document.getElementById("responseErrors").innerHTML = event.message;
+            }
+        }, 
+        {escape: true}
+        );
+    }
     </script>
     </body>
   </html>
