@@ -12,6 +12,7 @@
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <apex:includeScript value="{!$Resource.gauge}"/>
@@ -74,7 +75,7 @@
         <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
           <p> Statistics </p>
         </a>
-        <a class="tab green_border hover_green_text" data-section="three" href="#">
+        <a class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false);'>
           <p> Attendees </p>
         </a>
         <apex:outputLink value="{!$Page.checkin}">
@@ -89,7 +90,7 @@
       <input type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
       <div id="container">
         <section id="one" class="active">
-          <div class="page">
+          <div class="page" >
             <div id="event">
               <div class="information">
                 <p class="blue_text"> Name: </p>
@@ -119,10 +120,13 @@
         </section>
         <!-- Attendees -->
         <section id="three">
-          <div class="page">
+          <div class="page" style="overflow:auto">
             <div id="attendee_list">
               <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <div id="the_list"></div>
+               <button id="showmore" class="btn btn-info loading hidden" onclick="getAttendees(true);">
+                            <span class="glyphicon glyphicon-cloud-download"></span> Show More
+                        </button> 
             </div>
           </div>
         </section>
@@ -283,6 +287,8 @@
     </script>
 
     <script type="text/javascript">
+    var page_offset = 50;
+            var page = 0;
         function createListElement(attendee) {
           var element = document.createElement("ul")
           var f = document.createElement('p');
@@ -303,6 +309,13 @@
         function getAttendees(paginate, searchTerm) {
           var searchName = searchTerm ? searchTerm : document.getElementById("search_name").value;       
           var offset = 0;
+          if(paginate){
+                    page += 1;
+                    offset = page*page_offset;
+                }
+                else{
+                    page = 0;
+                }
           console.log('swag');
           Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.EventController.attendee_search}',
@@ -324,11 +337,11 @@
                         console.log(fragment);
                         //fragment.appendChild(result[i]);
                     }
-                    //if (result.length < 30){
-                      //  $("#showmore").addClass("hidden");
-                   // } else {
-                     //   $("#showmore").removeClass("hidden");
-                   // }
+                    if (result.length < 30){
+                        $("#showmore").addClass("hidden");
+                    } else {
+                        $("#showmore").removeClass("hidden");
+                    }
                     objlist.appendChild(fragment);
                 } else if (event.type === 'exception') {
                     console.log('exception');
@@ -343,6 +356,7 @@
             );
         }
     </script>
+
 
     </body>
   </html>

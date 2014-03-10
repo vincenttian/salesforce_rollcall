@@ -117,7 +117,7 @@ global class EventController{
         CampaignMember[] registered = [SELECT Lead.Firstname, Lead.Lastname, Lead.Email, 
         Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c 
         FROM CampaignMember WHERE Status='Responded' AND
-         CampaignId in :potential_children.keySet() AND (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name)];
+         CampaignId in :potential_children.keySet() AND (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  Id  LIMIT 50 OFFSET :offset];
         sObject[] registered2 = new sObject[]{};
         for (CampaignMember cm : registered) {
             registered2.add(cm.Contact);
