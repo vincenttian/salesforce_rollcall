@@ -162,7 +162,7 @@ global class EventController{
 
     // For d3    
     @RemoteAction
-    public static List<DateTime> getCheckedInTimes(String event_id) {
+    global static List<DateTime> getCheckedInTimes(String event_id) {
         Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
         CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet() ORDER BY LastModifiedDate ASC];
