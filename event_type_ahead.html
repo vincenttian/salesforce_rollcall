@@ -250,17 +250,20 @@
 
     <script type="text/javascript">
         function createListElement(attendee) {
-          var first_name = attendee.Contact.Firstname
-          var last_name = attendee.Contact.Lastname
-          var email = attendee.Contact.Email
-          var Company = attendee.Contact.Contact
-          var element = document.createElement("p")
+          console.log(attendee);
+          var first_name = attendee.Firstname
+          var last_name = attendee.Lastname
+          var email = attendee.Email
+          var Company = attendee.Company
+          var element = document.createElement("li")
+          console.log('element');
           element.innerHTML = first_name;
           return element;
         }
         function getAttendees(paginate, searchTerm) {
           var searchName = searchTerm ? searchTerm : document.getElementById("search_name").value;       
           var offset = 0;
+          console.log('swag');
           Visualforce.remoting.Manager.invokeAction(
                     '{!$RemoteAction.EventController2.attendee_search}',
                     '{!event.cid}', searchName, offset, 
@@ -274,21 +277,24 @@
                                     objlist.removeChild(objlist.lastChild);
                                 }
                             }
+                            console.log('in')
                             for (var i = 0; i < result.length; i += 1) {
+                                console.log('go');
                                 fragment.appendChild(createListElement(result[i]));
-                                console.log(result[i])
                                 //fragment.appendChild(result[i]);
                             }
-                            if (result.length < 30){
-                                $("#showmore").addClass("hidden");
-                            } else {
-                                $("#showmore").removeClass("hidden");
-                            }
+                            //if (result.length < 30){
+                              //  $("#showmore").addClass("hidden");
+                           // } else {
+                             //   $("#showmore").removeClass("hidden");
+                           // }
                             objlist.appendChild(fragment);
                         } else if (event.type === 'exception') {
+                            console.log('exception');
                             document.getElementById("responseErrors").innerHTML = 
                                 event.message + "<br/>\n<pre>" + event.where + "</pre>";
                         } else {
+                            console.log('null')
                             document.getElementById("responseErrors").innerHTML = event.message;
                         }
                     }, 

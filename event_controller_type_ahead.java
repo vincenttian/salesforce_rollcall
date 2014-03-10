@@ -109,10 +109,15 @@ global class EventController2{
     // METHODS FOR JAVASCRIPT REMOTING
     // Returns a single campaign with parameter for detail view
     @RemoteAction
-    global static CampaignMember[] attendee_search(ID cid, String name, Integer offset) {
+    global static sObject[] attendee_search(ID cid, String name, Integer offset) {
+        String search_name = '%' + String.escapeSingleQuotes(name) + '%';
         Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:cid];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
-        CampaignMember[] registered = [SELECT Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet() AND FirstName LIKE :name];
+        sObject[] registered = [SELECT Lead.Firstname, Lead.Lastname, Lead.Email, 
+        Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c 
+        FROM CampaignMember WHERE Status='Responded' AND
+         CampaignId in :potential_children.keySet() AND (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name)];
+
         return registered;
     }
 
