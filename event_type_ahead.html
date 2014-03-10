@@ -125,15 +125,7 @@
             <div id="attendee_list">
                <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <div id="the_list">
-              <apex:dataList value="{!attendees}" var="attendee" id="theRepeat">
-                <br> </br>
-                <ul>
-                    <p> First Name: {!attendee.Contact.Firstname} </p>
-                    <p> Last Name: {!attendee.Contact.Lastname} </p>
-                    <p> Email : {!attendee.Contact.Email} </p>
-                    <p> Company: {!attendee.Contact.Company__c} </p>
-                </ul>
-              </apex:dataList>
+
             </div>
             </div>
           </div>
