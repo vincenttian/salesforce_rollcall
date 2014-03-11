@@ -1,5 +1,8 @@
+/** A wrapper class for a campaign. */
+
 global class Event{
     
+    /** Getters and Setters. */
     public String name {get;set;}
     public String start {get;set;}
     public String description {get;set;}
@@ -12,7 +15,7 @@ global class Event{
     public ID cid {get;set;}
     
    
-    /** Main constructor for an event. */ 
+    /* Main constructor for an event that represents campaign C. */ 
     public Event (Campaign c) {
         name = c.Name;
         start = c.StartDate.format();
@@ -29,7 +32,10 @@ global class Event{
         titleColor = 'title blue';
         textColor = 'blue_text';
         cid = c.id;
-        CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet()];
+        CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname,
+            Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname,
+            Contact.Email, Contact.Company__c FROM CampaignMember WHERE
+            Status='Responded' AND CampaignId in :potential_children.keySet()];
         List<String> data = new List<String>();
         for (CampaignMember check_in: checked_in) {
             data.add('\'' + check_in.LastModifiedDate.format('HH:mm:ss') + '\'');
@@ -38,7 +44,10 @@ global class Event{
         checkedInTimes = data;
     }
 
-    /** Special constructor for an event to add color. */
+    /** 
+    *  Special constructor for an event that takes in the campaign C,
+    *  to add a color that is represented by I.
+    */
     public Event (Campaign c, Integer i) {
         name = c.Name;
         start = c.StartDate.format();

@@ -1,8 +1,6 @@
 /**
-*
-*Roll Call application basic functionality
-*
-*/
+ * Controller to handle the CheckInPage.
+ */
 
 
 global class CheckInController{
