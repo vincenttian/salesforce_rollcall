@@ -41,39 +41,6 @@ global class EventController {
         return registered2;
     }
 
-    // Returns a single campaign with parameter for detail view
-    @RemoteAction
-    global static Campaign get_event(String event_id) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Id=:event_id];
-        return event;         
-    }
-
-    // Returns the date of a single campaign 
-    @RemoteAction
-    global static String get_event_date(String event_id) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Id=:event_id];
-        return event.StartDate.format();         
-    }
-
-    // Edits event info
-    @RemoteAction
-    global static void edit_info(String event_id, String new_description) {
-        Campaign event = [SELECT Name, Description, StartDate FROM Campaign WHERE isActive=True AND Id=:event_id];
-        event.Description = new_description;
-        update event;
-    }
-
-    // Gives statistics on the number of attendees
-    @RemoteAction
-    global static Integer[] event_stats(String event_id) {
-        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
-        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:event_id OR Id=:event_id]);
-        Integer registered = [SELECT Count() FROM CampaignMember WHERE CampaignId in :potential_children.keySet()];
-        Integer checked_in = [SELECT Count() FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Status='Responded')];
-        Integer[] data = new Integer[]{registered, checked_in};
-        return data;   
-    } 
-
     // For d3    
     @RemoteAction
     global static List<DateTime> get_checkedin_times(String event_id) {
