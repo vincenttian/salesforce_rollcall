@@ -20,6 +20,7 @@ id="todo"
     <p> Salesforce Workday </p>          
   </div>
   <div id="return" class ="invisible" onclick="javascript:window.location='{!$Page.event}?event_id={!event.id}';"></div>
+  <!-- Initial Checkin Page to enter email -->
   <div id="container">
    <section id="one" class="active">
     <div class="checkin">
@@ -28,6 +29,7 @@ id="todo"
       <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
     </div>
   </section>
+  <!-- Confirmation Page -->
   <section id="two">
     <div class="checkin">
       <div id="confirm_info">
@@ -52,6 +54,7 @@ id="todo"
       <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_placeholders()"> update</a> this information </p>
     </div>
   </section>
+  <!-- Successful checkin -->
   <section id="three">
     <div class="checkin">
       <img id="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'checkin.svg')}"> </img>
@@ -61,6 +64,7 @@ id="todo"
       </a>
     </div>
   </section>
+  <!-- Update Attendee Information -->
   <section id="four">
     <div class="checkin">
       <div class="column">
@@ -78,6 +82,7 @@ id="todo"
       <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee_javascript()" value="Confirm"> </input>
     </div>
   </section>
+  <!-- Haven't registered page -->
   <section id="five">
     <div class="checkin">
       <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'help_alt.svg')}"> </img>
@@ -88,6 +93,7 @@ id="todo"
       <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
     </div>
   </section>
+  <!-- Multiple Logins -->
   <section id="six">
     <div class="checkin">
         <p id="multiple"> </p>
