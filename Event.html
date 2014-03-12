@@ -177,7 +177,7 @@
     // Flow Chart of attendees
     function line_chart_info() {
         Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.EventController.getCheckedInTimes}',
+        '{!$RemoteAction.EventController.get_checkedin_times}',
         '{!event.cid}',
         function(result, event){
             if (event.status) {

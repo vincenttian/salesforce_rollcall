@@ -15,28 +15,6 @@ global class EventController {
         event = new Event(c);
     }
 
-    public static void check_in(String campaign_id, String email) {        
-        CampaignMember[] event_attendee = [SELECT ContactID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id];// AND (Contact.email=:email or Lead.email=:email)];
-        if (event_attendee.size() == 0) {
-            // Should not get here
-        } else {
-            event_attendee[0].status = 'Responded'; // temp status to signify checked in  // NOT SETTING PICKLIST TO SPECIFIED VALUE
-        }
-        update event_attendee[0];
-    }
-
-    // logic to check if a campaign member needs to register or just check in
-    public static void handle_parent_events(String campaign_id, String email) {
-        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
-        CampaignMember[] event_attendee = [SELECT Id, CampaignId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
-        if (event_attendee.size() == 0) {
-            // register the attendee
-            // MUST RAISE AN ERROR
-        } else {
-            EventController.check_in(string.valueof(campaign_id), email);
-        }
-    }
-
     // For apex: repeat    
     public CampaignMember[] getAttendees() {
         Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event.cid];
@@ -53,7 +31,8 @@ global class EventController {
         CampaignMember[] registered = [SELECT Lead.Firstname, Lead.Lastname, Lead.Email, 
         Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c 
         FROM CampaignMember WHERE Status='Responded' AND
-         CampaignId in :potential_children.keySet() AND (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  Id  LIMIT 50 OFFSET :offset];
+             CampaignId in :potential_children.keySet() AND 
+             (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  Id  LIMIT 50 OFFSET :offset];
         sObject[] registered2 = new sObject[]{};
         for (CampaignMember cm : registered) {
             registered2.add(cm.Contact);
@@ -97,7 +76,7 @@ global class EventController {
 
     // For d3    
     @RemoteAction
-    global static List<DateTime> getCheckedInTimes(String event_id) {
+    global static List<DateTime> get_checkedin_times(String event_id) {
         Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
         CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet() ORDER BY LastModifiedDate ASC];
