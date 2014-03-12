@@ -1,7 +1,10 @@
 /**
- * Controller to handle the CheckInPage.
- */
-
+*
+*Roll Call application 
+*Controller for Checkin page
+*@authors Howard Chen and Vincent Tian
+*
+*/
 
 global class CheckInController{
 

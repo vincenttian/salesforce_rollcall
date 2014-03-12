@@ -1,11 +1,10 @@
 /**
 *
-*Roll Call application basic functionality
-*@author Vincent Tian
-*Version1
+*Roll Call application 
+*Controller for Event page
+*@authors Howard Chen and Vincent Tian
 *
 */
-
 
 global class EventController {
 

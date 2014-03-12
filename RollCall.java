@@ -2,7 +2,7 @@
 *
 *Roll Call application 
 *Controller for Index page
-*@author Howard Chen and Vincent Tian
+*@authors Howard Chen and Vincent Tian
 *
 */
 
