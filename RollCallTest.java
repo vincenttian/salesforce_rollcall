@@ -18,39 +18,53 @@ private class RollCallTest {
     }
 
     static testMethod void test_create_child_event() {
-        x b = new x(Name='Behind the Cloud', Price__c=100);
-        System.debug('Price before inserting new book: ' + b.Price__c);
-        // Insert 
-        insert b;
-        // Retrieve 
-        b = [SELECT a FROM  WHERE Id =:b.Id];
-        System.debug('Price after trigger fired: ' + b.Price__c);
-        // Test that the trigger correctly updated the price
-   System.assertEquals(90, b.Price__c);
+        Date test_date = Date.newInstance(2014, 2, 17);
+        Campaign parent_campaign = create_event('test_event2', test_date, 'test_description', 'Open');
+        System.debug('Inserting parent campaign into database: ' + parent_campaign);
+        // Insert parent campaign
+        insert parent_campaign;
+
+        Date test_date = Date.newInstance(2014, 2, 17);
+        Campaign child_campaign = create_child_event('test_event2', test_date, 'test_description', 'Open', parent_campaign.Id);
+        System.debug('Inserting parent campaign into database: ' + child_campaign);
+        // Insert child campaign
+        insert child_campaign;
+        // Retrieve child
+        child = [SELECT ParentId FROM Campaign WHERE Id =:child_campaign.Id];
+        // Test that the child event's parentId matches
+       System.assertEquals(child_campaign.Id, parent_campaign.Id);
     }
 
     static testMethod void test_delete_event() {
-        x b = new x(Name='Behind the Cloud', Price__c=100);
-        System.debug('Price before inserting new book: ' + b.Price__c);
+        Date test_date = Date.newInstance(2014, 2, 17);
+        Campaign campaign = create_event('test_event1', test_date, 'test_description', 'Open');
+        System.debug('Inserting campaign into database: ' + c);
         // Insert 
-        insert b;
+        insert campaign;
         // Retrieve 
-        b = [SELECT a FROM  WHERE Id =:b.Id];
-        System.debug('Price after trigger fired: ' + b.Price__c);
-        // Test that the trigger correctly updated the price
-        System.assertEquals(90, b.Price__c);
+        Campaign[] c = [SELECT Name, StartDate, Description, Status, isActive FROM Campaign WHERE Id =:campaign.Id];
+        System.assertEquals(1, c.size());
+        // Deleting event
+        delete_event(campaign.Id);
+        Campaign[] c = [SELECT Name, StartDate, Description, Status, isActive FROM Campaign WHERE Id =:campaign.Id];
+        // Test that campaign no longer exists in the database
+        System.assertEquals(0, c.size());
     }
 
     static testMethod void test_end_event() {
-        x b = new x(Name='Behind the Cloud', Price__c=100);
-        System.debug('Price before inserting new book: ' + b.Price__c);
+        Date test_date = Date.newInstance(2014, 2, 17);
+        Campaign campaign = create_event('test_event1', test_date, 'test_description', 'Open');
+        System.debug('Inserting campaign into database: ' + c);
         // Insert 
-        insert b;
+        insert campaign;
         // Retrieve 
-        b = [SELECT a FROM  WHERE Id =:b.Id];
-        System.debug('Price after trigger fired: ' + b.Price__c);
-        // Test that the trigger correctly updated the price
-        System.assertEquals(90, b.Price__c);
+        campaign = [SELECT Campaign FROM Campaign WHERE Id =:campaign.Id];
+        // Check that the event is active
+        System.assertEquals(True, campaign.isActive);
+        // End event
+        end_event(campaign.Id);
+        // Test that the event is no longer active
+        System.assertEquals(False, campaign.isActive);
     }
 
 }

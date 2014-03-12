@@ -1,8 +1,8 @@
 /**
 *
-*Roll Call application basic functionality
+*Roll Call application 
+*Controller for Index page
 *@author Howard Chen and Vincent Tian
-*Version1
 *
 */
 
@@ -18,13 +18,13 @@ global class RollCall{
         insert new_event;
     }
 
-    public void delete_event(String event_name) {
-        Campaign event = [SELECT Description FROM Campaign WHERE Name=:event_name];
+    public void delete_event(String id) {
+        Campaign event = [SELECT Description FROM Campaign WHERE Id=:id];
         delete event;
     }
 
-    public void end_event(String event_name) {
-        Campaign event = [SELECT Name, isActive FROM Campaign WHERE Name=:event_name];
+    public void end_event(String id) {
+        Campaign event = [SELECT Name, isActive FROM Campaign WHERE Id=:id];
         event.isActive = False;
         update event;
     }
