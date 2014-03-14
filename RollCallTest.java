@@ -1,6 +1,6 @@
-@isTest 
+@isTest
 private class RollCallTest {
-    
+
     static testMethod void test_create_event() {
         Date test_date = Date.newInstance(2014, 2, 17);
         Campaign c = create_event('test_event1', test_date, 'test_description', 'Open');
