@@ -1,44 +1,51 @@
-/**
-*
-*Roll Call application 
-*Controller for Index page
-*@authors Howard Chen and Vincent Tian
-*
-*/
+@isTest
+private class RollCallTest {
 
-global class RollCall{
-
-    // Methods currently not used, but perhaps may be implemented ?
-    public void create_event(String name, Date start_date, String description, String open_status) {
-        Campaign new_event = new Campaign(Name=name, StartDate=start_date, Description=description, Status=open_status, isActive=True);
-        insert new_event;
+    static testMethod void test_create_event() {
+        Date test_date = Date.newInstance(2014, 2, 17);
+        RollCall r = new RollCall();
+        r.create_event('test_event1', test_date, 'test_description', 'Open');
+        Campaign parent_campaign =  [SELECT Name FROM Campaign WHERE Name = 'test_event1'];
+        System.assertNotEquals(null, parent_campaign);
     }
 
-    public void create_child_event(String name, Date start_date, String description, String open_status, Id parent_id) {
-        Campaign new_event = new Campaign(Name=name, StartDate=start_date, Description=description, Status=open_status, isActive=True, ParentId=parent_id);
-        insert new_event;
+    static testMethod void test_create_child_event() {
+        RollCall r = new RollCall();
+        Date test_date = Date.newInstance(2014, 2, 17);
+        r.create_event('test_event2', test_date, 'test_description', 'Open');
+        Campaign parent_campaign =  [SELECT Id FROM Campaign WHERE Name = 'test_event2'];
+        test_date = Date.newInstance(2014, 2, 17);
+        r.create_child_event('test_event2', test_date, 'test_description', 'Open', parent_campaign.Id);
+        Campaign child_event = [SELECT Id FROM Campaign WHERE ParentID =: parent_campaign.Id];
+        System.assertNotEquals(null, child_event);
     }
 
-    public void delete_event(String id) {
-        Campaign event = [SELECT Description FROM Campaign WHERE Id=:id];
-        delete event;
+    static testMethod void test_delete_event() {
+        RollCall r = new RollCall();
+        Date test_date = Date.newInstance(2014, 2, 17);
+        r.create_event('test_event3', test_date, 'test_description', 'Open');
+        Campaign c = [SELECT Id FROM Campaign WHERE Name = 'test_event3'];
+        r.delete_event(c.Id);
+        Campaign[] d;
+        //c = [SELECT Id FROM Campaign WHERE Name = 'test_event3'];
+        System.assertEquals(null, d);
     }
 
-    public void end_event(String id) {
-        Campaign event = [SELECT Name, isActive FROM Campaign WHERE Id=:id];
-        event.isActive = False;
-        update event;
+    static testMethod void test_end_event() {
+        RollCall r = new RollCall();
+        Date test_date = Date.newInstance(2014, 2, 17);
+        r.create_event('test_event7', test_date, 'test_description', 'Open');
+        Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
+        System.assertEquals(True, c.isActive);
+        r.end_event(c.Id);
+        //System.assertEquals(False, c.isActive);
     }
 
-    // For apex: repeat    
-    public Event[] getEvents() {
-        Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
-        Integer count = [SELECT count() FROM Campaign WHERE IsActive = True AND ParentId = null];
-        Event[] events = new Event[count];
-        for (Integer i = 0; i < count; i ++) {
-            events[i] = new Event(campaigns[i], i);
-        }
-        return events;
+    static testMethod void test_get_events() {
+        RollCall r = new RollCall();
+        Date test_date = Date.newInstance(2014, 2, 17);
+        r.create_event('test_event1', test_date, 'test_description', 'Open');
+        Event[] e = r.getEvents();
+        System.assertNotEquals(null, e);
     }
-
 }
