@@ -20,8 +20,9 @@
         }
 
         var range = config.max - config.min;
-        config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
-        config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+        config.greenZones = [{ from: config.min + range*0, to: config.min + range/3 }];
+        config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
+        config.redZones = [{ from: config.min + range*2/3, to: config.max }];
 
         gauges[name] = new Gauge(name + "GaugeContainer", config);
         gauges[name].render();
@@ -29,7 +30,7 @@
 
     function createGauges()
     {
-        createGauge("test", "Test", -200, 200 );
+        createGauge("test", "Test", 0, 200 );
     }
 
     function updateGauges()
@@ -86,18 +87,38 @@
  		</section>
  		<section id="two">
             <div class="page">
-                <div id="chart_one"></div>
-                <div id="chart_two"></div>
+                <div id="chart_one">
+                    <p class="chart_title"> Flow </p>
+                    <p id="rate"> Rate: <span class="magenta_text"> 15 </span> People/Minute</p>
+                </div>
+                <div id="chart_two">
+                    <p class="chart_title"> Attendance </p>
+                    <p class="chart_info"> Checked In: <span class="blue_text"> 100 </span> <br> Registered: <span class="gray_text"> 128 </span> </p>
+                    <p id="percentage"> 84% </p>
+                </div>
                 <div id="chart_three">
-		          <span id="testGaugeContainer"></span>
+                    <p class="chart_title"> Capacity </p>
+                    <p class="chart_info"> Checked In: <span class="orange_text"> 100 </span> <br> Capacity: <span class="gray_text"> 200 </span> </p>
+                    <span id="testGaugeContainer"></span>
 	            </div>
             </div>
  		</section>
         <section id="three">
             <div class="page">
                 <div class="information">
-                    <p class="blue_text"> Attendee List: </p>
-                    <p> John Smith,  </p>
+                    <form class="form-wrapper cf">
+                        <input class="input" id="field" type="text" placeholder="Search here..." required>
+                        <button id="search" type="submit">Search</button>
+                    </form>
+                    <br>                    
+                    <p class="green_text"> Attendee List: </p>
+                    <ul>
+                        <li> John Smith, Salesforce, <br> JohnSmith@salesforce.com </li>
+                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
+                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
+                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
+                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
+                    </ul>
                 </div>
             </div>
  		</section>
@@ -106,18 +127,17 @@
     .axis path,
     .axis line {
       fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-
-    .x.axis path {
-      display: none;
-    }
-
+      stroke: #CCC;
+    }    
+    
     .line {
       fill: none;
-      stroke: steelblue;
-      stroke-width: 1.5px;
+      stroke: #ff009d;
+      stroke-width: 3px;
+    }
+        
+    .tick {
+        display: none;
     }
     </style>
     <script>
@@ -127,7 +147,7 @@
     var parseTime = d3.time.format("%H:%M:%S").parse;
 
     var x = d3.time.scale()
-        .range([0, width]);
+        .range([0, width - 100]);
 
     var y = d3.scale.linear()
         .range([height, 0]);
@@ -148,7 +168,7 @@
         .attr("width", width + 100)
         .attr("height", height + 100)
       .append("g")
-        .attr("transform", "translate(" + 50 + "," + 50 + ")");
+        .attr("transform", "translate(" + 100 + "," + 50 + ")");
 
     d3.json("data.json", function(error, data) {
         data = d3.zip(data.close, data.date).map(function(d) {
@@ -163,48 +183,70 @@
       svg.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + 284 + ")")
-          .call(xAxis);
+          .call(xAxis)
+          .style("font-family", "'Hammersmith One', sans-serif");
 
       svg.append("g")
           .attr("class", "y axis")
-          .call(yAxis);
+          .call(yAxis)
+          .style("font-family", "'Hammersmith One', sans-serif");
 
       svg.append("path")
           .datum(data)
           .attr("class", "line")
           .attr("d", line);
+
     });
     </script>
     <script>
-    var dataset = {
-      attendance: [75, 28],
-    };
+
+    var data = [ {name: "attended", value: 100},
+            {name: "absent", value:  28} ];
 
     var width = 362,
         height = 384,
         radius = Math.min(width, height) / 2;
 
-    var color = d3.scale.ordinal()
-        .range(["#98abc5", "#8a89a6"]);
+    var chart = d3.select("#chart_two")
+                    .append('svg')
+                    .attr("width", width)
+                    .attr("height", height)
+                   .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + 106 + ")");
 
-    var pie = d3.layout.pie()
-        .sort(null);
+    var radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.ordinal()
+        .range(["#0096ff", "#CCC"]);
 
     var arc = d3.svg.arc()
-        .innerRadius(radius - 100)
-        .outerRadius(radius - 50);
+        .outerRadius(radius - 75)
+        .innerRadius(radius - 100);
 
-    var svg2 = d3.select("#chart_two").append("svg")
-        .attr("width", width)
-        .attr("height", height)
-      .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    var pie = d3.layout.pie()
+        .sort(null)
+        .startAngle(1.1*Math.PI)
+        .endAngle(3.1*Math.PI)
+        .value(function(d) { return d.value; });
 
-    var path2 = svg2.selectAll("path")
-        .data(pie(dataset.attendance))
-        .enter().append("path")
-        .attr("fill", function(d, i) { return color(i); })
-        .attr("d", arc);
+
+    var g = chart.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+    g.append("path")
+      .style("fill", function(d) { return color(d.data.name); })
+      .style("stroke", "#fff")
+      .style("stroke-width", "3px")
+      .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
+      .attrTween('d', function(d) {
+           var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+           return function(t) {
+               d.endAngle = i(t);
+             return arc(d);
+           }
+      });
     </script>
 </body>
 </html>

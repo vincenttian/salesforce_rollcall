@@ -18,12 +18,12 @@ function Gauge(placeholderName, configuration)
 		this.config.max = undefined != configuration.max ? configuration.max : 100; 
 		this.config.range = this.config.max - this.config.min;
 		
-		this.config.majorTicks = configuration.majorTicks || 5;
-		this.config.minorTicks = configuration.minorTicks || 2;
+		this.config.majorTicks = configuration.majorTicks || 4;
+		this.config.minorTicks = configuration.minorTicks || 0;
 		
-		this.config.greenColor 	= configuration.greenColor || "#109618";
-		this.config.yellowColor = configuration.yellowColor || "#FF9900";
-		this.config.redColor 	= configuration.redColor || "#DC3912";
+		this.config.greenColor 	= configuration.greenColor || "#7ac100";
+		this.config.yellowColor = configuration.yellowColor || "#ff9d00";
+		this.config.redColor 	= configuration.redColor || "#ff4040";
 		
 		this.config.transitionDuration = configuration.transitionDuration || 500;
 	}
@@ -40,7 +40,7 @@ function Gauge(placeholderName, configuration)
 					.attr("cx", this.config.cx)
 					.attr("cy", this.config.cy)
 					.attr("r", this.config.raduis)
-					.style("fill", "#ccc")
+					.style("fill", "#fff")
 					.style("stroke-width", "0.5px");
 					
 		this.body.append("svg:circle")
@@ -48,7 +48,7 @@ function Gauge(placeholderName, configuration)
 					.attr("cy", this.config.cy)
 					.attr("r", 0.9 * this.config.raduis)
 					.style("fill", "#fff")
-					.style("stroke", "#e0e0e0")
+					.style("stroke", "#fff")
 					.style("stroke-width", "2px");
 					
 		for (var index in this.config.greenZones)
@@ -76,7 +76,7 @@ function Gauge(placeholderName, configuration)
 						.attr("text-anchor", "middle")
 						.text(this.config.label)
 						.style("font-size", fontSize + "px")
-						.style("fill", "#333")
+						.style("fill", "#fff")
 						.style("stroke-width", "0px");
 		}
 		
@@ -87,32 +87,32 @@ function Gauge(placeholderName, configuration)
 			var minorDelta = majorDelta / this.config.minorTicks;
 			for (var minor = major + minorDelta; minor < Math.min(major + majorDelta, this.config.max); minor += minorDelta)
 			{
-				var point1 = this.valueToPoint(minor, 0.75);
-				var point2 = this.valueToPoint(minor, 0.85);
+				var point1 = this.valueToPoint(minor, 0.9);
+				var point2 = this.valueToPoint(minor, 1);
 				
 				this.body.append("svg:line")
 							.attr("x1", point1.x)
 							.attr("y1", point1.y)
 							.attr("x2", point2.x)
 							.attr("y2", point2.y)
-							.style("stroke", "#666")
-							.style("stroke-width", "1px");
+							.style("stroke", "#fff")
+							.style("stroke-width", "3px");
 			}
 			
-			var point1 = this.valueToPoint(major, 0.7);
-			var point2 = this.valueToPoint(major, 0.85);	
+			var point1 = this.valueToPoint(major, 0.9);
+			var point2 = this.valueToPoint(major, 1);	
 			
 			this.body.append("svg:line")
 						.attr("x1", point1.x)
 						.attr("y1", point1.y)
 						.attr("x2", point2.x)
 						.attr("y2", point2.y)
-						.style("stroke", "#333")
-						.style("stroke-width", "2px");
+						.style("stroke", "#fff")
+						.style("stroke-width", "3px");
 			
 			if (major == this.config.min || major == this.config.max)
 			{
-				var point = this.valueToPoint(major, 0.63);
+				var point = this.valueToPoint(major, 0.9);
 				
 				this.body.append("svg:text")
 				 			.attr("x", point.x)
@@ -120,6 +120,7 @@ function Gauge(placeholderName, configuration)
 				 			.attr("dy", fontSize / 3)
 				 			.attr("text-anchor", major == this.config.min ? "start" : "end")
 				 			.text(major)
+				 			.style("font-family", "'Hammersmith One', sans-serif")
 				 			.style("font-size", fontSize + "px")
 							.style("fill", "#333")
 							.style("stroke-width", "0px");
@@ -142,15 +143,15 @@ function Gauge(placeholderName, configuration)
 							.enter()
 								.append("svg:path")
 									.attr("d", pointerLine)
-									.style("fill", "#dc3912")
-									.style("stroke", "#c63310")
-									.style("fill-opacity", 0.7)
+									.style("fill", "#666")
+									.style("stroke", "#666")
+									.style("opacity", 1)
 					
 		pointerContainer.append("svg:circle")
 							.attr("cx", this.config.cx)
 							.attr("cy", this.config.cy)
 							.attr("r", 0.12 * this.config.raduis)
-							.style("fill", "#4684EE")
+							.style("fill", "#FFFFFF")
 							.style("stroke", "#666")
 							.style("opacity", 1);
 		
@@ -163,6 +164,7 @@ function Gauge(placeholderName, configuration)
 									.attr("y", this.config.size - this.config.cy / 4 - fontSize)
 									.attr("dy", fontSize / 2)
 									.attr("text-anchor", "middle")
+									.style("font-family", "'Hammersmith One', sans-serif")
 									.style("font-size", fontSize + "px")
 									.style("fill", "#000")
 									.style("stroke-width", "0px");
@@ -179,11 +181,11 @@ function Gauge(placeholderName, configuration)
 		var head2 = valueToPoint(value + delta, 0.12);
 		
 		var tailValue = value - (this.config.range * (1/(270/360)) / 2);
-		var tail = valueToPoint(tailValue, 0.28);
+		var tail = valueToPoint(tailValue, 0);
 		var tail1 = valueToPoint(tailValue - delta, 0.12);
 		var tail2 = valueToPoint(tailValue + delta, 0.12);
 		
-		return [head, head1, tail2, tail, tail1, head2, head];
+		return [head, tail];
 		
 		function valueToPoint(value, factor)
 		{
@@ -203,8 +205,8 @@ function Gauge(placeholderName, configuration)
 					.attr("d", d3.svg.arc()
 						.startAngle(this.valueToRadians(start))
 						.endAngle(this.valueToRadians(end))
-						.innerRadius(0.65 * this.config.raduis)
-						.outerRadius(0.85 * this.config.raduis))
+						.innerRadius(0.9 * this.config.raduis)
+						.outerRadius(1 * this.config.raduis))
 					.attr("transform", function() { return "translate(" + self.config.cx + ", " + self.config.cy + ") rotate(270)" });
 	}
 	
@@ -216,7 +218,7 @@ function Gauge(placeholderName, configuration)
 		
 		var pointer = pointerContainer.selectAll("path");
 		pointer.transition()
-					.duration(undefined != transitionDuration ? transitionDuration : this.config.transitionDuration)
+					.duration(1000)
 					//.delay(0)
 					//.ease("linear")
 					//.attr("transform", function(d) 
