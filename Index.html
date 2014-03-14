@@ -13,12 +13,39 @@
    <html>
       <head>
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+         <style>
+            #animation {
+               position: fixed;
+               z-index: 2;
+               top: 50%;
+               left: 50%;
+               bottom: 50%;
+               right: 50%;
+               background: #fff;
+            }
+         </style>
+         <script>
+            $(document).ready(function(){
+                $('a').click(function(e){
+                    redirect = $(this).attr('href');
+                    e.preventDefault();
+                    $('#animation').animate({"top":"0%"}, { queue: false, duration: 100 })
+                    $('#animation').animate({"left":"0%"},{ queue: false, duration: 100 })
+                    $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 100 })
+                    $('#animation').animate({"right":"0%"},{ queue: false, duration: 100 })
+                    $('#animation').animate({"opacity":"1"},1,'linear',function(){
+                        document.location.href = redirect
+                    });
+                });
+            })
+         </script>
          <title>RollCall</title>
          <style>
           background: url(wooden_background.jpg);
          </style>
       </head>
       <body>
+         <div id="animation"></div>
          <div id="select_event">
             <p> Select An Event </p>
             <div id="rollcall"></div>
