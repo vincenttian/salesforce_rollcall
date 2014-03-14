@@ -143,32 +143,37 @@ li {
 }
 
 .cal_blue {
-    background: url(calendar_blue.jpg);
-    background: contain;
+    background: url(calendar_blue.svg);
+    background-size: contain;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
 .cal_magenta {
     background: url(calendar_magenta.svg);
-    background: contain;
+    background-size: contain;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
 .cal_green {
     background: url(calendar_green.svg);
-    background: contain;
+    background-size: contain;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
 .cal_red {
-    background: url(calendar_red.jpg);
-    background: contain;
+    background: url(calendar_red.svg);
+    background-size: contain;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
 .cal_orange {
     background: url(calendar_orange.svg);
-    background: contain;
+    background-size: contain;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
