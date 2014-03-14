@@ -137,8 +137,39 @@ li {
 }
 
 .pic {
+    margin-left: 37px;
     width: 150px;
     height: 125px;
+}
+
+.cal_blue {
+    background: url(calendar_blue.jpg);
+    background: contain;
+    background-repeat: no-repeat;
+}
+
+.cal_magenta {
+    background: url(calendar_magenta.svg);
+    background: contain;
+    background-repeat: no-repeat;
+}
+
+.cal_green {
+    background: url(calendar_green.svg);
+    background: contain;
+    background-repeat: no-repeat;
+}
+
+.cal_red {
+    background: url(calendar_red.jpg);
+    background: contain;
+    background-repeat: no-repeat;
+}
+
+.cal_orange {
+    background: url(calendar_orange.svg);
+    background: contain;
+    background-repeat: no-repeat;
 }
 
 .pic_data {
@@ -147,8 +178,7 @@ li {
     font-size: 1.5em;
     font-family: Oswald, sans-serif;
     font-weight: 400;
-    margin-top: -75px;
-    margin-bottom: 40px;
+    margin-top: 50px;
 }
 
 .percentage {

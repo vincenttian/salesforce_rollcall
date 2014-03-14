@@ -7,7 +7,8 @@
    applyBodyTag="false"
    id="todo"
    >
-   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Hammersmith+One"/>
+   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Oswald"/>
    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
    <html>
       <head>
@@ -35,12 +36,11 @@
                      </div>
                      <div class="info">
 
-                        <p>Max Capactiy: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
+                        <p>Capacity: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
                         <p>Registered : <span class="{!event.textcolor}">{!event.registered}</span></p>
-                        <p>Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span></p>
+                        <!-- <p>Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span></p> -->
                      </div>
-                     <img class="pic" src="{!URLFOR($Resource.RollCallAssets, '{!event.cal}')}"><p class="{!event.picData}"> {!event.start} </p></img>
-                         
+                     <div class="pic"><p class="{!event.picData}"> {!event.start} </p></div>  
                   </div>
                </a>
             </apex:repeat>
