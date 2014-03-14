@@ -34,20 +34,11 @@
             gauges[name] = new Gauge(name + "GaugeContainer", config);
             gauges[name].render();        
         }
-
-        function createGauges() {
-            createGauge("test", "Test", 0, {!event.maxCapacity} );
-        }
-
-        function updateGauges() {
-            for (var key in gauges) {
-                var value = {!event.checkedIn};
-            }
-        }
-
+ 
         function initialize() {
-            createGauges();
-            setInterval(updateGauges, 1000);
+            createGauge("test", "Test", 0, {!event.maxCapacity} );
+            var value = {!event.checkedIn};
+            gauges["test"].redraw(value);
         }
         </script>
     </head>
