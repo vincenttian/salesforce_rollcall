@@ -35,6 +35,26 @@ global class CheckInController{
         }
     }
 
+
+    public static CampaignMember[] check_in(String campaign_id, String email) {        
+        CampaignMember event_attendee = [SELECT ContactID, LeadID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
+        if (event_attendee == null) {
+            return new CampaignMember[0];
+        } else {
+            event_attendee.status = 'Responded'; 
+        }
+        update event_attendee;
+        CampaignMember[] info = new CampaignMember[]{};
+        if (event_attendee.ContactId == null) {
+            Lead lead_event_attendee = [SELECT FirstName, LastName, Company FROM Lead WHERE Id=:event_attendee.LeadId];
+        } else {
+            Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee.ContactId];
+        }
+        info.add(event_attendee);
+        return info;
+    }
+
+    /* Original
     public static String[] check_in(String campaign_id, String email) {        
         CampaignMember event_attendee = [SELECT ContactID, LeadID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
         if (event_attendee == null) {
@@ -57,7 +77,26 @@ global class CheckInController{
         }
         return info;
     }
+    */
 
+    // logic to check if a campaign member needs to register or just check in
+    public static CampaignMember[] handle_parent_events(String campaign_id, String email) {
+        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
+        CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId, LeadId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
+        if (event_attendee.size() == 0) {
+            return new CampaignMember[0];
+        } else if (event_attendee.size() != 1) {
+            CampaignMember[] info = new CampaignMember[]{};
+            for (CampaignMember cmember: event_attendee) {
+                info.add(cmember);
+            }
+            return info;
+        } else {
+            return CheckInController.check_in(string.valueof(campaign_id), email);
+        }
+    }
+
+    /* Original
     // logic to check if a campaign member needs to register or just check in
     public static String[] handle_parent_events(String campaign_id, String email) {
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
@@ -88,10 +127,11 @@ global class CheckInController{
             return CheckInController.check_in(string.valueof(campaign_id), email);
         }
     }
+    */
 
     // Checking in attendees for checkin page
     @RemoteAction
-    global static String[] check_in_attendee(String event_id, String email) {
+    global static CampaignMember[] check_in_attendee(String event_id, String email) {
         return handle_parent_events(event_id, email);
     }
 
