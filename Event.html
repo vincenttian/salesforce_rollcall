@@ -9,6 +9,7 @@
   >
   <html>
     <head>
+      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Hammersmith+One"/>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
@@ -132,10 +133,10 @@
         <!-- Event Attendees -->
         <section id="three">
           <div class="page" style="overflow:auto">
-            <div id="attendee_list">
-              <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
-               <div id="the_list"></div>
-               <button id="showmore" class="btn btn-info loading hidden" onclick="getAttendees(true);">
+            <div class="information" id="attendee_list">
+              <input type="text" id="field" class="input form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
+               <ul id="the_list"></ul>
+               <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More
                 </button> 
             </div>
@@ -154,48 +155,9 @@
       stroke: #ff009d;
       stroke-width: 3px;
     }   
-    .tick {
+    .y {
         display: none;
     }    </style>
-    <script>
-    // Pie Chart for Attendance
-    var checked_in = {!event.checkedin};
-    var registered = {!event.registered};
-    var math = registered - checked_in;
-
-    document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
-
-    var dataset = {
-      attendance: [math, {!event.checkedIn}],
-    };
-
-    var width = 362,
-        height = 384,
-        radius = Math.min(width, height) / 2;
-
-    var color = d3.scale.ordinal()
-        .range(["#0096ff", "#CCC"]);
-
-    var arc = d3.svg.arc()
-        .outerRadius(radius - 75)
-        .innerRadius(radius - 100);
-
-    var pie = d3.layout.pie()
-        .sort(null);
-
-    var svg2 = d3.select("#chart_two").append("svg")
-        .attr("width", width)
-        .attr("height", height)
-      .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    var path2 = svg2.selectAll("path")
-        .data(pie(dataset.attendance))
-        .enter().append("path")
-        .attr("fill", function(d, i) { return color(i); })
-        .attr("d", arc);
-    </script>
-
     <script>
     // Flow Chart of attendees
     function line_chart_info() {
@@ -290,7 +252,7 @@
     var page_offset = 50;
     var page = 0;
     function createListElement(attendee) {
-        var element = document.createElement("ul")
+        var element = document.createElement("li")
         var f = document.createElement('p');
         var l = document.createElement('p');
         var e = document.createElement('p');
@@ -298,8 +260,14 @@
         console.log(element);
         f.innerHTML = 'First Name: ' + attendee.FirstName;
         l.innerHTML = 'Last Name: ' + attendee.LastName;
-        e.innerHTML = 'Email: ' + attendee.Email;
-        c.innerHTML = 'Company: ' + attendee.Company__c;
+        if (attendee.email) {
+            e.innerHTML = 'Email: ' + attendee.Email;
+        }
+        if (attendee.Company__c) {
+            c.innerHTML = 'Company: ' + attendee.Company__c;
+        } else if (attendee.Company) {
+            c.innerHTML = 'Company: ' + attendee.Company__c;
+        }
         element.appendChild(f);
         element.appendChild(l);
         element.appendChild(e);
@@ -307,7 +275,7 @@
         return element;
     }
     function getAttendees(paginate, searchTerm) {
-        var searchName = searchTerm ? searchTerm : document.getElementById("search_name").value;       
+        var searchName = searchTerm ? searchTerm : document.getElementById("field").value;       
         var offset = 0;
         if(paginate){
             page += 1;
@@ -349,6 +317,62 @@
             {escape: true}
         );
     }
+    </script>
+    <script>
+
+    var checked_in = {!event.checkedin};
+    var registered = {!event.registered};
+    var math = registered - checked_in;
+
+    document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
+
+    var data = [ {name: "attended", value: {!event.checkedIn}},
+            {name: "absent", value:  math} ];
+
+    var width = 362,
+        height = 384,
+        radius = Math.min(width, height) / 2;
+
+    var chart = d3.select("#chart_two")
+                    .append('svg')
+                    .attr("width", width)
+                    .attr("height", height)
+                   .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + 106 + ")");
+
+    var radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.ordinal()
+        .range(["#0096ff", "#CCC"]);
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 75)
+        .innerRadius(radius - 100);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .startAngle(1.1*Math.PI)
+        .endAngle(3.1*Math.PI)
+        .value(function(d) { return d.value; });
+
+
+    var g = chart.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+    g.append("path")
+      .style("fill", function(d) { return color(d.data.name); })
+      .style("stroke", "#fff")
+      .style("stroke-width", "3px")
+      .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
+      .attrTween('d', function(d) {
+           var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+           return function(t) {
+               d.endAngle = i(t);
+             return arc(d);
+           }
+      });
     </script>
     </body>
   </html>
