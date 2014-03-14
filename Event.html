@@ -296,9 +296,9 @@
                         fragment.appendChild(createListElement(result[i]));
                     }
                     if (result.length < 30){
-                        $("#showmore").addClass("hidden");
+                        document.getElementById("search").hidden='hidden';
                     } else {
-                        $("#showmore").removeClass("hidden");
+                        document.getElementById("search").hidden='';
                     }
                     objlist.appendChild(fragment);
                 } else if (event.type === 'exception') {
