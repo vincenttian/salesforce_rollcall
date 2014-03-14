@@ -19,7 +19,7 @@
                 <form>
                 <input type="text" name="email" class="normal" id="email" />
                 <p id="checkin_error"> Please enter a valid email </p>
-                <a id="submit" data-section="one" href="#">  
+                <a id="submit" data-section="two" href="#">  
                     <p> Check In </p>
                 </a>
                 </form>
@@ -52,17 +52,18 @@
             <div class="checkin">
                 <div class="column">
                     <p class="label"> First Name: </p>
-                    <p class="label"> Middle Name: </p>
                     <p class="label"> Last Name: </p>
                     <p class="label"> Email: </p>
                     <p class="label"> Company: </p>
                 </div>
                 <div class="column">
-                    <input type="text" name="firstname" class="input" placeholder="Kevin"/>
-                    <input type="text" name="middlename" class="input" placeholder="TianXiang"/> 
-                    <input type="text" name="lastname" class="input" placeholder="Wu"/>
-                    <input type="text" name="email" class="input" placeholder="kevintxwu@gmail.com"/>
-                    <input type="text" name="company" class="input" placeholder="Salesforce"/>
+                    <input type="text" name="firstname" class="input normal" placeholder="Kevin"/>
+                    <p id="first_error"> Please enter a first name </p>
+                    <input type="text" name="lastname" class="input normal" placeholder="Wu"/>
+                    <p id="last_error"> Please enter a last name </p>
+                    <input type="text" name="email" class="input normal" placeholder="kevintxwu@gmail.com"/>
+                    <p id="email_error"> Please enter a valid email </p>
+                    <input type="text" name="company" class="input normal" placeholder="Salesforce"/>
                 </div>
                 <a id="update" data-section="three" href="#"> 
                     <p> Confirm </p>

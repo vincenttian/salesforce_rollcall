@@ -348,6 +348,21 @@ li {
     color: #ff4040;
 }
 
+#first_error {
+    display: none;
+    color: #ff4040;
+}
+
+#last_error {
+    display: none;
+    color: #ff4040;
+}
+
+#email_error {
+    display: none;
+    color: #ff4040;
+}
+
 #submit {
     box-sizing: border-box;
     display: block;
