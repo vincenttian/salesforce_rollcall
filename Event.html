@@ -319,11 +319,12 @@
     var checked_in = {!event.checkedin};
     var registered = {!event.registered};
     var math = registered - checked_in;
+    if (registered == 0) {
+      registered = 1;
+    }
 
     document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
-    if (registered == 0) {
-      document.getElementById('chart_two').hidden = "hidden";
-    }
+
 
     var data = [ {name: "attended", value: {!event.checkedIn}},
             {name: "absent", value:  math} ];
