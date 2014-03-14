@@ -255,9 +255,7 @@
     function createListElement(attendee) {
         var element = document.createElement("li")
         var f = document.createElement('p');
-        var l = document.createElement('p');
         var e = document.createElement('p');
-        var c = document.createElement('p');
         console.log(element);
         f.innerHTML = attendee.FirstName + ' '+attendee.LastName;
         if (attendee.Email) {
@@ -270,7 +268,6 @@
         }
         element.appendChild(f);
         element.appendChild(e);
-        element.appendChild(c);
         return element;
     }
     function getAttendees(paginate, searchTerm) {
