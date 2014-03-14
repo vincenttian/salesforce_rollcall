@@ -1,51 +1,24 @@
-@isTest
-private class RollCallTest {
+/**
+*
+*Roll Call application 
+*Controller for Index page
+*@authors Howard Chen and Vincent Tian
+*
+*/
 
-    static testMethod void test_create_event() {
-        Date test_date = Date.newInstance(2014, 2, 17);
-        RollCall r = new RollCall();
-        r.create_event('test_event1', test_date, 'test_description', 'Open');
-        Campaign parent_campaign =  [SELECT Name FROM Campaign WHERE Name = 'test_event1'];
-        System.assertNotEquals(null, parent_campaign);
+global class RollCall{
+
+    // For apex: repeat    
+    public Event[] getEvents() {
+        Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
+        Event[] events = new Event[]{};
+            
+        Integer i = 0;    
+        for (Campaign c : campaigns) {
+            events.add(new Event(c, i));
+            i++;
+        }
+        return events;
     }
 
-    static testMethod void test_create_child_event() {
-        RollCall r = new RollCall();
-        Date test_date = Date.newInstance(2014, 2, 17);
-        r.create_event('test_event2', test_date, 'test_description', 'Open');
-        Campaign parent_campaign =  [SELECT Id FROM Campaign WHERE Name = 'test_event2'];
-        test_date = Date.newInstance(2014, 2, 17);
-        r.create_child_event('test_event2', test_date, 'test_description', 'Open', parent_campaign.Id);
-        Campaign child_event = [SELECT Id FROM Campaign WHERE ParentID =: parent_campaign.Id];
-        System.assertNotEquals(null, child_event);
-    }
-
-    static testMethod void test_delete_event() {
-        RollCall r = new RollCall();
-        Date test_date = Date.newInstance(2014, 2, 17);
-        r.create_event('test_event3', test_date, 'test_description', 'Open');
-        Campaign c = [SELECT Id FROM Campaign WHERE Name = 'test_event3'];
-        r.delete_event(c.Id);
-        Campaign[] d;
-        //c = [SELECT Id FROM Campaign WHERE Name = 'test_event3'];
-        System.assertEquals(null, d);
-    }
-
-    static testMethod void test_end_event() {
-        RollCall r = new RollCall();
-        Date test_date = Date.newInstance(2014, 2, 17);
-        r.create_event('test_event7', test_date, 'test_description', 'Open');
-        Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
-        System.assertEquals(True, c.isActive);
-        r.end_event(c.Id);
-        //System.assertEquals(False, c.isActive);
-    }
-
-    static testMethod void test_get_events() {
-        RollCall r = new RollCall();
-        Date test_date = Date.newInstance(2014, 2, 17);
-        r.create_event('test_event1', test_date, 'test_description', 'Open');
-        Event[] e = r.getEvents();
-        System.assertNotEquals(null, e);
-    }
 }
