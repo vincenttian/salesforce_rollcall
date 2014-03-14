@@ -29,11 +29,11 @@
                 minorTicks: 5
             }
             var range = config.max - config.min;
-            config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
-            config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+            config.greenZones = [{ from: config.min + range*0, to: config.min + range/3 }];
+            config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
+            config.redZones = [{ from: config.min + range*2/3, to: config.max }];
             gauges[name] = new Gauge(name + "GaugeContainer", config);
-            gauges[name].render();
-        }
+            gauges[name].render();        }
 
         function createGauges() {
             createGauge("test", "Test", 0, {!event.maxCapacity} );
@@ -101,11 +101,33 @@
         <!-- Event Statistics -->
         <section id="two">
           <div class="page" id="page_two">
-            <div id="chart_one"></div>
-            <div id="chart_two"></div>
-            <div id="chart_three">
-                <span id="testGaugeContainer"></span>
-            </div>
+              <div id="chart_one">
+                  <p class="chart_title"> Flow </p>
+                  <p id="rate"> Rate: 
+                    <span class="magenta_text"> 
+                      <!-- FILL IN HERE -->
+                    </span> People/Minute
+                  </p>
+              </div>
+              <div id="chart_two">
+                  <p class="chart_title"> Attendance </p>
+                  <p class="chart_info"> Checked In: 
+                    <span class="blue_text"> 
+                      {!event.checkedin} 
+                    </span> 
+                    <br></br> 
+                    Registered: 
+                    <span class="gray_text"> 
+                      {!event.registered}
+                    </span> 
+                  </p>
+                  <p id="percentage"> </p>
+              </div>
+              <div id="chart_three">
+                  <p class="chart_title"> Capacity </p>
+                  <p class="chart_info"> Checked In: <span class="orange_text"> 100 </span> <br></br> Capacity: <span class="gray_text"> 200 </span> </p>
+                  <span id="testGaugeContainer"></span>
+              </div>>
           </div>
         </section>
         <!-- Event Attendees -->
@@ -126,25 +148,24 @@
     .axis path,
     .axis line {
       fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-
-    .x.axis path {
-      display: none;
-    }
-
+      stroke: #CCC;
+    }    
     .line {
       fill: none;
-      stroke: steelblue;
-      stroke-width: 1.5px;
-    }
-    </style>
+      stroke: #ff009d;
+      stroke-width: 3px;
+    }   
+    .tick {
+        display: none;
+    }    </style>
     <script>
     // Pie Chart for Attendance
     var checked_in = {!event.checkedin};
     var registered = {!event.registered};
     var math = registered - checked_in;
+
+    document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
+
     var dataset = {
       attendance: [math, {!event.checkedIn}],
     };
@@ -154,14 +175,14 @@
         radius = Math.min(width, height) / 2;
 
     var color = d3.scale.ordinal()
-        .range(["#98abc5", "#8a89a6"]);
+        .range(["#0096ff", "#CCC"]);
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 75)
+        .innerRadius(radius - 100);
 
     var pie = d3.layout.pie()
         .sort(null);
-
-    var arc = d3.svg.arc()
-        .innerRadius(radius - 100)
-        .outerRadius(radius - 50);
 
     var svg2 = d3.select("#chart_two").append("svg")
         .attr("width", width)
@@ -174,7 +195,9 @@
         .enter().append("path")
         .attr("fill", function(d, i) { return color(i); })
         .attr("d", arc);
+    </script>
 
+    <script>
     // Flow Chart of attendees
     function line_chart_info() {
         Visualforce.remoting.Manager.invokeAction(
@@ -188,7 +211,7 @@
                   height = 284;
               var parseTime = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
               var x = d3.time.scale()
-                  .range([0, width]);
+                  .range([0, width - 100]);
               var y = d3.scale.linear()
                   .range([height, 0]);
               var xAxis = d3.svg.axis()
@@ -240,14 +263,18 @@
             svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + 284 + ")")
-                .call(xAxis);
+                .call(xAxis)
+                .style("font-family", "'Hammersmith One', sans-serif");
+
             svg.append("g")
                 .attr("class", "y axis")
-                .call(yAxis);
+                .call(yAxis)
+                .style("font-family", "'Hammersmith One', sans-serif");
+
             svg.append("path")
                 .datum(data)
                 .attr("class", "line")
-                .attr("d", line);
+                .attr("d", line);            
             } else if (event.type === 'exception') {
                 document.getElementById("responseErrors").innerHTML = event.message + "<br/>\n<pre>" + event.where + "</pre>";
             } else {
