@@ -28,15 +28,18 @@ global class EventController {
         String search_name = '%' + String.escapeSingleQuotes(name) + '%';
         Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:cid];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
-        CampaignMember[] registered = [SELECT Lead.Firstname, Lead.Lastname, Lead.Email, 
-        Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c 
+        CampaignMember[] registered = [SELECT Lead.Name, Lead.Email, 
+        Contact.Name, Contact.Email, Contact.Company__c, LeadID, ContactID
         FROM CampaignMember WHERE Status='Responded' AND
              CampaignId in :potential_children.keySet() AND 
              (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  Id  LIMIT 50 OFFSET :offset];
         sObject[] registered2 = new sObject[]{};
         for (CampaignMember cm : registered) {
-            registered2.add(cm.Contact);
-            registered2.add(cm.Lead);
+            if (cm.ContactID != null) { 
+                registered2.add(cm.Contact);
+            } else {
+                registered2.add(cm.Lead);
+            }
         }
         return registered2;
     }
