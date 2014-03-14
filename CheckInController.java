@@ -11,7 +11,12 @@ global class CheckInController{
     public Campaign event {get;set;}
 
     public CheckInController() {
-        event = [SELECT Id, Name, Description, StartDate FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
+        System.debug(ApexPages.currentPage().getParameters().get('event_id'));
+        if (ApexPages.currentPage().getParameters().get('event_id') == null) {
+            return;
+        } else {
+            event = [SELECT Id, Name, Description, StartDate FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
+        }
     }
 
     public static void register_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { 
@@ -95,8 +100,9 @@ global class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static String[] check_in_attendee(String event_id, String email) {
+        System.debug(event_id);
         Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
-        return CheckInController.handle_parent_events(string.valueof(event.Id), email);
+        return handle_parent_events(string.valueof(event.Id), email);
     }
 
     // Checking in attendees for checkin page
