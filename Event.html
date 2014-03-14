@@ -9,7 +9,7 @@
   >
   <html>
     <head>
-      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Hammersmith+One"/>
+      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
@@ -22,7 +22,7 @@
         var gauges = [];
         function createGauge(name, label, min, max) {
             var config = {
-                size: 250,
+                size: 245,
                 label: label,
                 min: undefined != min ? min : 0,
                 max: undefined != max ? max : 100,
@@ -127,14 +127,14 @@
                   <p class="chart_title"> Capacity </p>
                   <p class="chart_info"> Checked In: <span class="orange_text"> {!event.checkedin} </span> <br></br> Capacity: <span class="gray_text"> {!event.maxCapacity} </span> </p>
                   <span id="testGaugeContainer"></span>
-              </div>>
+              </div>
           </div>
         </section>
         <!-- Event Attendees -->
         <section id="three">
           <div class="page" style="overflow:auto">
             <div class="information" id="attendee_list">
-              <input type="text" id="field" class="input form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
+              <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More
@@ -334,7 +334,7 @@
                     .attr("width", width)
                     .attr("height", height)
                    .append("g")
-                    .attr("transform", "translate(" + width / 2 + "," + 106 + ")");
+                    .attr("transform", "translate(" + width / 2 + "," + 96 + ")");
 
     var radius = Math.min(width, height) / 2;
 
@@ -342,8 +342,8 @@
         .range(["#0096ff", "#CCC"]);
 
     var arc = d3.svg.arc()
-        .outerRadius(radius - 75)
-        .innerRadius(radius - 100);
+        .outerRadius(radius - 85)
+        .innerRadius(radius - 110);
 
     var pie = d3.layout.pie()
         .sort(null)

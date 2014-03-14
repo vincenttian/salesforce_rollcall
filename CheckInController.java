@@ -20,14 +20,14 @@ global class CheckInController{
 
     public static void update_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { 
         CampaignMember member = [SELECT ContactId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.Email=:email or Lead.Email=:email)];
-        Contact updated_contact = [SELECT firstname, lastname, Company__c FROM Contact WHERE Id=:member.ContactId];
-        if (updated_contact == null) {
+        if (member.ContactId == null) {
             Lead updated_lead = [SELECT firstname, lastname, Company FROM Lead WHERE Id=:member.LeadId];
             updated_lead.company = company;
             updated_lead.firstname = first_name;
             updated_lead.lastname = last_name;
             update updated_lead;
         } else {
+            Contact updated_contact = [SELECT firstname, lastname, Company__c FROM Contact WHERE Id=:member.ContactId];
             updated_contact.Company__c = company;
             updated_contact.firstname = first_name;
             updated_contact.lastname = last_name;
@@ -44,13 +44,13 @@ global class CheckInController{
         }
         update event_attendee;
         String[] info = new String[3];
-        Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee.ContactId];
-        if (contact_event_attendee == null) {
+        if (event_attendee.ContactId == null) {
             Lead lead_event_attendee = [SELECT FirstName, LastName, Company FROM Lead WHERE Id=:event_attendee.LeadId];
             info[0] = lead_event_attendee.FirstName;
             info[1] = lead_event_attendee.LastName;
             info[2] = lead_event_attendee.Company;
         } else {
+            Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee.ContactId];
             info[0] = contact_event_attendee.FirstName;
             info[1] = contact_event_attendee.LastName;
             info[2] = contact_event_attendee.Company__c;
@@ -66,8 +66,7 @@ global class CheckInController{
             return new String[0];
         } else if (event_attendee.size() != 1) {
             String[] info = new String[6];
-            Contact[] contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE (Id=:event_attendee[0].ContactId or Id=:event_attendee[1].ContactId)];
-            if (contact_event_attendee.size() == 0) {
+            if (event_attendee[0].ContactId == null) {
                 Lead[] lead_event_attendee = [SELECT FirstName, LastName, Company FROM Lead WHERE (Id=:event_attendee[0].LeadId or Id=:event_attendee[1].LeadId)];
                 info[0] = lead_event_attendee[0].FirstName;
                 info[1] = lead_event_attendee[0].LastName;
@@ -76,6 +75,7 @@ global class CheckInController{
                 info[4] = lead_event_attendee[1].LastName;
                 info[5] = lead_event_attendee[1].Company;
             } else {
+                Contact[] contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE (Id=:event_attendee[0].ContactId or Id=:event_attendee[1].ContactId)];
                 info[0] = contact_event_attendee[0].FirstName;
                 info[1] = contact_event_attendee[0].LastName;
                 info[2] = contact_event_attendee[0].Company__c;
@@ -92,10 +92,7 @@ global class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static String[] check_in_attendee(String event_id, String email) {
-        System.debug(event_id);
-        System.debug('asdlfkjsad;lfjka please go here');
-        Campaign event = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
-        return handle_parent_events(string.valueof(event.Id), email);
+        return handle_parent_events(event_id, email);
     }
 
     // Checking in attendees for checkin page

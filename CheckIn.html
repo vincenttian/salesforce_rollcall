@@ -16,7 +16,7 @@ id="todo"
   <title>RollCall</title>
 </head>
 <body>
-  <input id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
+  <input class='normal' id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
   <div id="select_event">
     <p> Salesforce Workday </p>          
   </div>
@@ -24,7 +24,8 @@ id="todo"
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input type="text" name="email" id="email" class='required'/>
+      <input class='normal'  type="text" name="email" id="email"/>
+      <p id="checkin_error"> Please enter a valid email </p>
       <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
     </div>
   </section>
@@ -67,16 +68,16 @@ id="todo"
   <section id="four">
     <div class="checkin">
       <div class="column">
-        <p class="label"> *First Name: </p>
-        <p class="label"> *Last Name: </p>
+        <p class="label" id='first_error'> *First Name: </p>
+        <p class="label" id='last_error'> *Last Name: </p>
         <p class="label"> Company: </p>
         <p class="label"> *Email: </p>
       </div>
       <div class="column">
-        <input id="update_firstname" type="text" name="firstname" class="input" placeholder=""/>
-        <input id="update_lastname" type="text" name="lastname" class="input" placeholder=""/>
-        <input id="update_company" type="text" name="company" class="input" placeholder=""/>
-        <input id="update_email" type="text" name="email" class="input" placeholder="" readonly="readonly"/>
+        <input  id="update_firstname" type="text" name="firstname" class="input normal" placeholder=""/>
+        <input  id="update_lastname" type="text" name="lastname" class="input normal" placeholder=""/>
+        <input  id="update_company" type="text" name="company" class="input normal" placeholder=""/>
+        <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee_javascript()" value="Confirm"> </input>
     </div>
@@ -139,6 +140,10 @@ function check_in_attendee_javascript() {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
     if (email == '' || re.test(email) == false) {
         console.log('STOPPED! Not a valid email according to regex');
+        var error = document.getElementById('checkin_error');
+        error.style.display = 'block';
+        var error_class = document.getElementById('#email');
+        error_class.addClass("error");
         return;
     }    
 
@@ -149,6 +154,7 @@ function check_in_attendee_javascript() {
         function(result, event){
             if (event.status) {
                 if (result.length == 3) { // successfully found match in database !
+                    // CHANGE THIS
                     console.log(document.getElementById("email").value);
                     console.log(result[0]);
                     console.log(result[1]);
@@ -191,7 +197,19 @@ function update_attendee_javascript() {
     var firstname = document.getElementById("update_firstname").value;
     var lastname = document.getElementById("update_lastname").value;
     if (firstname == '' || lastname == '') {
-        console.log('STOPPED! Must have first name and last name');
+        if (firstname =='') {
+            var error = document.getElementById('first_error');
+            error.style.display = 'block';
+            var error_class = document.getElementById('#update_firstname');
+            error_class.addClass('error');
+        } 
+        if (lastname == '') {
+            var error = document.getElementById('last_error');
+            error.style.display = 'block';
+            var error_class = document.getElementById('#update_lastname');
+            error_class.addClass('error');
+        }
+        // console.log('STOPPED! Must have first name and last name');
         return;
     }
     Visualforce.remoting.Manager.invokeAction(
