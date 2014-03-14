@@ -9,6 +9,7 @@
   >
   <html>
     <head>
+      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Hammersmith+One"/>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
@@ -110,9 +111,9 @@
         <!-- Event Attendees -->
         <section id="three">
           <div class="page" style="overflow:auto">
-            <div id="attendee_list">
-              <input type="text" id="search_name" class="form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
-               <div id="the_list"></div>
+            <div class="information" id="attendee_list">
+              <input type="text" id="search_name" class="input form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
+               <ul id="the_list"></ul>
                <button id="showmore" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More
                 </button> 
@@ -263,7 +264,7 @@
     var page_offset = 50;
     var page = 0;
     function createListElement(attendee) {
-        var element = document.createElement("ul")
+        var element = document.createElement("li")
         var f = document.createElement('p');
         var l = document.createElement('p');
         var e = document.createElement('p');
@@ -271,8 +272,14 @@
         console.log(element);
         f.innerHTML = 'First Name: ' + attendee.FirstName;
         l.innerHTML = 'Last Name: ' + attendee.LastName;
-        e.innerHTML = 'Email: ' + attendee.Email;
-        c.innerHTML = 'Company: ' + attendee.Company__c;
+        if (attendee.email) {
+            e.innerHTML = 'Email: ' + attendee.Email;
+        }
+        if (attendee.Company__c) {
+            c.innerHTML = 'Company: ' + attendee.Company__c;
+        } else if (attendee.Company) {
+            c.innerHTML = 'Company: ' + attendee.Company__c;
+        }
         element.appendChild(f);
         element.appendChild(l);
         element.appendChild(e);
