@@ -134,7 +134,7 @@
         <section id="three">
           <div class="page" style="overflow:auto">
             <div class="information" id="attendee_list">
-              <input type="text" id="search_name" class="input form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
+              <input type="text" id="field" class="input form-control object-search-input" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More
@@ -314,7 +314,7 @@
         return element;
     }
     function getAttendees(paginate, searchTerm) {
-        var searchName = searchTerm ? searchTerm : document.getElementById("search_name").value;       
+        var searchName = searchTerm ? searchTerm : document.getElementById("field").value;       
         var offset = 0;
         if(paginate){
             page += 1;
