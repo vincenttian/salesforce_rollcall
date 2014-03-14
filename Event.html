@@ -125,7 +125,7 @@
               </div>
               <div id="chart_three">
                   <p class="chart_title"> Capacity </p>
-                  <p class="chart_info"> Checked In: <span class="orange_text"> 100 </span> <br></br> Capacity: <span class="gray_text"> 200 </span> </p>
+                  <p class="chart_info"> Checked In: <span class="orange_text"> {!event.checkedin} </span> <br></br> Capacity: <span class="gray_text"> {!event.maxCapacity} </span> </p>
                   <span id="testGaugeContainer"></span>
               </div>>
           </div>
@@ -177,6 +177,7 @@
                   .range([height, 0]);
               var xAxis = d3.svg.axis()
                   .scale(x)
+                  .ticks(4)
                   .orient("bottom");
               var yAxis = d3.svg.axis()
                   .scale(y)
