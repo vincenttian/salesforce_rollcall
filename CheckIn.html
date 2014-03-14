@@ -67,16 +67,16 @@ id="todo"
   <section id="four">
     <div class="checkin">
       <div class="column">
-        <p class="label"> First Name: </p>
-        <p class="label"> Last Name: </p>
+        <p class="label"> *First Name: </p>
+        <p class="label"> *Last Name: </p>
         <p class="label"> Company: </p>
-        <p class="label"> Email: </p>
+        <p class="label"> *Email: </p>
       </div>
       <div class="column">
         <input id="update_firstname" type="text" name="firstname" class="input" placeholder=""/>
         <input id="update_lastname" type="text" name="lastname" class="input" placeholder=""/>
         <input id="update_company" type="text" name="company" class="input" placeholder=""/>
-        <input id="update_email" type="text" name="email" class="input" placeholder=""/>
+        <input id="update_email" type="text" name="email" class="input" placeholder="" readonly="readonly"/>
       </div>
       <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee_javascript()" value="Confirm"> </input>
     </div>
@@ -138,7 +138,7 @@ function check_in_attendee_javascript() {
     var email = document.getElementById("email").value;    
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
     if (email == '' || re.test(email) == false) {
-        console.log('STOPPED!');
+        console.log('STOPPED! Not a valid email according to regex');
         return;
     }    
 
@@ -174,16 +174,13 @@ function check_in_attendee_javascript() {
                     document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
                     setSection($("#container section#"+"#six"), $('.active'));
                 } else { // could not find match in database
-                    console.log('i tink it goes here');
                     document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
                     setSection($("#container section#"+"#five"), $('.active'));
                 }
             } else if (event.type === 'exception') {
                 // should never go here
-                console.log('swag');
             } else {
                 document.getElementById("test").innerHTML +=event.message;
-                console.log('swag2');
             }
         }, 
     {escape: true}
@@ -191,6 +188,12 @@ function check_in_attendee_javascript() {
 }
 
 function update_attendee_javascript() {
+    var firstname = document.getElementById("update_firstname").value;
+    var lastname = document.getElementById("update_lastname").value;
+    if (firstname == '' || lastname == '') {
+        console.log('STOPPED! Must have first name and last name');
+        return;
+    }
     Visualforce.remoting.Manager.invokeAction(
     '{!$RemoteAction.CheckInController.update_attendee}',
     document.getElementById('event_id').value,
