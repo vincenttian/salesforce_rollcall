@@ -107,17 +107,16 @@
             <div class="page">
                 <div class="information">
                     <form class="form-wrapper cf">
-                        <input class="input" id="field" type="text" placeholder="Search here..." required>
+                        <input class="input" id="field" type="text" placeholder="Search here..." required="required">
                         <button id="search" type="submit">Search</button>
                     </form>
                     <br>                    
                     <p class="green_text"> Attendee List: </p>
                     <ul>
-                        <li> John Smith, Salesforce, <br> JohnSmith@salesforce.com </li>
-                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
-                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
-                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
-                        <li> John Smith, Salesforce <br> JohnSmith@salesforce.com </li>
+                        <li> <p> John Smith, Salesforce, </p> <p> JohnSmith@salesforce.com </p></li>
+                        <li> <p> John Smith, Salesforce, </p> <p> JohnSmith@salesforce.com </p></li>
+                        <li> <p> John Smith, Salesforce, </p> <p> JohnSmith@salesforce.com </p></li>
+                        <li> <p> John Smith, Salesforce, </p> <p> JohnSmith@salesforce.com </p></li>
                     </ul>
                 </div>
             </div>
@@ -136,9 +135,10 @@
       stroke-width: 3px;
     }
         
-    .tick {
+    .y {
         display: none;
     }
+        
     </style>
     <script>
     var width = 624,

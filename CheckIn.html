@@ -16,17 +16,22 @@ id="todo"
   <title>RollCall</title>
 </head>
 <body>
+  <!-- USE THIS FOR JAVASCRIPT REMOTING ARGUMENT -->
+  <input id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
   <div id="select_event">
     <p> Salesforce Workday </p>          
   </div>
-  <div id="return" class ="invisible" onclick="javascript:window.location='{!$Page.event}?event_id={!event.id}';"></div>
+  <!-- change back button to not use event.id -->
+  <!-- <div id="return" class ="invisible" onclick="javascript:window.location='{!$Page.event}?event_id={!event.id}';"></div> -->
   <!-- Initial Checkin Page to enter email -->
   <div id="container">
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input type="text" name="email" id="email"/>
-      <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
+      <form>
+        <input type="text" name="email" id="email" class='required'/>
+        <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
+      </form>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -135,12 +140,19 @@ var mult_company2;
 var mult_email;
 
 function check_in_attendee_javascript() {
-    console.log(document.getElementById("email").value);
+    console.log('email: ' + document.getElementById("email").value);
+    console.log('event id: ' + document.getElementById("event_id").value);
+    
+    if (document.getElementById('email'.value) == null) {
+        return;
+    }    
+
     Visualforce.remoting.Manager.invokeAction(
         '{!$RemoteAction.CheckInController.check_in_attendee}',
-        '{!event.id}',
+        document.getElementById('event_id').value,
         document.getElementById("email").value,
         function(result, event){
+            console.log('called remoting');
             if (event.status) {
                 if (result.length == 3) { // successfully found match in database !
                     console.log(document.getElementById("email").value);
@@ -168,6 +180,7 @@ function check_in_attendee_javascript() {
                     document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
                     setSection($("#container section#"+"#six"), $('.active'));
                 } else { // could not find match in database
+                    console.log('i tink it goes here');
                     document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
                     setSection($("#container section#"+"#five"), $('.active'));
                 }
@@ -184,7 +197,7 @@ function check_in_attendee_javascript() {
 function update_attendee_javascript() {
     Visualforce.remoting.Manager.invokeAction(
     '{!$RemoteAction.CheckInController.update_attendee}',
-    '{!event.id}',
+    document.getElementById('event_id').value,
     document.getElementById("update_firstname").value,
     document.getElementById("update_lastname").value,
     document.getElementById("update_email").value,
@@ -229,7 +242,7 @@ function multiple_get2() {
 function multiple_login1() {
     Visualforce.remoting.Manager.invokeAction(
     '{!$RemoteAction.CheckInController.multiple_login}',
-    '{!event.id}',
+    document.getElementById('event_id').value,
     mult_company1,
     mult_email,
     function(result, event){
@@ -248,7 +261,7 @@ function multiple_login1() {
 function multiple_login2() {
     Visualforce.remoting.Manager.invokeAction(
     '{!$RemoteAction.CheckInController.multiple_login}',
-    '{!event.id}',  
+    document.getElementById('event_id').value,  
     mult_company2,
     mult_email,
     function(result, event){
