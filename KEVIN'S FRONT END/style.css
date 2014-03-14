@@ -5,7 +5,8 @@ body {
 }
 
 p {
-    font-family: 'Hammersmith One', sans-serif;
+    font-family: Open Sans, sans-serif;
+    font-weight: 600;
     margin: 0px;
 }
 
@@ -15,13 +16,15 @@ div {
 }
 
 input {
-    font-family: 'Hammersmith One', sans-serif;
+    font-family: Open Sans, sans-serif;
+    font-weight: 600;
 }
 
 li {
     list-style-type: none;
-    font-family: 'Hammersmith One', sans-serif;
-    color: #666666;
+    font-family: Open Sans, sans-serif;
+    font-weight: 600;
+    color: #AAAAAA;
     margin-bottom: 50px;
     margin-left: -40px;
 }
@@ -49,10 +52,10 @@ li {
     box-sizing: border-box;
     text-align: left;
     margin-top: 25px;
-    padding: 5px;
+    padding-left: 25px;
     height: 50px;
     width: 200px;
-    font-size: 1em;
+    font-size: 0.5em;
     color: #FFFFFF;
     background: #7ac100;
     border-radius: 10px;
@@ -142,7 +145,9 @@ li {
     color: #77DDFF;
     text-align: center;
     font-size: 1.5em;
-    margin-top: -70px;
+    font-family: Oswald, sans-serif;
+    font-weight: 400;
+    margin-top: -75px;
     margin-bottom: 40px;
 }
 
@@ -161,8 +166,8 @@ li {
 
 #percentage {
     position: relative;
-    top: 126px;
-    left: 144px;
+    top: 116px;
+    left: 150px;
     font-size: 2em;
     color: #0096ff;
     margin-top: -36px;
@@ -170,7 +175,7 @@ li {
 
 .info {
     width: 100%;
-    color: #CCCCCC;
+    color: #AAAAAA;
     margin-top: 10px;
     padding: 15px;
 }
@@ -205,7 +210,7 @@ li {
     height: 100%;
     background: #FFFFFF;
     z-index: 1;
-    border-right: 10px solid #CCCCCC;
+    border-right: 10px solid #aaaaaa;
     box-shadow: 1px 0px 5px 0px #000000;
 }
 
@@ -220,7 +225,7 @@ li {
     padding-left: 25px;
     width: 300px;
     height: 225px;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid #aaaaaa;
 }
 
 .tab {
@@ -233,7 +238,7 @@ li {
     padding-left: 25px;
     width: 300px;
     height: 80px;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid #aaaaaa;
 }
 
 .tab:hover {
@@ -269,7 +274,7 @@ li {
 }
 
 .information {
-    color: #CCCCCC;
+    color: #aaaaaa;
     text-align: left;
     padding: 50px;
     line-height: 1.5em;
@@ -310,7 +315,7 @@ li {
 #checkin_title {
     margin-top: 175px;
     font-size: 2em;
-    color: #CCCCCC;
+    color: #aaaaaa;
 }
 
 #email {
@@ -362,7 +367,7 @@ li {
 }
 
 #confirm_info {
-    color: #CCCCCC;
+    color: #aaaaaa;
     margin-top: 110px;
     margin-left: 188px;
     text-align: left;
@@ -398,7 +403,7 @@ li {
     font-size: 1.25em;
     line-height: 1.5em;
     width: 600px;
-    color: #CCCCCC;
+    color: #aaaaaa;
 }
 
 .checkin_icon {
@@ -410,7 +415,7 @@ li {
 #checkin_confirmation {
     margin-top: 25px;
     font-size: 2em;
-    color: #CCCCCC;
+    color: #aaaaaa;
 }
 
 .checkin_end {
@@ -466,7 +471,7 @@ li {
     margin-left: 190px;
     font-size: 1.25em;
     width: 600px;
-    color: #CCCCCC;
+    color: #aaaaaa;
 }
 
 .label {
@@ -495,7 +500,7 @@ li {
 }
 
 #multiple {
-    color: #CCCCCC;
+    color: #aaaaaa;
     width: 600px;
     margin: auto;
     margin-top: 50px;
@@ -517,7 +522,7 @@ li {
     text-align: center;
     top: 50px;
     width: 100%;
-    color: #CCCCCC;
+    color: #aaaaaa;
     font-size: 1.5em;
 }
 
@@ -536,6 +541,10 @@ li {
 
 .blue_border {
     border-right: 10px solid #0096ff;
+}
+
+.hover_blue_text:hover {
+    color: #0096ff;
 }
 
 .magenta {
@@ -599,7 +608,7 @@ li {
 }
 
 .gray_text {
-    color: #CCCCCC;
+    color: #AAAAAA;
 }
 
 @media (max-width: 641px) {
