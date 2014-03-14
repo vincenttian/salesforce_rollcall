@@ -33,7 +33,8 @@
             config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
             config.redZones = [{ from: config.min + range*2/3, to: config.max }];
             gauges[name] = new Gauge(name + "GaugeContainer", config);
-            gauges[name].render();        }
+            gauges[name].render();        
+        }
 
         function createGauges() {
             createGauge("test", "Test", 0, {!event.maxCapacity} );
@@ -42,7 +43,6 @@
         function updateGauges() {
             for (var key in gauges) {
                 var value = {!event.checkedIn};
-                gauges[key].redraw(value);
             }
         }
 
