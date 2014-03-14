@@ -153,35 +153,45 @@ function check_in_attendee_javascript() {
         document.getElementById("email").value,
         function(result, event){
             if (event.status) {
-                if (result.length == 3) { // successfully found match in database !
+                if (result.length == 1) { // successfully found match in database !
                     // CHANGE THIS
                     console.log(document.getElementById("email").value);
-                    console.log(result[0]);
-                    console.log(result[1]);
-                    console.log(result[2]);
+                    if (result[0].ContactId == null) {
+                        var lead = result[0].Lead;
+                        first_name = lead.firstname;
+                        last_name = lead.lastname;
+                        company = result[0].company;
+                    } else {
+                        var contact = result[0].Contact;
+                        first_name = contact.firstname;
+                        last_name = contact.lastname;
+                        company = result[0].company;
+                    }
+                    console.log(first_name);
+                    console.log(last_name);
+                    console.log(company);
                     document.getElementById('error').innerHTML = "<p></p>";
                     document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
-                    document.getElementById("checkin_name").innerHTML = "<p> Name: <span class='blue_text'>"  + result[0] + " " + result[1] + "</span> </p>"; 
-                    document.getElementById("checkin_company").innerHTML = "<p> Company: <span class='blue_text'>"  + result[2] + "</span> </p>";  
-                    first_name = result[0];
-                    last_name = result[1];
-                    company = result[2];
+                    document.getElementById("checkin_name").innerHTML = "<p> Name: <span class='blue_text'>"  + first_name + " " + last_name + "</span> </p>"; 
+                    document.getElementById("checkin_company").innerHTML = "<p> Company: <span class='blue_text'>"  + company + "</span> </p>";  
                     setSection($("#container section#"+"#two"), $('.active'));
-                } else if (result.length == 6){
-                    console.log('there are two people with this email')
-                    mult_name1 = result[0] + " " + result[1];
-                    mult_company1 = result[2]; 
-                    mult_name2 = result[3] + " " + result[4];
-                    mult_company2 = result[5]; 
+                } else if (result.length == 0){ // should be coming from handle_parent_events returning empty CampaignMember[0]
+                    document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
+                    setSection($("#container section#"+"#five"), $('.active'));
+                } else { // could not find match in database
+                    console.log('there are multiple people with this email')
+                    // mult_name1 = result[0] + " " + result[1];
+                    // mult_company1 = result[2]; 
+                    // mult_name2 = result[3] + " " + result[4];
+                    // mult_company2 = result[5]; 
+
+                    // CURRENTLY WORKING
                     mult_email = document.getElementById("email").value;
                     document.getElementById("multiple").innerHTML = "There seem to be multiple " + document.getElementById("email").value + "'s. Which of these do you want to check in as?";
                     document.getElementById("multiple-1").innerHTML = "<p id='mult-1'>" + result[0] + " " + result[1] + ", " + result[2] + "</p>";
                     document.getElementById("multiple-2").innerHTML = "<p id='mult-2'>" + result[3] + " " + result[4] + ", " + result[5] + "</p>";
                     document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
                     setSection($("#container section#"+"#six"), $('.active'));
-                } else { // could not find match in database
-                    document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
-                    setSection($("#container section#"+"#five"), $('.active'));
                 }
             } else if (event.type === 'exception') {
                 // should never go here

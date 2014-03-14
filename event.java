@@ -44,21 +44,21 @@ global class Event{
         name = c.Name;
         Integer month = c.StartDate.month();
         if (month == 1) {
-            start = 'Jan ' + c.StartDate.day();
+            start = 'JAN ' + c.StartDate.day();
         } else if (month == 2) {
-            start = 'Feb ' + c.StartDate.day();
+            start = 'FEB ' + c.StartDate.day();
         } else if (month == 3) {
-            start = 'Mar ' + c.StartDate.day();
+            start = 'MAR ' + c.StartDate.day();
         } else if (month == 4) {
-            start = 'Apr ' + c.StartDate.day();
+            start = 'APR ' + c.StartDate.day();
         } else if (month == 5) {
-            start = 'May ' + c.StartDate.day();
+            start = 'MAY ' + c.StartDate.day();
         } else if (month == 6) {
-            start = 'Jun ' + c.StartDate.day();
+            start = 'JUN ' + c.StartDate.day();
         } else if (month == 7) {
-            start = 'Jul ' + c.StartDate.day();
+            start = 'JUL ' + c.StartDate.day();
         } else if (month == 8) {
-            start = 'Aug ' + c.StartDate.day();
+            start = 'AUG ' + c.StartDate.day();
         } else if (month == 9) {
             start = 'Sep ' + c.StartDate.day();
         } else if (month == 10) {
@@ -83,31 +83,32 @@ global class Event{
             titleColor = 'title blue';
             textColor = 'blue_text';
             picData = 'pic_data ' + textColor;
-            cal = 'calendar_blue.svg';
+            cal = 'pic cal_blue';
         }
         if (Math.mod(i, 5) == 1) {
             titleColor = 'title magenta';
             textColor = 'magenta_text';
             picData = 'pic_data ' + textColor;
-            cal = '{!URLFOR($Resource.RollCallAssets, \'calendar_magenta.svg\')}';
+            cal = 'pic cal_magenta';
         }
         if (Math.mod(i, 5) == 2) {
             titleColor = 'title green';
             textColor = 'green_text';
             picData = 'pic_data ' + textColor;
-            cal = '{!URLFOR($Resource.RollCallAssets, \'calendar_green.svg\')}';
+            cal = 'pic cal_green';
         }
         if (Math.mod(i, 5) == 3) {
             titleColor = 'title red';
             textColor = 'red_text';
             picData = 'pic_data ' + textColor;
-            cal = '{!URLFOR($Resource.RollCallAssets, \'calendar_red.svg\')}';
+            cal = 'pic cal_red';
+
         }
         if (Math.mod(i, 5) == 4) {
             titleColor = 'title orange';
             textColor = 'orange_text';
             picData = 'pic_data ' + textColor;
-            cal = '{!URLFOR($Resource.RollCallAssets, \'calendar_orange.svg\')}';
+            cal = 'pic cal_orange';
         }
     }
 
