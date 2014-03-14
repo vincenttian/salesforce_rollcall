@@ -16,22 +16,16 @@ id="todo"
   <title>RollCall</title>
 </head>
 <body>
-  <!-- USE THIS FOR JAVASCRIPT REMOTING ARGUMENT -->
   <input id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
   <div id="select_event">
     <p> Salesforce Workday </p>          
   </div>
-  <!-- change back button to not use event.id -->
-  <!-- <div id="return" class ="invisible" onclick="javascript:window.location='{!$Page.event}?event_id={!event.id}';"></div> -->
-  <!-- Initial Checkin Page to enter email -->
   <div id="container">
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <form>
-        <input type="text" name="email" id="email" class='required'/>
-        <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
-      </form>
+      <input type="text" name="email" id="email" class='required'/>
+      <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -140,10 +134,11 @@ var mult_company2;
 var mult_email;
 
 function check_in_attendee_javascript() {
-    console.log('email: ' + document.getElementById("email").value);
-    console.log('event id: ' + document.getElementById("event_id").value);
-    
-    if (document.getElementById('email'.value) == null) {
+    // Email Validation
+    var email = document.getElementById("email").value;    
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
+    if (email == '' || re.test(email) == false) {
+        console.log('STOPPED!');
         return;
     }    
 
@@ -152,7 +147,6 @@ function check_in_attendee_javascript() {
         document.getElementById('event_id').value,
         document.getElementById("email").value,
         function(result, event){
-            console.log('called remoting');
             if (event.status) {
                 if (result.length == 3) { // successfully found match in database !
                     console.log(document.getElementById("email").value);
@@ -186,8 +180,10 @@ function check_in_attendee_javascript() {
                 }
             } else if (event.type === 'exception') {
                 // should never go here
+                console.log('swag');
             } else {
                 document.getElementById("test").innerHTML +=event.message;
+                console.log('swag2');
             }
         }, 
     {escape: true}
