@@ -259,18 +259,16 @@
         var e = document.createElement('p');
         var c = document.createElement('p');
         console.log(element);
-        f.innerHTML = 'First Name: ' + attendee.FirstName;
-        l.innerHTML = 'Last Name: ' + attendee.LastName;
+        f.innerHTML = attendee.FirstName + ' '+attendee.LastName;
         if (attendee.Email) {
             e.innerHTML = 'Email: ' + attendee.Email;
         }
         if (attendee.Company__c) {
-            c.innerHTML = 'Company: ' + attendee.Company__c;
+            f.innerHTML += ', ' + attendee.Company__c;
         } else if (attendee.Company) {
-            c.innerHTML = 'Company: ' + attendee.Company;
+            f.innerHTML += ', ' + attendee.Company;
         }
         element.appendChild(f);
-        element.appendChild(l);
         element.appendChild(e);
         element.appendChild(c);
         return element;
