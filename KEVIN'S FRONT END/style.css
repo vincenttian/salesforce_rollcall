@@ -327,13 +327,25 @@ li {
     font-size: 2em;
     color: #666666;
     border-radius: 10px;
-    border: 1px solid #666666;
 }
 
 #email:focus {
     outline: none;
     border: 1px solid #0096ff;
     opacity: 1;
+}
+
+.normal {
+    border: 1px solid #666666;
+}
+
+.error {
+    border: 1px solid #ff4040;
+}
+
+#checkin_error {
+    display: none;
+    color: #ff4040;
 }
 
 #submit {
@@ -496,7 +508,6 @@ li {
     font-size: 1.5em;
     color: #666666;
     border-radius: 10px;
-    border: 1px solid #666666;
 }
 
 #multiple {
