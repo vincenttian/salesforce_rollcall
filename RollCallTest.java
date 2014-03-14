@@ -5,9 +5,9 @@ private class RollCallTest {
         Date test_date = Date.newInstance(2014, 2, 17);
         Campaign c = create_event('test_event1', test_date, 'test_description', 'Open');
         System.debug('Inserting campaign into database: ' + c);
-        // Insert 
+        // Insert
         insert c;
-        // Retrieve 
+        // Retrieve
         c = [SELECT Name, StartDate, Description, Status, isActive FROM Campaign WHERE Id =:c.Id];
         // Test that the trigger correctly updated the price
         System.assertEquals('test_event1', c.Name);
@@ -39,9 +39,9 @@ private class RollCallTest {
         Date test_date = Date.newInstance(2014, 2, 17);
         Campaign campaign = create_event('test_event1', test_date, 'test_description', 'Open');
         System.debug('Inserting campaign into database: ' + c);
-        // Insert 
+        // Insert
         insert campaign;
-        // Retrieve 
+        // Retrieve
         Campaign[] c = [SELECT Name, StartDate, Description, Status, isActive FROM Campaign WHERE Id =:campaign.Id];
         System.assertEquals(1, c.size());
         // Deleting event
@@ -55,9 +55,9 @@ private class RollCallTest {
         Date test_date = Date.newInstance(2014, 2, 17);
         Campaign campaign = create_event('test_event1', test_date, 'test_description', 'Open');
         System.debug('Inserting campaign into database: ' + c);
-        // Insert 
+        // Insert
         insert campaign;
-        // Retrieve 
+        // Retrieve
         campaign = [SELECT Campaign FROM Campaign WHERE Id =:campaign.Id];
         // Check that the event is active
         System.assertEquals(True, campaign.isActive);
@@ -67,4 +67,13 @@ private class RollCallTest {
         System.assertEquals(False, campaign.isActive);
     }
 
+    static testMethod void test_get_events() {
+        Date test_date = Date.newInstance(2014, 2, 17);
+        Campaign campaign = create_event('test_event1', test_date, 'test_description', 'Open');
+        System.debug('Inserting campaign into database: ' + c);
+        // Insert
+        insert campaign;
+        Event[] e = getEvents();
+        System.assertEquals(1, e.size());
+    }
 }
