@@ -22,6 +22,8 @@
                bottom: 50%;
                right: 50%;
                background: #fff;
+               margin: 0px;
+               padding: 0px;
             }
          </style>
          <script>
@@ -29,11 +31,11 @@
                 $('a').click(function(e){
                     redirect = $(this).attr('href');
                     e.preventDefault();
-                    $('#animation').animate({"top":"0%"}, { queue: false, duration: 150 })
-                    $('#animation').animate({"left":"0%"},{ queue: false, duration: 150 })
-                    $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 150 })
-                    $('#animation').animate({"right":"0%"},{ queue: false, duration: 150 })
-                    $('#animation').animate({"opacity":"1"},1,'linear',function(){
+                    $('#animation').animate({"top":"0%"}, { queue: false, duration: 125 }, 'linear')
+                    $('#animation').animate({"left":"0%"},{ queue: false, duration: 125 }, 'linear')
+                    $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 125 }, 'linear')
+                    $('#animation').animate({"right":"0%"},{ queue: false, duration: 125 }, 'linear')
+                    $('#animation').animate({"opacity":"1"},100,'linear',function(){
                         document.location.href = redirect
                     });
                 });
