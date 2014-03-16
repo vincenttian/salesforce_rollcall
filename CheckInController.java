@@ -12,14 +12,14 @@ global class CheckInController{
     }
 
     public static void register_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { 
-        Lead tmp_contact = new Lead(Email=email, FirstName=first_name, LastName=last_name, Company=company);
-        insert tmp_contact;
-        CampaignMember new_event_attendee = new CampaignMember(LeadId=tmp_contact.id, CampaignId=campaign_id, Status = 'Responded'); 
+        Lead tmp_lead = new Lead(Email=email, FirstName=first_name, LastName=last_name, Company=company);
+        insert tmp_lead;
+        CampaignMember new_event_attendee = new CampaignMember(LeadId=tmp_lead.id, CampaignId=campaign_id, Status = 'Responded'); 
         insert new_event_attendee;
     }
 
-    public static void update_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { 
-        CampaignMember member = [SELECT ContactId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.Email=:email or Lead.Email=:email)];
+    public static void update_event_attendee(CampaignMember member, String email, String first_name, String last_name, String company) { 
+
         if (member.ContactId == null) {
             Lead updated_lead = [SELECT firstname, lastname, Company FROM Lead WHERE Id=:member.LeadId];
             updated_lead.company = company;
@@ -33,101 +33,28 @@ global class CheckInController{
             updated_contact.lastname = last_name;
             update updated_contact;
         }
+        check_in(member);
     }
 
 
-    public static CampaignMember[] check_in(String campaign_id, String email) {        
-        CampaignMember event_attendee = [SELECT ContactID, LeadID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
-        if (event_attendee == null) {
-            return new CampaignMember[0];
-        } else {
-            event_attendee.status = 'Responded'; 
-        }
-        update event_attendee;
-        CampaignMember[] info = new CampaignMember[]{};
-        if (event_attendee.ContactId == null) {
-            Lead lead_event_attendee = [SELECT FirstName, LastName, Company FROM Lead WHERE Id=:event_attendee.LeadId];
-        } else {
-            Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee.ContactId];
-        }
-        info.add(event_attendee);
-        return info;
+    public static void check_in(CampaignMember attendee) {        
+        attendee.status = 'Responded'; 
+        update attendee;
     }
-
-    /* Original
-    public static String[] check_in(String campaign_id, String email) {        
-        CampaignMember event_attendee = [SELECT ContactID, LeadID, Status, CampaignId FROM CampaignMember WHERE CampaignId=:campaign_id AND (Contact.email=:email or Lead.email=:email)];
-        if (event_attendee == null) {
-            return new String[0];
-        } else {
-            event_attendee.status = 'Responded'; 
-        }
-        update event_attendee;
-        String[] info = new String[3];
-        if (event_attendee.ContactId == null) {
-            Lead lead_event_attendee = [SELECT FirstName, LastName, Company FROM Lead WHERE Id=:event_attendee.LeadId];
-            info[0] = lead_event_attendee.FirstName;
-            info[1] = lead_event_attendee.LastName;
-            info[2] = lead_event_attendee.Company;
-        } else {
-            Contact contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE Id=:event_attendee.ContactId];
-            info[0] = contact_event_attendee.FirstName;
-            info[1] = contact_event_attendee.LastName;
-            info[2] = contact_event_attendee.Company__c;
-        }
-        return info;
-    }
-    */
 
     // logic to check if a campaign member needs to register or just check in
     public static CampaignMember[] handle_parent_events(String campaign_id, String email) {
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
-        CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId, LeadId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
-        if (event_attendee.size() == 0) {
-            return new CampaignMember[0];
-        } else if (event_attendee.size() != 1) {
-            CampaignMember[] info = new CampaignMember[]{};
-            for (CampaignMember cmember: event_attendee) {
-                info.add(cmember);
-            }
-            return info;
-        } else {
-            return CheckInController.check_in(string.valueof(campaign_id), email);
+        CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId, LeadId, Lead.Name, Lead.FirstName, Lead.LastName, Contact.Name, Contact.FirstName, Contact.LastName, Lead.Email, Contact.Email, Lead.Company, Contact.Company__c 
+                                           FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND 
+                                           (Lead.Email=:email OR Contact.Email=:email)];
+        
+        if (event_attendee.size() == 1) {
+            check_in(event_attendee[0]);
         }
+        
+        return event_attendee;
     }
-
-    /* Original
-    // logic to check if a campaign member needs to register or just check in
-    public static String[] handle_parent_events(String campaign_id, String email) {
-        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
-        CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId, LeadId FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND (Lead.Email=:email OR Contact.Email=:email)];
-        if (event_attendee.size() == 0) {
-            return new String[0];
-        } else if (event_attendee.size() != 1) {
-            String[] info = new String[6];
-            if (event_attendee[0].ContactId == null) {
-                Lead[] lead_event_attendee = [SELECT FirstName, LastName, Company FROM Lead WHERE (Id=:event_attendee[0].LeadId or Id=:event_attendee[1].LeadId)];
-                info[0] = lead_event_attendee[0].FirstName;
-                info[1] = lead_event_attendee[0].LastName;
-                info[2] = lead_event_attendee[0].Company;
-                info[3] = lead_event_attendee[1].FirstName;
-                info[4] = lead_event_attendee[1].LastName;
-                info[5] = lead_event_attendee[1].Company;
-            } else {
-                Contact[] contact_event_attendee = [SELECT FirstName, LastName, Company__c FROM Contact WHERE (Id=:event_attendee[0].ContactId or Id=:event_attendee[1].ContactId)];
-                info[0] = contact_event_attendee[0].FirstName;
-                info[1] = contact_event_attendee[0].LastName;
-                info[2] = contact_event_attendee[0].Company__c;
-                info[3] = contact_event_attendee[1].FirstName;
-                info[4] = contact_event_attendee[1].LastName;
-                info[5] = contact_event_attendee[1].Company__c;
-            }
-            return info;
-        } else {
-            return CheckInController.check_in(string.valueof(campaign_id), email);
-        }
-    }
-    */
 
     // Checking in attendees for checkin page
     @RemoteAction
@@ -137,9 +64,9 @@ global class CheckInController{
 
     // Checking in attendees for checkin page
     @RemoteAction
-    global static void multiple_login(String event_id, String company, String email) {
+    global static void check_in_multiple(String CampaignMemberId) {
         // login person that has specific attributes above 
-        CampaignMember event_attendee = [SELECT ContactId, LeadId FROM CampaignMember WHERE CampaignId=:event_id AND ((Contact.Company__c=:company AND Contact.email=:email) or (Lead.Company=:company AND Lead.email=:email))];
+        CampaignMember event_attendee = [SELECT status FROM CampaignMember WHERE id = :CampaignMemberId];
         event_attendee.status = 'Responded'; 
         update event_attendee;
     }
@@ -147,13 +74,12 @@ global class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static void update_attendee(String event_id, String first_name, String last_name, String email, String company) {
-        Integer attendee_size = [SELECT count() FROM CampaignMember WHERE CampaignId=:event_Id AND (Contact.Email=:email or Lead.Email=:email)];
-        if (attendee_size == 0) {
+        CampaignMember[] cm = [SELECT Status, ContactId, LeadId FROM CampaignMember WHERE CampaignId=:event_Id AND (Contact.Email=:email or Lead.Email=:email)];
+        if (cm.size() == 0) {
             // register attendee
-            CheckInController.register_event_attendee(email, first_name, last_name, company, event_id);
+            register_event_attendee(email, first_name, last_name, company, event_id);
         } else {
-            // update attendee
-            CheckInController.update_event_attendee(email, first_name, last_name, company, event_id);
+            update_event_attendee(cm[0], email, first_name, last_name, company);
         }
     }
 
