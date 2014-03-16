@@ -178,7 +178,7 @@ $(document).ready(function() {
                         document.getElementById("checkin_name").innerHTML = name; 
                         document.getElementById("checkin_company").innerHTML = company;  
                         setSection($("#container section#"+"#two"), $('.active'));
-                    } else if (result.length == 0){ // should be coming from handle_parent_events returning empty CampaignMember[0]
+                    } else if (result.length == 0){ // no match in DB - Register page
                         setSection($("#container section#"+"#five"), $('.active'));
                     } else { // could not find match in database
                         mult_email = document.getElementById("email").value;
@@ -202,7 +202,6 @@ $(document).ready(function() {
                             newA.appendTo("#multipleAttendees");
                             document.getElementById("checkin_email").innerHTML = mult_email; 
                         }
-                        // CURRENTLY WORKING
                         setSection($("#container section#"+"#six"), $('.active'));
                     }
                 } else if (event.type === 'exception') {
@@ -231,7 +230,6 @@ $(document).ready(function() {
                 var error_class = document.getElementById('#update_lastname');
                 error_class.addClass('error');
             }
-            // console.log('STOPPED! Must have first name and last name');
             return;
         }
         Visualforce.remoting.Manager.invokeAction(
@@ -268,10 +266,7 @@ $(document).ready(function() {
         document.getElementById('update_company').value = "";
     }
 
-    function checkInMultiple(campaignMemberId) {
-        //document.getElementById('checkin_name').innerHTML = "<p> Name: <span class='blue_text'>"  + name + "</span> </p>";
-        //document.getElementById('checkin_company').innerHTML = "<p> Company: <span class='blue_text'>"  + company + "</span> </p>";
-    
+    function checkInMultiple(campaignMemberId) {    
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_multiple}',
             campaignMemberId,
