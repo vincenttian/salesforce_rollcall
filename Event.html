@@ -17,6 +17,7 @@
       <script type="text/javascript" src="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <script type="text/javascript" src="{!$Resource.gauge}"/>
+      <script type="application/javascript" src="{!URLFOR($Resource.iscroll, 'build/iscroll.js')}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
 
@@ -127,6 +128,9 @@
     
     
     </body>
+    <script type="text/javascript">
+      var myScroll = new iScroll('attendee_list');
+    </script>
     <script>
         var gauges = [];
         function createGauge(name, label, min, max) {
