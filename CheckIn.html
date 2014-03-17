@@ -58,9 +58,9 @@ id="todo"
   <!-- Successful checkin -->
   <section id="three">
     <div class="checkin">
-      <img id="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'checkin.svg')}"> </img>
+      <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'checkin.svg')}"> </img>
       <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
-      <a id="checkin_end" data-section="one" href="#"> 
+      <a class="checkin_end" data-section="one" href="#"> 
         <p> Return </p>
       </a>
     </div>
@@ -70,15 +70,17 @@ id="todo"
     <div class="checkin">
       <div class="column">
         <p class="label"> *First Name: </p>
-        <p id="first_error"> Please enter a first name </p>
+        <p id="first_spacer"> <br></br> </p>
         <p class="label"> *Last Name: </p>
-        <p id="last_error"> Please enter a last name </p>
+        <p id="last_spacer"> <br></br> </p>
         <p class="label"> Company: </p>
         <p class="label"> *Email: </p>
       </div>
       <div class="column">
         <input  id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" onclick='clear_error("first_error")'/>
+        <p id="first_error"> Please enter a first name </p>
         <input  id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" onclick='clear_error("last_error")'/>
+        <p id="last_error"> Please enter a last name </p>
         <input  id="update_company" type="text" name="company" class="input normal" placeholder=""/>
         <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
@@ -138,6 +140,12 @@ $(document).ready(function() {
     var mult_email;
 
     function clear_error(id) {
+        if (id == 'first_error') {
+          $('#update_firstname').removeClass('error'); 
+        } else {
+          $('#email').removeClass('error'); 
+          $('#update_lastname').removeClass('error'); 
+        }
         var error = document.getElementById(id);
         error.style.display = 'none';
     }
@@ -150,8 +158,7 @@ $(document).ready(function() {
             console.log('STOPPED! Not a valid email according to regex');
             var error = document.getElementById('checkin_error');
             error.style.display = 'block';
-            // var error_class = document.getElementById('#email');
-            // error_class.addClass("error");
+            $('#email').addClass('error'); 
             return;
         }    
         var error = document.getElementById('checkin_error');
@@ -229,28 +236,21 @@ $(document).ready(function() {
             if (firstname == '' && lastname == '') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_firstname');
-                // error_class.addClass('error');   
+                $('#update_firstname').addClass('error');   
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_lastname');
-                // error_class.addClass('error');
+                $('#update_lastname').addClass('error');   
             } else if (firstname =='') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_firstname');
-                // error_class.addClass('error');
+                $('#update_firstname').addClass('error'); 
             } else if (lastname == '') {
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_lastname');
-                // error_class.addClass('error');
+                $('#update_lastname').addClass('error'); 
             }
             return;
         }
-        // TODO:
-        // error.style.display = 'none';
-        // error_class.removeClass('error');
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
