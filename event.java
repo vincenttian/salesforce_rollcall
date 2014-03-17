@@ -29,7 +29,9 @@ global class Event{
         checkedIn = [SELECT Count() FROM CampaignMember
                      WHERE CampaignId in :potential_children.keySet() AND
                      (Status=:checkedInStatus)];
-        maxCapacity = c.MaxCapacity__c;
+        if (c.MaxCapacity__c != null) {
+            maxCapacity = c.MaxCapacity__c;
+        }
         titleColor = 'title blue';
         textColor = 'blue_text';
         cid = c.id;
