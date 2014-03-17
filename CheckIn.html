@@ -9,10 +9,12 @@ id="todo"
 >
 <html>
 <head>
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
   <!--apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/-->
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+  <apex:includeScript value="{!$Resource.doubleTap}"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
   <title>RollCall</title>
 </head>
@@ -21,7 +23,7 @@ id="todo"
   <div id="select_event">
     <p> Salesforce Workday </p>          
   </div>
-  <div class="invisible" id="return" onclick="javascript:window.location='event.html';"></div>
+  <div class="invisible" id="return"></div>
   <div id="container">
    <section id="one" class="active">
     <div class="checkin">
@@ -108,6 +110,16 @@ id="todo"
     </div>
   </section>
 </div>
+<script>
+    // Double Tap Implementation for iPad
+    var HAS_TOUCH = ('ontouchstart' in window);
+    function returnHandler() {
+        window.location.href="/apex/event?event_id={!event.cId}";
+    }
+    var ret = document.getElementById('return');
+    ret.addEventListener(HAS_TOUCH ? 'touchend' : 'mouseup', doubleTap(), false);
+    ret.addEventListener('dbltap', returnHandler, false);
+</script>
 </body>
 
 <script>
@@ -309,6 +321,7 @@ $(document).ready(function() {
             {escape: true}
         );
     }
+
 </script>
 </html>
 </apex:page>
