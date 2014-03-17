@@ -1,3 +1,9 @@
+#simubar {
+    height: 70px;
+    width: 100%;
+    background: #000000;
+}
+
 body {
     margin: 0px;
     height: 100%;
@@ -47,8 +53,6 @@ li {
 }   
 
 #field {
-    padding: 10px;
-    padding-top: 15px;
     font-size: 1em;
 }
 
@@ -106,26 +110,17 @@ li {
     height: 40px;
 }
 
-.action:hover {
-    cursor: pointer;
-}
-
 .card {
     float: left;
     text-align: center;
     margin-top: 25px;
     margin-left: 25px;
     width: 224px;
-    height: 300px;
+    height: 280px;
     border-radius: 10px;
     box-shadow: 0px 1px 5px 0px #000000;
     background: #FFFFFF;
     overflow: hidden;
-}
-
-.card:hover {
-    cursor: pointer;
-    box-shadow: 0px 1px 15px 0px #000000;
 }
 
 .title {
@@ -134,7 +129,7 @@ li {
     background: #77DDFF;
     padding-top: 45px;
     padding-left: 15px;
-    height: 75px;
+    height: 70px;
     color: #FFFFFF;
     font-size: 1em;
     box-shadow: 0px -2px 3px 2px #000000;
@@ -143,7 +138,7 @@ li {
 .pic {
     margin-left: 37px;
     width: 150px;
-    height: 125px;
+    height: 115px;
 }
 
 .cal_blue {
@@ -215,7 +210,7 @@ li {
 .info {
     width: 100%;
     color: #AAAAAA;
-    margin-top: 10px;
+    margin-top: 5px;
     padding: 15px;
 }
 
@@ -280,10 +275,6 @@ li {
     border-bottom: 1px solid #aaaaaa;
 }
 
-.tab:hover {
-    cursor: pointer;
-}
-
 #return {
     position: absolute;
     top: 0px;
@@ -300,7 +291,6 @@ li {
 }
 
 #return:hover {
-    cursor: pointer;
     background-color: #ff9d00;
 }
 
@@ -433,7 +423,6 @@ li {
 }
 
 #submit:hover {
-    cursor: pointer;
     background: #333333;
 }
 
@@ -624,9 +613,10 @@ li {
     border-right: 10px solid #0096ff;
 }
 
+/*
 .hover_blue_text:hover {
     color: #0096ff;
-}
+}*/
 
 .magenta {
     background: #ff009d;
@@ -636,9 +626,10 @@ li {
     color: #ff009d;
 }
 
+/*
 .hover_magenta_text:hover {
     color: #ff009d;
-}
+}*/
 
 .magenta_border {
     border-right: 10px solid #ff009d;
@@ -652,9 +643,10 @@ li {
     color: #7ac100;
 }
 
+/*
 .hover_green_text:hover {
     color: #7ac100;
-}
+}*/
 
 .green_border {
     border-right: 10px solid #7ac100;
@@ -668,9 +660,10 @@ li {
     color: #ff4040;
 }
 
+/*
 .hover_red_text:hover {
     color: #ff4040;
-}
+}*/
 
 .red_border {
     border-right: 10px solid #ff4040;
@@ -692,6 +685,7 @@ li {
     color: #AAAAAA;
 }
 
+/*
 @media (max-width: 641px) {
     body {
         background: #fff;
@@ -758,4 +752,4 @@ li {
     .input {
         width: 300px;
     }
-}
+}*/

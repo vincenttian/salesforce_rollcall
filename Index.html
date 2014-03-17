@@ -35,16 +35,13 @@
                     $('#animation').animate({"left":"0%"},{ queue: false, duration: 125 }, 'linear')
                     $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 125 }, 'linear')
                     $('#animation').animate({"right":"0%"},{ queue: false, duration: 125 }, 'linear')
-                    $('#animation').animate({"opacity":"1"},100,'linear',function(){
+                    $('#animation').animate({"opacity":"1"},125,'linear',function(){
                         document.location.href = redirect
                     });
                 });
             })
          </script>
          <title>RollCall</title>
-         <style>
-          background: url(wooden_background.jpg);
-         </style>
       </head>
       <body>
          <div id="animation"></div>
@@ -66,7 +63,7 @@
                      <div class="info">
 
                         <p>Capacity: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
-                        <p>Registered : <span class="{!event.textcolor}">{!event.registered}</span></p>
+                        <p>Registered: <span class="{!event.textcolor}">{!event.registered}</span></p>
                         <!-- <p>Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span></p> -->
                      </div>
                      <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>  
