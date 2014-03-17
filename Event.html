@@ -17,34 +17,7 @@
       <script type="text/javascript" src="{!$Resource.gauge}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
-      <script>
-        var started = false;
-        var gauges = [];
-        function createGauge(name, label, min, max) {
-            var config = {
-                size: 245,
-                label: label,
-                min: undefined != min ? min : 0,
-                max: undefined != max ? max : 100,
-                minorTicks: 5
-            }
-            var range = config.max - config.min;
-            config.greenZones = [{ from: config.min + range*0, to: config.min + range/3 }];
-            config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
-            config.redZones = [{ from: config.min + range*2/3, to: config.max }];
-            gauges[name] = new Gauge(name + "GaugeContainer", config);
-            gauges[name].render();        
-        }
- 
-        function initialize() {
-            if (!started) {
-                createGauge("test", "Test", 0, {!event.maxCapacity} );
-                var value = {!event.checkedIn};
-                gauges["test"].redraw(value);
-                started = true;
-            }
-        }
-        </script>
+      
     </head>
     <body>
       <div id="navbar">
@@ -148,7 +121,37 @@
     .y {
         display: none;
     }    </style>
+    
+    </body>
     <script>
+        var started = false;
+        var gauges = [];
+        function createGauge(name, label, min, max) {
+            var config = {
+                size: 245,
+                label: label,
+                min: undefined != min ? min : 0,
+                max: undefined != max ? max : 100,
+                minorTicks: 5
+            }
+            var range = config.max - config.min;
+            config.greenZones = [{ from: config.min + range*0, to: config.min + range/3 }];
+            config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
+            config.redZones = [{ from: config.min + range*2/3, to: config.max }];
+            gauges[name] = new Gauge(name + "GaugeContainer", config);
+            gauges[name].render();        
+        }
+ 
+        function initialize() {
+            if (!started) {
+                createGauge("test", "Test", 0, {!event.maxCapacity} );
+                var value = {!event.checkedIn};
+                gauges["test"].redraw(value);
+                started = true;
+            }
+        }
+        </script>
+        <script>
     var startedLine = false;
     // Flow Chart of attendees
     function line_chart_info() {
@@ -364,6 +367,5 @@
            }
       });
     </script>
-    </body>
   </html>
 </apex:page>
