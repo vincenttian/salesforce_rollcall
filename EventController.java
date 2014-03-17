@@ -15,18 +15,10 @@ global class EventController {
         event = new Event(c);
     }
 
-    // For apex: repeat    
-    public CampaignMember[] getAttendees() {
-        Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event.cid];
-        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
-        CampaignMember[] registered = [SELECT Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet()];
-        return registered;
-    }
-
     @RemoteAction
     global static sObject[] attendee_search(ID cid, String name, Integer offset) {
         String search_name = '%' + String.escapeSingleQuotes(name) + '%';
-        Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:cid];
+        Campaign c = [SELECT Id FROM Campaign WHERE Id=:cid];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
         CampaignMember[] registered = [SELECT Lead.Name, Lead.Email, 
         Contact.Name, Contact.Email, Contact.Company__c, LeadID, ContactID
@@ -47,7 +39,7 @@ global class EventController {
     // For d3    
     @RemoteAction
     global static List<DateTime> get_checkedin_times(String event_id) {
-        Campaign c = [SELECT Id FROM Campaign WHERE isActive=True AND Id=:event_id];
+        Campaign c = [SELECT Id FROM Campaign WHERE Id=:event_id];
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
         CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet() ORDER BY LastModifiedDate ASC];
         List<DateTime> data = new List<DateTime>();
