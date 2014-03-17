@@ -25,7 +25,7 @@ id="todo"
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input class="normal"  type="text" name="email" id="email" onclick='clear_error("checkin_error")'/>
+      <input class="normal"  type="email" name="email" id="email" onclick='clear_error("checkin_error")'/>
       <p id="checkin_error"> Please enter a valid email </p>
       <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee()" value="Check In">  </input>
     </div>
@@ -156,9 +156,10 @@ $(document).ready(function() {
         error.style.display = 'none';
 
         // HANDLES MAX CAPACITY
-        // if ({!event.checkedIn} >= {!event.maxCapacity}) {
-        //     console.log('TOO BIG');
-        // }
+        if ({!event.checkedIn} >= {!event.maxCapacity}) {
+            console.log('Event is already at capacity');
+            return;
+        }
 
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
