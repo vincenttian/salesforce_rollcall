@@ -49,4 +49,12 @@ global class EventController {
         return data;
     }
 
+    // Updates info for charts
+    @RemoteAction
+    global static Event update_stats(String event_id) {
+        Campaign c = [SELECT Name, StartDate, Description, Id, MaxCapacity__c, LastModifiedDate FROM Campaign WHERE Id=:event_id];
+        Event e = new Event(c);
+        return e;
+    }
+
 }
