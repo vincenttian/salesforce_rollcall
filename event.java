@@ -11,6 +11,8 @@ global class Event{
     public String picData {get;set;}
     public String cal {get;set;}
     public List<String> checkedInTimes {get;set;}
+    global static String registeredStatus = 'Sent';
+    global static String checkedInStatus = 'Responded';
     public ID cid {get;set;}
     
    
@@ -26,7 +28,7 @@ global class Event{
                       WHERE CampaignId in :potential_children.keySet()];
         checkedIn = [SELECT Count() FROM CampaignMember
                      WHERE CampaignId in :potential_children.keySet() AND
-                     (Status='Responded')];
+                     (Status=:checkedInStatus)];
         maxCapacity = c.MaxCapacity__c;
         titleColor = 'title blue';
         textColor = 'blue_text';
