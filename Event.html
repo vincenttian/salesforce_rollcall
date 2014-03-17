@@ -92,12 +92,12 @@
               <div id="chart_two">
                   <p class="chart_title"> Attendance </p>
                   <p class="chart_info"> Checked In: 
-                    <span class="blue_text"> 
+                    <span class="blue_text" id='pie_checkedin'> 
                       {!event.checkedin} 
                     </span> 
                     <br></br> 
                     Registered: 
-                    <span class="gray_text"> 
+                    <span class="gray_text" id='pie_registered'> 
                       {!event.registered}
                     </span> 
                   </p>
@@ -105,7 +105,7 @@
               </div>
               <div id="chart_three">
                   <p class="chart_title"> Capacity </p>
-                  <p class="chart_info"> Checked In: <span class="orange_text"> {!event.checkedin} </span> <br></br> Capacity: <span class="gray_text"> {!event.maxCapacity} </span> </p>
+                  <p class="chart_info"> Checked In: <span class="orange_text" id='gauge_checkedin'> {!event.checkedin} </span> <br></br> Capacity: <span class="gray_text"> {!event.maxCapacity} </span> </p>
                   <span id="testGaugeContainer"></span>
               </div>
           </div>
@@ -156,11 +156,6 @@
                 '{!event.cid}',
                 function(result, event){
                     if (event.status) {
-                        createGauge("test", "Test", 0, result.maxCapacity );
-                        var value = result.checkedIn;
-                        gauges["test"].redraw(value);
-
-
                         var checked_in = result.checkedIn;
                         var registered = result.registered;
                         var math = registered - checked_in;
@@ -168,10 +163,24 @@
                           registered = 1;
                         }
 
+                        // Gauges
+                        createGauge("test", "Test", 0, result.maxCapacity );
+                        var value = result.checkedIn;
+                        gauges["test"].redraw(value);
+
+
+                        // Pie Chart
+                        document.getElementById('gauge_checkedin').innerHTML = checked_in;
+                        document.getElementById('pie_checkedin').innerHTML = checked_in;
+                        document.getElementById('pie_registered').innerHTML = registered;
+
                         document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
 
                         var data = [ {name: "attended", value: result.checkedIn},
                                 {name: "absent", value:  math} ];
+
+                        console.log(result.checkedIn);
+                        console.log(math);
 
                         var width = 362,
                             height = 384,
