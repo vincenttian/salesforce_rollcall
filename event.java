@@ -19,7 +19,11 @@ global class Event{
     /** Main constructor for an event. */ 
     public Event (Campaign c) {
         name = c.Name;
-        start = c.StartDate.format();
+        if (c.StartDate != null) {
+            start = c.StartDate.format();
+        } else {
+            start = 'Today';
+        }
         description = c.description;
         Map<Id, Campaign> potential_children =
             new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
@@ -29,9 +33,7 @@ global class Event{
         checkedIn = [SELECT Count() FROM CampaignMember
                      WHERE CampaignId in :potential_children.keySet() AND
                      (Status=:checkedInStatus)];
-        if (c.MaxCapacity__c != null) {
-            maxCapacity = c.MaxCapacity__c;
-        }
+        maxCapacity = c.MaxCapacity__c;
         titleColor = 'title blue';
         textColor = 'blue_text';
         cid = c.id;
