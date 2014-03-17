@@ -329,7 +329,13 @@ li {
     height: 384px;
 }
 
-/*PUT CHECKIN BACK HERE*/
+.checkin {
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background: #FFFFFF;
+    overflow: hidden;
+}
 
 #checkin_title {
     margin-top: 175px;
@@ -401,7 +407,7 @@ li {
 #submit {
     box-sizing: border-box;
     display: block;
-    margin-left: 187px;
+    margin-left: 212px;
     border-style: none;
     background: #0096ff;
     margin-top: 32px;
@@ -510,7 +516,7 @@ li {
 #update {
     box-sizing: border-box;
     display: block;
-    margin-left: 187px;
+    margin-left: 212px;
     border-style: none;
     background: #0096ff;
     text-align: center;

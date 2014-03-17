@@ -87,7 +87,8 @@ id="todo"
         <input  id="update_company" type="text" name="company" class="input normal" placeholder=""/>
         <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
-      <div id="update" data-section="three" onclick="update_attendee()"> <p> Confirm </p> </div>
+      <!--<div id="submit" data-section="two" onclick="check_in_attendee()"> <p> Check In </p> </div>-->
+      <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee()" value="Confirm"> </input>
     </div>
   </section>
   <!-- Haven't registered page -->
@@ -166,10 +167,11 @@ $(document).ready(function() {
 
     function clear_error(id) {
         if (id == 'first_error') {
-          $('#update_firstname').removeClass('error'); 
+          $('#update_firstname').removeClass('error');
+        } else if (id == 'last_error') {
+          $('#update_lastname').removeClass('error');
         } else {
-          $('#email').removeClass('error'); 
-          $('#update_lastname').removeClass('error'); 
+          $('#email').removeClass('error');
         }
         var error = document.getElementById(id);
         error.style.display = 'none';
