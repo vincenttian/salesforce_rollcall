@@ -18,6 +18,7 @@
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
       <script>
+        var started = false;
         var gauges = [];
         function createGauge(name, label, min, max) {
             var config = {
@@ -36,13 +37,16 @@
         }
  
         function initialize() {
-            createGauge("test", "Test", 0, {!event.maxCapacity} );
-            var value = {!event.checkedIn};
-            gauges["test"].redraw(value);
+            if (!started) {
+                createGauge("test", "Test", 0, {!event.maxCapacity} );
+                var value = {!event.checkedIn};
+                gauges["test"].redraw(value);
+                started = true;
+            }
         }
         </script>
     </head>
-    <body onload="initialize(); line_chart_info();">
+    <body>
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">  
@@ -53,7 +57,7 @@
         <a class="tab blue_border hover_blue_text" data-section="one" href="#">
           <p> Information </p>
         </a>
-        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
+        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="initialize(); line_chart_info();">
           <p> Statistics </p>
         </a>
         <a class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false);'>
@@ -145,12 +149,18 @@
         display: none;
     }    </style>
     <script>
+    var startedLine = false;
     // Flow Chart of attendees
     function line_chart_info() {
+         console.log(started);
+        if (startedLine) {
+          return;
+        }
         Visualforce.remoting.Manager.invokeAction(
         '{!$RemoteAction.EventController.get_checkedin_times}',
         '{!event.cid}',
         function(result, event){
+            startedLine = true;
             if (event.status) {
                 // Get DOM IDs for HTML and Visualforce elements like this
               var width = 624,
