@@ -12,10 +12,10 @@
       <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-      <apex:includeScript value="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
+      <script type="text/javascript" src="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
+      <script type="text/javascript" src="{!$Resource.gauge}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
-      <apex:includeScript value="{!$Resource.gauge}"/>
       <title>RollCall</title>
       <script>
         var gauges = [];
