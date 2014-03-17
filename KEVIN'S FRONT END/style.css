@@ -388,8 +388,10 @@ li {
 }
 
 #first_error {
-    display: none;
     color: #ff4040;
+}
+
+#first_spacer {
 }
 
 #last_error {
@@ -397,9 +399,17 @@ li {
     color: #ff4040;
 }
 
+#last_spacer {
+    display: none;
+}
+
 #email_error {
     display: none;
     color: #ff4040;
+}
+
+#email_spacer {
+    display: none;
 }
 
 #submit {
