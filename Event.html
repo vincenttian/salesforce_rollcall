@@ -12,12 +12,13 @@
       <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-      <apex:includeScript value="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
+      <script type="text/javascript" src="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
+      <script type="text/javascript" src="{!$Resource.gauge}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
-      <apex:includeScript value="{!$Resource.gauge}"/>
       <title>RollCall</title>
       <script>
+        var started = false;
         var gauges = [];
         function createGauge(name, label, min, max) {
             var config = {
@@ -36,13 +37,16 @@
         }
  
         function initialize() {
-            createGauge("test", "Test", 0, {!event.maxCapacity} );
-            var value = {!event.checkedIn};
-            gauges["test"].redraw(value);
+            if (!started) {
+                createGauge("test", "Test", 0, {!event.maxCapacity} );
+                var value = {!event.checkedIn};
+                gauges["test"].redraw(value);
+                started = true;
+            }
         }
         </script>
     </head>
-    <body onload="initialize(); line_chart_info();">
+    <body>
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">  
@@ -53,7 +57,7 @@
         <a class="tab blue_border hover_blue_text" data-section="one" href="#">
           <p> Information </p>
         </a>
-        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#">
+        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="initialize(); line_chart_info();">
           <p> Statistics </p>
         </a>
         <a class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false);'>
@@ -145,14 +149,19 @@
         display: none;
     }    </style>
     <script>
+    var startedLine = false;
     // Flow Chart of attendees
     function line_chart_info() {
+         console.log(started);
+        if (startedLine) {
+          return;
+        }
         Visualforce.remoting.Manager.invokeAction(
         '{!$RemoteAction.EventController.get_checkedin_times}',
         '{!event.cid}',
         function(result, event){
+            startedLine = true;
             if (event.status) {
-              console.log('result: ' + result);
                 // Get DOM IDs for HTML and Visualforce elements like this
               var width = 624,
                   height = 284;
@@ -183,7 +192,6 @@
             } 
             data += (i+1) + '], "date": ["';
             for (var i=0; i<result.length - 1; i++) {
-                console.log('date: ' + result[i]);
                 temp_date = new Date(result[i]);
                 // CHANGE THE DATE FORMAT HERE
                 date_format = d3.time.format("%a %b %e %H:%M:%S %Y");
@@ -193,7 +201,6 @@
             temp_date = new Date(result[result.length-1]);
             temp_date = date_format(temp_date);
             data += temp_date + '"]}';
-            console.log('data: ' + data);
             data = jQuery.parseJSON(data);
             var date_list = [];
             data = d3.zip(data.close, data.date).map(function(d) {
@@ -242,7 +249,6 @@
         var element = document.createElement("li")
         var f = document.createElement('p');
         var e = document.createElement('p');
-        console.log(element);
         f.innerHTML = attendee.Name;
         if (attendee.Email) {
             e.innerHTML = attendee.Email;
@@ -288,11 +294,9 @@
                     }
                     objlist.appendChild(fragment);
                 } else if (event.type === 'exception') {
-                    console.log('exception');
                     document.getElementById("responseErrors").innerHTML = 
                         event.message + "<br/>\n<pre>" + event.where + "</pre>";
                 } else {
-                    console.log('null')
                     document.getElementById("responseErrors").innerHTML = event.message;
                 }
             }, 
