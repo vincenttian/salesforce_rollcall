@@ -17,6 +17,22 @@
       <script type="text/javascript" src="{!$Resource.gauge}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
+
+      <!-- Styling for graphs -->
+    <style>
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #CCC;
+    }    
+    .line {
+      fill: none;
+      stroke: #ff009d;
+      stroke-width: 3px;
+    }   
+    .y {
+        display: none;
+    }    </style>
       
     </head>
     <body>
@@ -106,21 +122,7 @@
           </div>
         </section>
       </div>
-    <!-- Styling for graphs -->
-    <style>
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #CCC;
-    }    
-    .line {
-      fill: none;
-      stroke: #ff009d;
-      stroke-width: 3px;
-    }   
-    .y {
-        display: none;
-    }    </style>
+    
     
     </body>
     <script>
