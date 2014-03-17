@@ -69,14 +69,6 @@ global class Event{
             start = 'Dec ' + c.StartDate.day();
         }
         description = c.description;
-        Map<Id, Campaign> potential_children =
-            new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
-            Id FROM Campaign WHERE ParentId=:c.Id OR Id=:c.Id]);
-        registered = [SELECT Count() FROM CampaignMember
-                      WHERE CampaignId in :potential_children.keySet()];
-        checkedIn = [SELECT Count() FROM CampaignMember
-                     WHERE CampaignId in :potential_children.keySet() AND
-                     (Status='Responded')];
         maxCapacity = c.MaxCapacity__c;
         cid = c.id;
         if (Math.mod(i, 5) == 0) {
