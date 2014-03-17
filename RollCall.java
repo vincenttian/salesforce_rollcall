@@ -59,13 +59,13 @@ global class RollCall{
             if (rMap.containsKey(m.CampaignID)) {
                 rMap.put(m.CampaignID, rMap.get(m.CampaignID) + 1);
             } else {
-                rMap.put(m.CampaignID, 0);
+                rMap.put(m.CampaignID, 1);
             }
             if (m.status.equals('Responded')) {
                 if (cMap.containsKey(m.CampaignID)) {
                     cMap.put(m.CampaignID, cMap.get(m.CampaignID) + 1);
                 } else {
-                    cMap.put(m.CampaignID, 0);
+                    cMap.put(m.CampaignID, 1);
                 }
             }
         }
@@ -77,13 +77,13 @@ global class RollCall{
             if (rMap.containsKey(m.Campaign.ParentId)) {
                 rMap.put(m.Campaign.ParentId, rMap.get(m.Campaign.ParentId) + 1);
             } else {
-                rMap.put(m.Campaign.ParentId, 0);
+                rMap.put(m.Campaign.ParentId, 1);
             }
             if (m.status.equals('Responded')) {
                 if (cMap.containsKey(m.Campaign.ParentId)) {
                     cMap.put(m.Campaign.ParentId, cMap.get(m.Campaign.ParentId) + 1);
                 } else {
-                    cMap.put(m.Campaign.ParentId, 0);
+                    cMap.put(m.Campaign.ParentId, 1);
                 }
             }
         }

@@ -9,8 +9,8 @@ id="todo"
 >
 <html>
 <head>
-  <meta name="viewport" content="width=device-width,user-scalable=no" />
-  <!--apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/-->
+  <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
@@ -122,6 +122,15 @@ id="todo"
     var ret = document.getElementById('return');
     ret.addEventListener(HAS_TOUCH ? 'touchend' : 'mouseup', doubleTap(), false);
     ret.addEventListener('dbltap', returnHandler, false);
+
+    // Return is equivalent to form submission
+    window.onkeydown = function(e){
+        var code = e.keyCode || e.which;
+        if(code == 13) { 
+            check_in_attendee();
+            // $("#submit").blur();
+        }
+    }
 </script>
 </body>
 
@@ -181,10 +190,10 @@ $(document).ready(function() {
         error.style.display = 'none';
 
         // HANDLES MAX CAPACITY
-        if ({!event.checkedIn} >= {!event.maxCapacity}) {
-            console.log('Event is already at capacity');
-            return;
-        }
+        // if ({!event.checkedIn} >= {!event.maxCapacity}) {
+        //     console.log('Event is already at capacity');
+        //     return;
+        // }
 
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
