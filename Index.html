@@ -12,6 +12,8 @@
    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
    <html>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
          <style>
             #animation {
@@ -35,16 +37,13 @@
                     $('#animation').animate({"left":"0%"},{ queue: false, duration: 125 }, 'linear')
                     $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 125 }, 'linear')
                     $('#animation').animate({"right":"0%"},{ queue: false, duration: 125 }, 'linear')
-                    $('#animation').animate({"opacity":"1"},100,'linear',function(){
+                    $('#animation').animate({"opacity":"1"},125,'linear',function(){
                         document.location.href = redirect
                     });
                 });
             })
          </script>
          <title>RollCall</title>
-         <style>
-          background: url(wooden_background.jpg);
-         </style>
       </head>
       <body>
          <div id="animation"></div>
@@ -66,7 +65,7 @@
                      <div class="info">
 
                         <p>Capacity: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
-                        <p>Registered : <span class="{!event.textcolor}">{!event.registered}</span></p>
+                        <p>Registered: <span class="{!event.textcolor}">{!event.registered}</span></p>
                         <!-- <p>Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span></p> -->
                      </div>
                      <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>  
