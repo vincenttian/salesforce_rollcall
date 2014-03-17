@@ -25,7 +25,7 @@ id="todo"
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input class="normal"  type="text" name="email" id="email"/>
+      <input class="normal"  type="text" name="email" id="email" onclick='clear_error("checkin_error")'/>
       <p id="checkin_error"> Please enter a valid email </p>
       <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee()" value="Check In">  </input>
     </div>
@@ -70,13 +70,15 @@ id="todo"
     <div class="checkin">
       <div class="column">
         <p class="label"> *First Name: </p>
+        <p id="first_error"> Please enter a first name </p>
         <p class="label"> *Last Name: </p>
+        <p id="last_error"> Please enter a last name </p>
         <p class="label"> Company: </p>
         <p class="label"> *Email: </p>
       </div>
       <div class="column">
-        <input  id="update_firstname" type="text" name="firstname" class="input normal" placeholder=""/>
-        <input  id="update_lastname" type="text" name="lastname" class="input normal" placeholder=""/>
+        <input  id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" onclick='clear_error("first_error")'/>
+        <input  id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" onclick='clear_error("last_error")'/>
         <input  id="update_company" type="text" name="company" class="input normal" placeholder=""/>
         <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
@@ -133,11 +135,12 @@ $(document).ready(function() {
     var company;
     var name;
     
-    var mult_name1;
-    var mult_company1;
-    var mult_name2;
-    var mult_company2;
     var mult_email;
+
+    function clear_error(id) {
+        var error = document.getElementById(id);
+        error.style.display = 'none';
+    }
 
     function check_in_attendee() {
         // Email Validation
@@ -147,11 +150,12 @@ $(document).ready(function() {
             console.log('STOPPED! Not a valid email according to regex');
             var error = document.getElementById('checkin_error');
             error.style.display = 'block';
-            var error_class = document.getElementById('#email');
-            error_class.addClass("error");
+            // var error_class = document.getElementById('#email');
+            // error_class.addClass("error");
             return;
         }    
-    
+        var error = document.getElementById('checkin_error');
+        error.style.display = 'none';
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
@@ -217,21 +221,36 @@ $(document).ready(function() {
     function update_attendee() {
         var firstname = document.getElementById("update_firstname").value;
         var lastname = document.getElementById("update_lastname").value;
+        var error = document.getElementById('first_error');
+        error.style.display = 'none';
+        var error = document.getElementById('last_error');
+        error.style.display = 'none';
         if (firstname == '' || lastname == '') {
-            if (firstname =='') {
+            if (firstname == '' && lastname == '') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                var error_class = document.getElementById('#update_firstname');
-                error_class.addClass('error');
-            } 
-            if (lastname == '') {
+                // var error_class = document.getElementById('#update_firstname');
+                // error_class.addClass('error');   
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                var error_class = document.getElementById('#update_lastname');
-                error_class.addClass('error');
+                // var error_class = document.getElementById('#update_lastname');
+                // error_class.addClass('error');
+            } else if (firstname =='') {
+                var error = document.getElementById('first_error');
+                error.style.display = 'block';
+                // var error_class = document.getElementById('#update_firstname');
+                // error_class.addClass('error');
+            } else if (lastname == '') {
+                var error = document.getElementById('last_error');
+                error.style.display = 'block';
+                // var error_class = document.getElementById('#update_lastname');
+                // error_class.addClass('error');
             }
             return;
         }
+        // TODO:
+        // error.style.display = 'none';
+        // error_class.removeClass('error');
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
