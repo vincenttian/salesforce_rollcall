@@ -42,7 +42,7 @@ global class CheckInController{
 
 
     public static void check_in(CampaignMember attendee) {        
-        attendee.status = 'Responded'; 
+        attendee.status = Event.checkedInStatus; 
         update attendee;
     }
 
