@@ -144,12 +144,87 @@
             gauges[name] = new Gauge(name + "GaugeContainer", config);
             gauges[name].render();        
         }
- 
+
         function initialize() {
-                createGauge("test", "Test", 0, {!event.maxCapacity} );
-                var value = {!event.checkedIn};
-                gauges["test"].redraw(value);
-            
+                update_stats();
+        }
+
+        // javascript remoting for realtime updates
+        function update_stats() {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EventController.update_stats}',
+                '{!event.cid}',
+                function(result, event){
+                    if (event.status) {
+                        createGauge("test", "Test", 0, result.maxCapacity );
+                        var value = result.checkedIn;
+                        gauges["test"].redraw(value);
+
+
+                        var checked_in = result.checkedIn;
+                        var registered = result.registered;
+                        var math = registered - checked_in;
+                        if (registered == 0) {
+                          registered = 1;
+                        }
+
+                        document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
+
+                        var data = [ {name: "attended", value: result.checkedIn},
+                                {name: "absent", value:  math} ];
+
+                        var width = 362,
+                            height = 384,
+                            radius = Math.min(width, height) / 2;
+
+                        var chart = d3.select("#chart_two")
+                                        .append('svg')
+                                        .attr("width", width)
+                                        .attr("height", height)
+                                       .append("g")
+                                        .attr("transform", "translate(" + width / 2 + "," + 96 + ")");
+
+                        var radius = Math.min(width, height) / 2;
+
+                        var color = d3.scale.ordinal()
+                            .range(["#0096ff", "#CCC"]);
+
+                        var arc = d3.svg.arc()
+                            .outerRadius(radius - 85)
+                            .innerRadius(radius - 110);
+
+                        var pie = d3.layout.pie()
+                            .sort(null)
+                            .startAngle(1.1*Math.PI)
+                            .endAngle(3.1*Math.PI)
+                            .value(function(d) { return d.value; });
+
+
+                        var g = chart.selectAll(".arc")
+                          .data(pie(data))
+                        .enter().append("g")
+                          .attr("class", "arc");
+
+                        g.append("path")
+                          .style("fill", function(d) { return color(d.data.name); })
+                          .style("stroke", "#fff")
+                          .style("stroke-width", "3px")
+                          .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
+                          .attrTween('d', function(d) {
+                               var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+                               return function(t) {
+                                   d.endAngle = i(t);
+                                 return arc(d);
+                               }
+                          });
+                    } else if (event.type === 'exception') {
+                        // should never go here
+                    } else {
+                        document.getElementById("test").innerHTML +=event.message;
+                    }
+                }, 
+            {escape: true}
+            );
         }
         </script>
         <script>
@@ -301,68 +376,8 @@
             {escape: true}
         );
     }
-    </script>
-    <script>
 
-    var checked_in = {!event.checkedin};
-    var registered = {!event.registered};
-    var math = registered - checked_in;
-    if (registered == 0) {
-      registered = 1;
-    }
-
-    document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
-
-
-    var data = [ {name: "attended", value: {!event.checkedIn}},
-            {name: "absent", value:  math} ];
-
-    var width = 362,
-        height = 384,
-        radius = Math.min(width, height) / 2;
-
-    var chart = d3.select("#chart_two")
-                    .append('svg')
-                    .attr("width", width)
-                    .attr("height", height)
-                   .append("g")
-                    .attr("transform", "translate(" + width / 2 + "," + 96 + ")");
-
-    var radius = Math.min(width, height) / 2;
-
-    var color = d3.scale.ordinal()
-        .range(["#0096ff", "#CCC"]);
-
-    var arc = d3.svg.arc()
-        .outerRadius(radius - 85)
-        .innerRadius(radius - 110);
-
-    var pie = d3.layout.pie()
-        .sort(null)
-        .startAngle(1.1*Math.PI)
-        .endAngle(3.1*Math.PI)
-        .value(function(d) { return d.value; });
-
-
-    var g = chart.selectAll(".arc")
-      .data(pie(data))
-    .enter().append("g")
-      .attr("class", "arc");
-
-    g.append("path")
-      .style("fill", function(d) { return color(d.data.name); })
-      .style("stroke", "#fff")
-      .style("stroke-width", "3px")
-      .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
-      .attrTween('d', function(d) {
-           var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-           return function(t) {
-               d.endAngle = i(t);
-             return arc(d);
-           }
-      });
-
-      function clearDom() {
+    function clearDom() {
         document.getElementById("chart_one").innerHTML ="";
         document.getElementById("testGaugeContainer").innerHTML = "";
       }
