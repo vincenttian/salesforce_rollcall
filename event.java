@@ -11,6 +11,8 @@ global class Event{
     public String picData {get;set;}
     public String cal {get;set;}
     public List<String> checkedInTimes {get;set;}
+    global static String registeredStatus = 'Sent';
+    global static String checkedInStatus = 'Responded';
     public ID cid {get;set;}
     
    
@@ -26,7 +28,7 @@ global class Event{
                       WHERE CampaignId in :potential_children.keySet()];
         checkedIn = [SELECT Count() FROM CampaignMember
                      WHERE CampaignId in :potential_children.keySet() AND
-                     (Status='Responded')];
+                     (Status=:checkedInStatus)];
         maxCapacity = c.MaxCapacity__c;
         titleColor = 'title blue';
         textColor = 'blue_text';
@@ -69,14 +71,6 @@ global class Event{
             start = 'Dec ' + c.StartDate.day();
         }
         description = c.description;
-        Map<Id, Campaign> potential_children =
-            new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
-            Id FROM Campaign WHERE ParentId=:c.Id OR Id=:c.Id]);
-        registered = [SELECT Count() FROM CampaignMember
-                      WHERE CampaignId in :potential_children.keySet()];
-        checkedIn = [SELECT Count() FROM CampaignMember
-                     WHERE CampaignId in :potential_children.keySet() AND
-                     (Status='Responded')];
         maxCapacity = c.MaxCapacity__c;
         cid = c.id;
         if (Math.mod(i, 5) == 0) {

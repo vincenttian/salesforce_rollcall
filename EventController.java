@@ -9,8 +9,11 @@
 global class EventController {
 
     public Event event{get; set;} 
+    public String registeredStatus {get;set;}
+    public String checkedInStatus {get;set;}
 
     public EventController() {
+
         Campaign c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
         event = new Event(c);
     }
