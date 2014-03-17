@@ -69,16 +69,14 @@
               <div class="information">
                 <p class="blue_text"> Name: </p>
                 <p> {!event.name} </p>
-                <p class="blue_text"> Description: </p>
-                <p> {!event.description} </p>
                 <p class="blue_text"> Date: </p>
                 <p> {!event.start} </p>
-                <p class="blue_text"> Number Registered: </p>
-                <p> {!event.registered} </p>
-                <p class="blue_text"> Number Checked In: </p>
-                <p> {!event.checkedIn} </p>
-                <p class="blue_text"> Max Capacity: </p>
-                <p> {!event.maxCapacity} </p>
+                <p class="blue_text"> Description: </p>
+                <p> {!event.description} </p>
+                <p class="blue_text"> Status: </p>
+                <p> Number Registered: {!event.registered} </p>
+                <p> Number Checked In: {!event.checkedIn} </p>
+                <p> Max Capacity: {!event.maxCapacity} </p>
               </div>
             </div>
           </div>
@@ -218,7 +216,7 @@
                           .style("fill", function(d) { return color(d.data.name); })
                           .style("stroke", "#fff")
                           .style("stroke-width", "3px")
-                          .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
+                          .transition().delay(function(d, i) { return i * 500; }).duration(1000)
                           .attrTween('d', function(d) {
                                var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
                                return function(t) {
