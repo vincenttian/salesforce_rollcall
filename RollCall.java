@@ -8,6 +8,14 @@
 
 global class RollCall{
 
+    public String registeredStatus {get;set;}
+    public String checkedInStatus {get;set;}
+
+    public RollCall() {
+        registeredStatus = 'Sent';
+        checkedInStatus = 'Responded';
+    }
+
     // For apex: repeat    
     public Event[] getEvents() {
         Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
@@ -19,8 +27,8 @@ global class RollCall{
             new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
             Id FROM Campaign WHERE ParentId IN :parentIds OR ID IN :parentIds]);
         CampaignMember[] registered = [SELECT Status, CampaignID, Campaign.ParentID FROM CampaignMember
-                      WHERE CampaignId in :potential_children.keySet() AND (Status = 'Sent'
-                        OR Status = 'Responded')];
+                      WHERE CampaignId in :potential_children.keySet() AND (Status =:registeredStatus
+                        OR Status =:checkedInStatus)];
         Map<Id, Integer> regMap = new Map<Id, Integer>();
         Map<Id, Integer> checkMap = new Map<Id, Integer>();
         CampaignMember[] ps = new CampaignMember[]{};
