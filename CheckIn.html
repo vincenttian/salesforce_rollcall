@@ -30,7 +30,7 @@ id="todo"
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
       <input class="normal"  type="email" name="email" id="email" onclick='clear_error("checkin_error")'/>
       <p id="checkin_error"> Please enter a valid email </p>
-      <div id="submit" data-section="two" onclick="check_in_attendee()"> <p> Check In </p> </div>
+      <div id="submit" onclick="check_in_attendee()"> <p> Check In </p> </div>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -88,7 +88,7 @@ id="todo"
         <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <!--<div id="submit" data-section="two" onclick="check_in_attendee()"> <p> Check In </p> </div>-->
-      <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee()" value="Confirm"> </input>
+      <button id="update" onclick="update_attendee()"><p> Confirm </p></button>
     </div>
   </section>
   <!-- Haven't registered page -->
