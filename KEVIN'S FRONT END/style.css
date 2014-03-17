@@ -309,6 +309,7 @@ li {
     padding: 50px;
     line-height: 1.5em;
     font-size: 2em;
+    overflow: auto;
 }
 
 #chart_one {
