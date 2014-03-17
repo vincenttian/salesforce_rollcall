@@ -152,7 +152,6 @@
         '{!event.cid}',
         function(result, event){
             if (event.status) {
-              console.log('result: ' + result);
                 // Get DOM IDs for HTML and Visualforce elements like this
               var width = 624,
                   height = 284;
@@ -183,7 +182,6 @@
             } 
             data += (i+1) + '], "date": ["';
             for (var i=0; i<result.length - 1; i++) {
-                console.log('date: ' + result[i]);
                 temp_date = new Date(result[i]);
                 // CHANGE THE DATE FORMAT HERE
                 date_format = d3.time.format("%a %b %e %H:%M:%S %Y");
@@ -193,7 +191,6 @@
             temp_date = new Date(result[result.length-1]);
             temp_date = date_format(temp_date);
             data += temp_date + '"]}';
-            console.log('data: ' + data);
             data = jQuery.parseJSON(data);
             var date_list = [];
             data = d3.zip(data.close, data.date).map(function(d) {
@@ -242,7 +239,6 @@
         var element = document.createElement("li")
         var f = document.createElement('p');
         var e = document.createElement('p');
-        console.log(element);
         f.innerHTML = attendee.Name;
         if (attendee.Email) {
             e.innerHTML = attendee.Email;
@@ -288,11 +284,9 @@
                     }
                     objlist.appendChild(fragment);
                 } else if (event.type === 'exception') {
-                    console.log('exception');
                     document.getElementById("responseErrors").innerHTML = 
                         event.message + "<br/>\n<pre>" + event.where + "</pre>";
                 } else {
-                    console.log('null')
                     document.getElementById("responseErrors").innerHTML = event.message;
                 }
             }, 
