@@ -102,6 +102,7 @@
                     </span> 
                   </p>
                   <p id="percentage"> </p>
+                  <div id="pie_chart"> </div>
               </div>
               <div id="chart_three">
                   <p class="chart_title"> Capacity </p>
@@ -168,6 +169,8 @@
                         var value = result.checkedIn;
                         gauges["test"].redraw(value);
 
+                        // Clear Pie Chart DOM
+                        $('#pie_chart').empty();
 
                         // Pie Chart
                         document.getElementById('gauge_checkedin').innerHTML = checked_in;
@@ -179,14 +182,11 @@
                         var data = [ {name: "attended", value: result.checkedIn},
                                 {name: "absent", value:  math} ];
 
-                        console.log(result.checkedIn);
-                        console.log(math);
-
                         var width = 362,
                             height = 384,
                             radius = Math.min(width, height) / 2;
 
-                        var chart = d3.select("#chart_two")
+                        var chart = d3.select("#pie_chart")
                                         .append('svg')
                                         .attr("width", width)
                                         .attr("height", height)
