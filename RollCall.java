@@ -34,7 +34,7 @@ global class RollCall{
             }
         }
         mapVals(regMap, checkMap, ps);
-        mapVals(regMap, checkMap, cs);
+        mapVals2(regMap, checkMap, cs);
         Event[] events = new Event[]{};
         Integer i = 0;
         for (Campaign c : campaigns) {
