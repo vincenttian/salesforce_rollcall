@@ -93,11 +93,6 @@
           <div class="page" id="page_two">
               <div id="chart_one">
                   <p class="chart_title"> Flow </p>
-                  <p id="rate"> Rate: 
-                    <span class="magenta_text"> 
-                      <!-- FILL IN HERE -->
-                    </span> People/Minute
-                  </p>
               </div>
               <div id="chart_two">
                   <p class="chart_title"> Attendance </p>
@@ -125,7 +120,7 @@
           <div class="page" style="overflow:auto">
             <div class="information" id="attendee_list">
               <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
-               <p class="green_text"> <br></br>Attendee List </p>
+               <p class="green_text"> <br></br>Attendee List: </p>
                <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More

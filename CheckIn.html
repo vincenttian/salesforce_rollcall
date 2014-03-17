@@ -9,10 +9,11 @@ id="todo"
 >
 <html>
 <head>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+  <!--apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/-->
+  <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
+  <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-  <apex:stylesheet value="http://fonts.googleapis.com/css?family=Hammersmith+One"/>
   <title>RollCall</title>
 </head>
 <body>
@@ -24,9 +25,9 @@ id="todo"
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input class='normal'  type="text" name="email" id="email"/>
+      <input class="normal"  type="text" name="email" id="email"/>
       <p id="checkin_error"> Please enter a valid email </p>
-      <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee_javascript()" value="Check In">  </input>
+      <input id="submit" type="submit" data-section="two" href="#" onclick="check_in_attendee()" value="Check In">  </input>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -35,16 +36,16 @@ id="todo"
       <div id="confirm_info">
         <p> You are checking in as... </p>
         <div id='error'></div>
-        <div id="checkin_name">
-          <p> Name: <span class="blue_text"> </span> </p>
+        <div >
+          <p> Name: <span id="checkin_name" class="blue_text"> </span> </p>
         </div>
         <br></br>
-        <div id="checkin_email">
-          <p> Email: <span class="blue_text"> </span> </p>
+        <div>
+          <p> Email: <span id="checkin_email" class="blue_text"> </span> </p>
         </div>
         <br></br>
-        <div id="checkin_company">
-          <p> Company: <span class="blue_text"> </span> </p>
+        <div>
+          <p> Company: <span id="checkin_company" class="blue_text"> </span> </p>
         </div>
         <div id="test"> </div>  <!-- A div for injecting tests into -->
       </div>
@@ -68,8 +69,8 @@ id="todo"
   <section id="four">
     <div class="checkin">
       <div class="column">
-        <p class="label" id='first_error'> *First Name: </p>
-        <p class="label" id='last_error'> *Last Name: </p>
+        <p class="label"> *First Name: </p>
+        <p class="label"> *Last Name: </p>
         <p class="label"> Company: </p>
         <p class="label"> *Email: </p>
       </div>
@@ -79,7 +80,7 @@ id="todo"
         <input  id="update_company" type="text" name="company" class="input normal" placeholder=""/>
         <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
-      <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee_javascript()" value="Confirm"> </input>
+      <input id="update" type="submit" data-section="three" href="#" onclick="update_attendee()" value="Confirm"> </input>
     </div>
   </section>
   <!-- Haven't registered page -->
@@ -97,8 +98,7 @@ id="todo"
   <section id="six">
     <div class="checkin">
         <p id="multiple"> </p>
-        <a id="multiple-1" class="checkin_end" data-section="two" href="#" onclick="multiple_get1(); multiple_login1();"> </a>
-        <a id="multiple-2" class="checkin_end" data-section="two" href="#" onclick="multiple_get2(); multiple_login2();"> </a>
+        <div id="multipleAttendees"></div>
         <p id="confirm_end"> If none of these are you then please <a class="blue_text" data-section="one" href="#"> retry</a> </p>
     </div>
   </section>
@@ -109,8 +109,11 @@ id="todo"
 $(document).ready(function() {
     $('a').on('click', function(event) {
         event.preventDefault();
-        var sectionId = $(this).attr("data-section"),
-        $toSlide= $("#container section#"+sectionId),
+        var sectionId = $(this).attr("data-section");
+        if (sectionId == 'one'){
+            $("#email").val(''); 
+        }
+        $toSlide= $("#container section#"+sectionId);
         $fromSlide= $('.active');
         if (!($toSlide.hasClass("active"))) {  
             $fromSlide.animate({"left":"-100%"},100,'linear')
@@ -125,184 +128,160 @@ $(document).ready(function() {
 </script>
 
 <script type="text/javascript">
-var first_name;
-var last_name;
-var company;
-var mult_name1;
-var mult_company1;
-var mult_name2;
-var mult_company2;
-var mult_email;
+    var first_name;
+    var last_name;
+    var company;
+    var name;
+    
+    var mult_name1;
+    var mult_company1;
+    var mult_name2;
+    var mult_company2;
+    var mult_email;
 
-function check_in_attendee_javascript() {
-    // Email Validation
-    var email = document.getElementById("email").value;    
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
-    if (email == '' || re.test(email) == false) {
-        console.log('STOPPED! Not a valid email according to regex');
-        var error = document.getElementById('checkin_error');
-        error.style.display = 'block';
-        var error_class = document.getElementById('#email');
-        error_class.addClass("error");
-        return;
-    }    
-
-    Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.CheckInController.check_in_attendee}',
-        document.getElementById('event_id').value,
-        document.getElementById("email").value,
-        function(result, event){
-            if (event.status) {
-                if (result.length == 1) { // successfully found match in database !
-                    // CHANGE THIS
-                    console.log(document.getElementById("email").value);
-                    if (result[0].ContactId == null) {
-                        var lead = result[0].Lead;
-                        first_name = lead.firstname;
-                        last_name = lead.lastname;
-                        company = result[0].company;
-                    } else {
-                        var contact = result[0].Contact;
-                        first_name = contact.firstname;
-                        last_name = contact.lastname;
-                        company = result[0].company;
+    function check_in_attendee() {
+        // Email Validation
+        var email = document.getElementById("email").value;    
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
+        if (email == '' || re.test(email) == false) {
+            console.log('STOPPED! Not a valid email according to regex');
+            var error = document.getElementById('checkin_error');
+            error.style.display = 'block';
+            var error_class = document.getElementById('#email');
+            error_class.addClass("error");
+            return;
+        }    
+    
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.CheckInController.check_in_attendee}',
+            document.getElementById('event_id').value,
+            document.getElementById("email").value,
+            function(result, event){
+                if (event.status) {
+                    if (result.length == 1) { // successfully found match in database !
+                        if (result[0].ContactId == null) {
+                            var lead = result[0].Lead;
+                            name = lead.Name;
+                            first_name = lead.FirstName;
+                            last_name = lead.LastName;
+                            company = lead.Company;
+                        } else {
+                            var contact = result[0].Contact;
+                            name = contact.Name;
+                            first_name = contact.FirstName;
+                            last_name = contact.LastName;
+                            company = contact.Company__c;
+                        }
+    
+                        document.getElementById('error').innerHTML = "<p></p>";
+                        document.getElementById("checkin_email").innerHTML = document.getElementById("email").value; 
+                        document.getElementById("checkin_name").innerHTML = name; 
+                        document.getElementById("checkin_company").innerHTML = company;  
+                        setSection($("#container section#"+"#two"), $('.active'));
+                    } else if (result.length == 0){ // no match in DB - Register page
+                        setSection($("#container section#"+"#five"), $('.active'));
+                    } else { // could not find match in database
+                        mult_email = document.getElementById("email").value;
+                        document.getElementById("multiple").innerHTML = "There seem to be multiple " + mult_email + "'s. Which of these do you want to check in as?";
+                        
+                        for(var i=0;i<result.length;i++){
+                           if (result[i].ContactId == null) {
+                                var lead = result[i].Lead;
+                                name = lead.Name;
+                                first_name = lead.FirstName;
+                                last_name = lead.LastName;
+                                company = lead.Company;
+                            } else {
+                                var contact = result[i].Contact;
+                                name = contact.Name;
+                                first_name = contact.FirstName;
+                                last_name = contact.LastName;
+                                company = contact.Company__c;
+                            }
+                            var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + name + ", " + company + "</p></a>");
+                            newA.appendTo("#multipleAttendees");
+                            document.getElementById("checkin_email").innerHTML = mult_email; 
+                        }
+                        setSection($("#container section#"+"#six"), $('.active'));
                     }
-                    console.log(first_name);
-                    console.log(last_name);
-                    console.log(company);
-                    document.getElementById('error').innerHTML = "<p></p>";
-                    document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
-                    document.getElementById("checkin_name").innerHTML = "<p> Name: <span class='blue_text'>"  + first_name + " " + last_name + "</span> </p>"; 
-                    document.getElementById("checkin_company").innerHTML = "<p> Company: <span class='blue_text'>"  + company + "</span> </p>";  
-                    setSection($("#container section#"+"#two"), $('.active'));
-                } else if (result.length == 0){ // should be coming from handle_parent_events returning empty CampaignMember[0]
-                    document.getElementById("confirm_info").innerHTML = "<div id='error'><p> Sorry. We could not find " + document.getElementById("email").value + " in our system.</div><div id='checkin_name'></div><br></br><div id='checkin_email'></div><br></br><div id='checkin_company'></div>";
-                    setSection($("#container section#"+"#five"), $('.active'));
-                } else { // could not find match in database
-                    console.log('there are multiple people with this email')
-                    // mult_name1 = result[0] + " " + result[1];
-                    // mult_company1 = result[2]; 
-                    // mult_name2 = result[3] + " " + result[4];
-                    // mult_company2 = result[5]; 
-
-                    // CURRENTLY WORKING
-                    mult_email = document.getElementById("email").value;
-                    document.getElementById("multiple").innerHTML = "There seem to be multiple " + document.getElementById("email").value + "'s. Which of these do you want to check in as?";
-                    document.getElementById("multiple-1").innerHTML = "<p id='mult-1'>" + result[0] + " " + result[1] + ", " + result[2] + "</p>";
-                    document.getElementById("multiple-2").innerHTML = "<p id='mult-2'>" + result[3] + " " + result[4] + ", " + result[5] + "</p>";
-                    document.getElementById("checkin_email").innerHTML = "<p> Email: <span class='blue_text'>"  + document.getElementById("email").value + "</span> </p>"; 
-                    setSection($("#container section#"+"#six"), $('.active'));
+                } else if (event.type === 'exception') {
+                    // should never go here
+                } else {
+                    document.getElementById("test").innerHTML +=event.message;
                 }
-            } else if (event.type === 'exception') {
-                // should never go here
-            } else {
-                document.getElementById("test").innerHTML +=event.message;
-            }
-        }, 
-    {escape: true}
-    );
-}
-
-function update_attendee_javascript() {
-    var firstname = document.getElementById("update_firstname").value;
-    var lastname = document.getElementById("update_lastname").value;
-    if (firstname == '' || lastname == '') {
-        if (firstname =='') {
-            var error = document.getElementById('first_error');
-            error.style.display = 'block';
-            var error_class = document.getElementById('#update_firstname');
-            error_class.addClass('error');
-        } 
-        if (lastname == '') {
-            var error = document.getElementById('last_error');
-            error.style.display = 'block';
-            var error_class = document.getElementById('#update_lastname');
-            error_class.addClass('error');
-        }
-        // console.log('STOPPED! Must have first name and last name');
-        return;
+            }, 
+        {escape: true}
+        );
     }
-    Visualforce.remoting.Manager.invokeAction(
-    '{!$RemoteAction.CheckInController.update_attendee}',
-    document.getElementById('event_id').value,
-    document.getElementById("update_firstname").value,
-    document.getElementById("update_lastname").value,
-    document.getElementById("update_email").value,
-    document.getElementById("update_company").value,
-        function(result, event){
-            if (event.status) {
-                setSection($("#container section#"+"#three"), $('.active'));
-            } else if (event.type === 'exception') {
-                document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
-            } else {
-                document.getElementById("test").innerHTML +=event.message;
+
+    function update_attendee() {
+        var firstname = document.getElementById("update_firstname").value;
+        var lastname = document.getElementById("update_lastname").value;
+        if (firstname == '' || lastname == '') {
+            if (firstname =='') {
+                var error = document.getElementById('first_error');
+                error.style.display = 'block';
+                var error_class = document.getElementById('#update_firstname');
+                error_class.addClass('error');
+            } 
+            if (lastname == '') {
+                var error = document.getElementById('last_error');
+                error.style.display = 'block';
+                var error_class = document.getElementById('#update_lastname');
+                error_class.addClass('error');
             }
-        }, 
-    {escape: true}
-    );
-}
-
-function update_placeholders() {
-    document.getElementById('update_email').value = document.getElementById("email").value;
-    document.getElementById('update_firstname').value = first_name;
-    document.getElementById('update_lastname').value = last_name;
-    document.getElementById('update_company').value = company;
-}
-
-function static_placeholders() {
-    document.getElementById('update_email').value = document.getElementById("email").value;
-    document.getElementById('update_firstname').value = "";
-    document.getElementById('update_lastname').value = "";
-    document.getElementById('update_company').value = "";
-}
-
-function multiple_get1() {
-    document.getElementById('checkin_name').innerHTML = "<p> Name: <span class='blue_text'>"  + mult_name1 + "</span> </p>";
-    document.getElementById('checkin_company').innerHTML = "<p> Company: <span class='blue_text'>"  + mult_company1 + "</span> </p>";
-}
-
-function multiple_get2() {
-    document.getElementById('checkin_name').innerHTML = "<p> Name: <span class='blue_text'>"  + mult_name2 + "</span> </p>";
-    document.getElementById('checkin_company').innerHTML = "<p> Company: <span class='blue_text'>"  + mult_company2 + "</span> </p>";
-}
-
-function multiple_login1() {
-    Visualforce.remoting.Manager.invokeAction(
-    '{!$RemoteAction.CheckInController.multiple_login}',
-    document.getElementById('event_id').value,
-    mult_company1,
-    mult_email,
-    function(result, event){
-        if (event.status) {
-            // success
-        } else if (event.type === 'exception') {
-            // 
-        } else {
-            document.getElementById("test").innerHTML +=event.message;
+            return;
         }
-    }, 
-    {escape: true}
-    );
-}
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.CheckInController.update_attendee}',
+            document.getElementById('event_id').value,
+            document.getElementById("update_firstname").value,
+            document.getElementById("update_lastname").value,
+            document.getElementById("update_email").value,
+            document.getElementById("update_company").value,
+                function(result, event){
+                    if (event.status) {
+                        setSection($("#container section#"+"#three"), $('.active'));
+                    } else if (event.type === 'exception') {
+                        document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                    } else {
+                        document.getElementById("test").innerHTML +=event.message;
+                    }
+                }, 
+            {escape: true}
+        );
+    }
 
-function multiple_login2() {
-    Visualforce.remoting.Manager.invokeAction(
-    '{!$RemoteAction.CheckInController.multiple_login}',
-    document.getElementById('event_id').value,  
-    mult_company2,
-    mult_email,
-    function(result, event){
-        if (event.status) {
-            // 
-        } else if (event.type === 'exception') {
-            // document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
-        } else {
-            // document.getElementById("test").innerHTML +=event.message;
-        }
-    }, 
-    {escape: true}
-    );
-}
+    function update_placeholders() {
+        document.getElementById('update_email').value = document.getElementById("email").value;
+        document.getElementById('update_firstname').value = first_name;
+        document.getElementById('update_lastname').value = last_name;
+        document.getElementById('update_company').value = company;
+    }
+    
+    function static_placeholders() {
+        document.getElementById('update_email').value = document.getElementById("email").value;
+        document.getElementById('update_firstname').value = "";
+        document.getElementById('update_lastname').value = "";
+        document.getElementById('update_company').value = "";
+    }
+
+    function checkInMultiple(campaignMemberId) {    
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.CheckInController.check_in_multiple}',
+            campaignMemberId,
+            function(result, event){
+                if (event.status) {
+                    setSection($("#container section#"+"#three"), $('.active'));
+                } else if (event.type === 'exception') {
+                    // 
+                } else {
+                    document.getElementById("test").innerHTML +=event.message;
+                }
+            }, 
+            {escape: true}
+        );
+    }
 </script>
 </html>
 </apex:page>
