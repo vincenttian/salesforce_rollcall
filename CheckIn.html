@@ -128,8 +128,9 @@ id="todo"
     window.onkeydown = function(e){
         var code = e.keyCode || e.which;
         if(code == 13) { 
-            check_in_attendee();
             $("#email").blur();
+            $("update_firstname").blur();
+            $("update_lastname").blur();            
         }
     }
 </script>
