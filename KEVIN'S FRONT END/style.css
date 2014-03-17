@@ -401,7 +401,7 @@ li {
 #submit {
     box-sizing: border-box;
     display: block;
-    margin: auto;
+    margin-left: 187px;
     border-style: none;
     background: #0096ff;
     margin-top: 32px;
@@ -510,7 +510,7 @@ li {
 #update {
     box-sizing: border-box;
     display: block;
-    margin: auto;
+    margin-left: 187px;
     border-style: none;
     background: #0096ff;
     text-align: center;
