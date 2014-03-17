@@ -438,10 +438,6 @@ li {
     z-index: 1;
 }
 
-.invisible:hover {
-    opacity: 1;
-}
-
 #confirm_info {
     color: #aaaaaa;
     margin-top: 110px;
