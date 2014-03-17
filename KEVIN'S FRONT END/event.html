@@ -89,7 +89,6 @@
             <div class="page">
                 <div id="chart_one">
                     <p class="chart_title"> Flow </p>
-                    <p id="rate"> Rate: <span class="magenta_text"> 15 </span> People/Minute</p>
                 </div>
                 <div id="chart_two">
                     <p class="chart_title"> Attendance </p>
@@ -142,7 +141,7 @@
     </style>
     <script>
     var width = 624,
-        height = 284;
+        height = 214;
 
     var parseTime = d3.time.format("%H:%M:%S").parse;
 
@@ -182,7 +181,7 @@
 
       svg.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(0," + 284 + ")")
+          .attr("transform", "translate(0," + 214 + ")")
           .call(xAxis)
           .style("font-family", "'Hammersmith One', sans-serif");
 
