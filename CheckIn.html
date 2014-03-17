@@ -163,6 +163,12 @@ $(document).ready(function() {
         }    
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
+
+        // HANDLES MAX CAPACITY
+        // if ({!event.checkedIn} >= {!event.maxCapacity}) {
+        //     console.log('TOO BIG');
+        // }
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
