@@ -5,7 +5,7 @@ global class Event{
     public String description {get;set;}
     public Integer checkedIn {get;set;}
     public Integer registered {get;set;}
-    public Decimal maxCapacity {get;set;}
+    public String maxCapacity {get;set;}
     public String titleColor {get;set;}
     public String textColor {get;set;}
     public String picData {get;set;}
@@ -33,7 +33,11 @@ global class Event{
         checkedIn = [SELECT Count() FROM CampaignMember
                      WHERE CampaignId in :potential_children.keySet() AND
                      (Status=:checkedInStatus)];
-        maxCapacity = c.MaxCapacity__c;
+        if (c.MaxCapacity__c != null) {
+            maxCapacity = c.MaxCapacity__c + '';
+        } else {
+            maxCapacity = 'Unlimited';
+        }
         titleColor = 'title blue';
         textColor = 'blue_text';
         cid = c.id;
@@ -48,34 +52,42 @@ global class Event{
     /** Special constructor for an event to add color. */
     public Event (Campaign c, Integer i) {
         name = c.Name;
-        Integer month = c.StartDate.month();
-        if (month == 1) {
-            start = 'JAN ' + c.StartDate.day();
-        } else if (month == 2) {
-            start = 'FEB ' + c.StartDate.day();
-        } else if (month == 3) {
-            start = 'MAR ' + c.StartDate.day();
-        } else if (month == 4) {
-            start = 'APR ' + c.StartDate.day();
-        } else if (month == 5) {
-            start = 'MAY ' + c.StartDate.day();
-        } else if (month == 6) {
-            start = 'JUN ' + c.StartDate.day();
-        } else if (month == 7) {
-            start = 'JUL ' + c.StartDate.day();
-        } else if (month == 8) {
-            start = 'AUG ' + c.StartDate.day();
-        } else if (month == 9) {
-            start = 'Sep ' + c.StartDate.day();
-        } else if (month == 10) {
-            start = 'Oct ' + c.StartDate.day();
-        } else if (month == 11) {
-            start = 'Nov ' + c.StartDate.day();
+        if (c.StartDate != null) {
+            Integer month = c.StartDate.month();
+            if (month == 1) {
+                start = 'JAN ' + c.StartDate.day();
+            } else if (month == 2) {
+                start = 'FEB ' + c.StartDate.day();
+            } else if (month == 3) {
+                start = 'MAR ' + c.StartDate.day();
+            } else if (month == 4) {
+                start = 'APR ' + c.StartDate.day();
+            } else if (month == 5) {
+                start = 'MAY ' + c.StartDate.day();
+            } else if (month == 6) {
+                start = 'JUN ' + c.StartDate.day();
+            } else if (month == 7) {
+                start = 'JUL ' + c.StartDate.day();
+            } else if (month == 8) {
+                start = 'AUG ' + c.StartDate.day();
+            } else if (month == 9) {
+                start = 'Sep ' + c.StartDate.day();
+            } else if (month == 10) {
+                start = 'Oct ' + c.StartDate.day();
+            } else if (month == 11) {
+                start = 'Nov ' + c.StartDate.day();
+            } else {
+                start = 'Dec ' + c.StartDate.day();
+            }
         } else {
-            start = 'Dec ' + c.StartDate.day();
+            start = 'Today';
         }
         description = c.description;
-        maxCapacity = c.MaxCapacity__c;
+        if (c.MaxCapacity__c != null) {
+            maxCapacity = c.MaxCapacity__c + '';
+        } else {
+            maxCapacity = 'Unlimited';
+        }
         cid = c.id;
         if (Math.mod(i, 5) == 0) {
             titleColor = 'title blue';
