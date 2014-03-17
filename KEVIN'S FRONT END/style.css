@@ -331,10 +331,9 @@ li {
 }
 
 .checkin {
-    position: absolute;
     text-align: center;
-    left: 25px;
-    top: 25px;
+    margin-left: 25px;
+    margin-top: 25px;
     width: 975px;
     height: 650px;
     border-radius: 10px;
