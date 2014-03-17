@@ -22,9 +22,9 @@ global class EventController {
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:c.id OR Id=:c.id]);
         CampaignMember[] registered = [SELECT Lead.Name, Lead.Email, 
         Contact.Name, Contact.Email, Contact.Company__c, LeadID, ContactID
-        FROM CampaignMember WHERE Status='Responded' AND
+        FROM CampaignMember WHERE Status=:Event.checkedInStatus AND
              CampaignId in :potential_children.keySet() AND 
-             (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  Id  LIMIT 50 OFFSET :offset];
+             (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  Contact.Name, Lead.Name  LIMIT 50 OFFSET :offset];
         sObject[] registered2 = new sObject[]{};
         for (CampaignMember cm : registered) {
             if (cm.ContactID != null) { 
