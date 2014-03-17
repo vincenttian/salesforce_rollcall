@@ -17,7 +17,7 @@
       <script type="text/javascript" src="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <script type="text/javascript" src="{!$Resource.gauge}"/>
-      <script type="application/javascript" src="{!URLFOR($Resource.iscroll, 'build/iscroll.js')}"/>
+      <script type="application/javascript" src="{!URLFOR($Resource.iscroll, 'iscroll-4/src/iscroll-lite.js')}"/>
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
 
@@ -114,7 +114,7 @@
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" style="overflow:auto">
+          <div class="page" id='cont' >
             <div class="information" id="attendee_list">
               <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <p class="green_text"> <br></br>Attendee List: </p>
@@ -130,9 +130,12 @@
     
     </body>
     <script type="text/javascript">
-      var myScroll = new iScroll('attendee_list');
-    </script>
-    <script>
+var myScroll;
+function loaded() {
+  myScroll = new iScroll('cont');
+}
+document.addEventListener('DOMContentLoaded', loaded, false);
+</script>    <script>
         var gauges = [];
         function createGauge(name, label, min, max) {
             var config = {
