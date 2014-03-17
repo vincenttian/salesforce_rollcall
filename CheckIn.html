@@ -150,12 +150,15 @@ $(document).ready(function() {
             console.log('STOPPED! Not a valid email according to regex');
             var error = document.getElementById('checkin_error');
             error.style.display = 'block';
-            // var error_class = document.getElementById('#email');
-            // error_class.addClass("error");
             return;
         }    
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
+
+        if ({!event.checkedIn >= {!event.maxCapacity}}) {
+            console.log('TOO BIG');
+        }
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
@@ -229,28 +232,17 @@ $(document).ready(function() {
             if (firstname == '' && lastname == '') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_firstname');
-                // error_class.addClass('error');   
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_lastname');
-                // error_class.addClass('error');
             } else if (firstname =='') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_firstname');
-                // error_class.addClass('error');
             } else if (lastname == '') {
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                // var error_class = document.getElementById('#update_lastname');
-                // error_class.addClass('error');
             }
             return;
         }
-        // TODO:
-        // error.style.display = 'none';
-        // error_class.removeClass('error');
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,

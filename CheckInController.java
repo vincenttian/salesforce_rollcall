@@ -8,7 +8,11 @@
 
 global class CheckInController{
 
+    public Event event{get; set;} 
+
     public CheckInController() {
+        Campaign c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
+        event = new Event(c);
     }
 
     public static void register_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { 
