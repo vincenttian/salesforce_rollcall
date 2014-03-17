@@ -52,12 +52,11 @@
         <a class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false);'>
           <p> Attendees </p>
         </a>
-        <apex:outputLink value="{!$Page.checkin}">
+        <a href="/apex/checkin?event_id={!event.cId}">
           <div class="tab red_border hover_red_text">
             <p> Check In </p>
           </div>
-          <apex:param name="event_id" value="{!$CurrentPage.parameters.event_id}"/>
-        </apex:outputLink>
+          <a/>
         <div id="return" onclick="javascript:window.location.href='{!$Page.index}';"></div>
       </div>
       <input type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
