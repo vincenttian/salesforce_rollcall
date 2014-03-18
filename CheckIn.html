@@ -23,7 +23,7 @@ id="todo"
   <div id="select_event">
     <p> Salesforce Workday </p>          
   </div>
-  <div class="invisible" id="return"></div>
+  <div class="invisible" id="doubletap"></div>
   <div id="container">
    <section id="one" class="active">
     <div class="checkin">
@@ -120,7 +120,7 @@ id="todo"
     function returnHandler() {
         window.location.href="/apex/event?event_id={!event.cId}";
     }
-    var ret = document.getElementById('return');
+    var ret = document.getElementById('doubletap');
     ret.addEventListener(HAS_TOUCH ? 'touchend' : 'mouseup', doubleTap(), false);
     ret.addEventListener('dbltap', returnHandler, false);
 
