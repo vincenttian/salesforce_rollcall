@@ -291,6 +291,21 @@ li {
     box-shadow: 0px 1px 5px 0px #000000;
 }
 
+#doubletap {
+    position: absolute;
+    bottom: 0px;
+    left: 25px;
+    padding-top: 10px;
+    background: url(back.svg);
+    height: 75px;
+    width: 75px;
+    background-size: cover;
+    background-color: #333333;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0px 1px 5px 0px #000000;
+}
+
 #return:hover {
     background-color: #ff9d00;
 }
@@ -309,6 +324,7 @@ li {
     padding: 50px;
     line-height: 1.5em;
     font-size: 2em;
+    overflow: auto;
 }
 
 #chart_one {

@@ -24,7 +24,7 @@ global class EventController {
         Contact.Name, Contact.Email, Contact.Company__c, LeadID, ContactID
         FROM CampaignMember WHERE Status=:Event.checkedInStatus AND
              CampaignId in :potential_children.keySet() AND 
-             (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  LastModifiedDate  LIMIT 50 OFFSET :offset];
+             (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name) ORDER BY  LastModifiedDate DESC LIMIT 50 OFFSET :offset];
         sObject[] registered2 = new sObject[]{};
         for (CampaignMember cm : registered) {
             if (cm.ContactID != null) { 
