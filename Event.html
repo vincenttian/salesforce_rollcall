@@ -86,6 +86,7 @@
           <div class="page" id="page_two">
             <p class="chart_title"> Flow </p>
               <div id="chart_one">
+                  <div id="flow_message"></div>
               </div>
               <div id="chart_two">
                   <p class="chart_title"> Attendance </p>
@@ -243,6 +244,10 @@
         function(result, event){
             if (event.status) {
                 // Get DOM IDs for HTML and Visualforce elements like this
+              if (result.length == 0) {
+                  $('#flow_message').text('There are currently no checkins for this event.');
+                  return;
+              }
               var width = 624,
                   height = 214;
               var parseTime = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
