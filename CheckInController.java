@@ -16,9 +16,9 @@ global class CheckInController{
     }
 
     public static void register_event_attendee(String email, String first_name, String last_name, String company, String campaign_id) { 
-        Lead tmp_lead = new Lead(Email=email, FirstName=first_name, LastName=last_name, Company=company);
-        insert tmp_lead;
-        CampaignMember new_event_attendee = new CampaignMember(LeadId=tmp_lead.id, CampaignId=campaign_id, Status = 'Responded'); 
+        Contact tmp_contact = new Contact(Email=email, FirstName=first_name, LastName=last_name, Company__c=company);
+        insert tmp_contact;
+        CampaignMember new_event_attendee = new CampaignMember(ContactId=tmp_contact.id, CampaignId=campaign_id, Status = Event.checkedInStatus); 
         insert new_event_attendee;
     }
 
