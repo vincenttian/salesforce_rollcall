@@ -114,7 +114,7 @@
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" id='cont' >
+          <div class="page" style="overflow:auto">
             <div class="information" id="attendee_list">
               <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
                <p class="green_text"> <br></br>Attendee List: </p>
@@ -130,12 +130,9 @@
     
     </body>
     <script type="text/javascript">
-var myScroll;
-function loaded() {
-  myScroll = new iScroll('cont');
-}
-document.addEventListener('DOMContentLoaded', loaded, false);
-</script>    <script>
+      var myScroll = new iScroll('attendee_list');
+    </script>
+    <script>
         var gauges = [];
         function createGauge(name, label, min, max) {
             var config = {
@@ -225,7 +222,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
                           .style("fill", function(d) { return color(d.data.name); })
                           .style("stroke", "#fff")
                           .style("stroke-width", "3px")
-                          .transition().delay(function(d, i) { return i * 500; }).duration(1000)
+                          .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
                           .attrTween('d', function(d) {
                                var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
                                return function(t) {
