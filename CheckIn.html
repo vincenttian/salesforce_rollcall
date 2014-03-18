@@ -130,7 +130,6 @@ id="todo"
         if(code == 13) { 
             if ($('.active').attr('id') == 'one') {
                 check_in_attendee();
-                $("#email").blur();  
             } else {
                 update_attendee();
                 $('#update_firstname').blur();
@@ -196,7 +195,7 @@ $(document).ready(function() {
         }    
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
-
+        $("#email").blur();  
         // HANDLES MAX CAPACITY
         // if ({!event.checkedIn} >= {!event.maxCapacity}) {
         //     console.log('Event is already at capacity');
