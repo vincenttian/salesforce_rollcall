@@ -55,11 +55,11 @@
         <a class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false);'>
           <p> Attendees </p>
         </a>
-        <a href="/apex/checkin?event_id={!event.cId}">
+        <div onclick='javascript:window.location.href="/apex/checkin?event_id={!event.cId}";'>
           <div class="tab red_border hover_red_text">
             <p> Check In </p>
           </div>
-          </a>
+        </div>
         <div id="return" onclick="javascript:window.location.href='{!$Page.index}';"></div>
       </div>
       <div id="container">
@@ -222,7 +222,7 @@
                           .style("fill", function(d) { return color(d.data.name); })
                           .style("stroke", "#fff")
                           .style("stroke-width", "3px")
-                          .transition().delay(function(d, i) { return i * 500; }).duration(1000).delay(1000)
+                          .transition().delay(function(d, i) { return i * 500; }).duration(1000)
                           .attrTween('d', function(d) {
                                var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
                                return function(t) {
