@@ -8,6 +8,8 @@
 
 global class CheckInController{
 
+    global static String checkedInStatus = 'Responded';
+
     public Event event{get; set;}
 
     public CheckInController() {
@@ -49,15 +51,27 @@ global class CheckInController{
     // logic to check if a campaign member needs to register or just check in
     public static CampaignMember[] handle_parent_events(String campaign_id, String email) {
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId, Id FROM Campaign WHERE ParentId=:campaign_id OR Id=:campaign_id]);
-        CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId, LeadId, Lead.Name, Lead.FirstName, Lead.LastName, Contact.Name, Contact.FirstName, Contact.LastName, Lead.Email, Contact.Email, Lead.Company, Contact.Company__c
-                                           FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND
-                                           (Lead.Email=:email OR Contact.Email=:email)];
-
-        if (event_attendee.size() == 1) {
-            check_in(event_attendee[0]);
-        }
-
-        return event_attendee;
+        Campaign pcampaign = [SELECT MaxCapacity__c FROM Campaign WHERE Id=: campaign_id];
+        Decimal capacity = pcampaign.MaxCapacity__c;
+        if (capacity != null) { // There is a max capacity
+            Integer checkedIn = [SELECT Count() FROM CampaignMember
+                     WHERE CampaignId in :potential_children.keySet() AND
+                     (Status=:checkedInStatus)];
+            Integer capacity_int = pcampaign.MaxCapacity__c.intValue();
+            if (checkedIn >= capacity_int) {
+                throw new CapacityException('Event already at max capacity');
+            } else {
+                return new CampaignMember[0];
+            }
+        } else {
+            CampaignMember[] event_attendee = [SELECT Id, CampaignId, ContactId, LeadId, Lead.Name, Lead.FirstName, Lead.LastName, Contact.Name, Contact.FirstName, Contact.LastName, Lead.Email, Contact.Email, Lead.Company, Contact.Company__c
+                                               FROM CampaignMember WHERE CampaignId in :potential_children.keySet() AND
+                                               (Lead.Email=:email OR Contact.Email=:email)];
+            if (event_attendee.size() == 1) {            
+                check_in(event_attendee[0]);
+            }
+            return event_attendee;
+        }      
     }
 
     // Checking in attendees for checkin page
@@ -86,5 +100,7 @@ global class CheckInController{
             update_event_attendee(cm[0], email, first_name, last_name, company);
         }
     }
+
+    public class CapacityException extends Exception {}
 
 }
