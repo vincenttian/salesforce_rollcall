@@ -54,10 +54,10 @@
          <div id="select_event">
             <p> Select An Event </p>
             <div id="rollcall"></div>
-            <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}"></img>
             <a href="/apex/settings">
-              <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img>
+            <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}"></img>
             </a>
+            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img>
          </div>
          <div id="list_events">
             <apex:repeat value="{!events}" var="event" id="theRepeat">
