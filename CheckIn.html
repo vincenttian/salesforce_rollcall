@@ -234,15 +234,27 @@ $(document).ready(function() {
                         if (result[0].ContactId == null) {
                             var lead = result[0].Lead;
                             name = lead.Name;
-                            first_name = lead.FirstName;
+                            if (lead.FirstName != null) {
+                                first_name = lead.FirstName;
+                            } else {
+                                first_name = '';
+                            }
                             last_name = lead.LastName;
                             company = lead.Company;
                         } else {
                             var contact = result[0].Contact;
                             name = contact.Name;
-                            first_name = contact.FirstName;
+                            if (contact.FirstName) {
+                                first_name = contact.FirstName;
+                            } else {
+                                first_name = '';
+                            }
                             last_name = contact.LastName;
-                            company = contact.Company__c;
+                            if (contact.Company__c != null) {
+                                company = contact.Company__c;
+                            } else {
+                                company = '';
+                            }
                         }
 
                         document.getElementById('error').innerHTML = "<p></p>";
@@ -255,20 +267,32 @@ $(document).ready(function() {
                     } else { // could not find match in database
                         mult_email = document.getElementById("email").value;
                         document.getElementById("multiple").innerHTML = "There seem to be multiple " + mult_email + "'s. Which of these do you want to check in as?";
-
+                         ("#multipleAttendees").empty();
                         for(var i=0;i<result.length;i++){
                            if (result[i].ContactId == null) {
                                 var lead = result[i].Lead;
                                 name = lead.Name;
-                                first_name = lead.FirstName;
+                                if (lead.FirstName != null) {
+                                    first_name = lead.FirstName;
+                                } else {
+                                first_name = '';
+                                }
                                 last_name = lead.LastName;
                                 company = lead.Company;
                             } else {
                                 var contact = result[i].Contact;
                                 name = contact.Name;
-                                first_name = contact.FirstName;
+                                if (contact.firstname != null) {
+                                    first_name = contact.FirstName;
+                                } else {
+                                    first_name = '';
+                                }
                                 last_name = contact.LastName;
-                                company = contact.Company__c;
+                                if (contact.Company__c != null) {
+                                    company = contact.Company__c;
+                                } else {
+                                    company = '';
+                            }
                             }
                             var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + name + ", " + company + "</p></a>");
                             newA.appendTo("#multipleAttendees");
