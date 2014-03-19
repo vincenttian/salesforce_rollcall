@@ -135,7 +135,7 @@
         <section id="three">
           <div class="page" style="overflow:auto;-webkit-overflow-scrolling: touch;">
             <div class="information" id="attendee_list">
-              <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/>
+              <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/>
               <div>
                <p class="green_text"> <br></br>Attendee List: </p>
                 <ul id="the_list"></ul>
@@ -148,6 +148,13 @@
         </section>
       </div>
     </body>
+    <script type="text/javascript">
+        window.onscroll = function(e){
+            console.log('swaggy');
+            var code = e.keyCode || e.which;
+               $("#field").blur();
+        }
+    </script>
     <script>
         var gauges = [];
         function createGauge(name, label, min, max) {
