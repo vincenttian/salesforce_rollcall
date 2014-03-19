@@ -1,6 +1,6 @@
 /**
 *
-*Roll Call application
+*Roll Call application 
 *Controller for Index page
 *@authors Howard Chen and Vincent Tian
 *
@@ -9,7 +9,7 @@
 global class RollCall{
 
 
-    // For apex: repeat
+    // For apex: repeat    
     public Event[] getEvents() {
         Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
         ID[] parentIds = new Id[]{};
@@ -61,7 +61,7 @@ global class RollCall{
             } else {
                 rMap.put(m.CampaignID, 1);
             }
-            if (m.status.equals('Responded')) {
+            if (m.status.equals(Event.checkedInStatus)) {
                 if (cMap.containsKey(m.CampaignID)) {
                     cMap.put(m.CampaignID, cMap.get(m.CampaignID) + 1);
                 } else {
@@ -79,7 +79,7 @@ global class RollCall{
             } else {
                 rMap.put(m.Campaign.ParentId, 1);
             }
-            if (m.status.equals('Responded')) {
+            if (m.status.equals(Event.checkedInStatus)) {
                 if (cMap.containsKey(m.Campaign.ParentId)) {
                     cMap.put(m.Campaign.ParentId, cMap.get(m.Campaign.ParentId) + 1);
                 } else {

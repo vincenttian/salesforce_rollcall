@@ -16,7 +16,6 @@
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <script type="text/javascript" src="{!$Resource.gauge}"/>
-      <apex:includeScript value="{!$Resource.fastclick}"/>
 
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
@@ -59,7 +58,7 @@
       }
     </script>
     </head>
-    <body>
+    <body onload="maxCapacityCheck()">
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">
@@ -73,7 +72,7 @@
         <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();initialize(); line_chart_info(); activate(2);">
           <p> Statistics </p>
         </a>
-        <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false); activate(3);'>
+        <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3);'>
           <p> Attendees </p>
         </a>
         <div id="checkinLink" onclick='javascript:window.location.href="/apex/checkin?event_id={!event.cId}"; activate(4);'>
@@ -150,11 +149,18 @@
       </div>
     </body>
     <script type="text/javascript">
+
+
         function blurrer(){
                
                $("#field").blur();
                window.focus();
         }
+        window.onkeydown = function(e){
+            window.focus();
+            $("#field").focus();
+        }
+    
     </script>
     <script>
         var gauges = [];
@@ -426,15 +432,16 @@
         document.getElementById("testGaugeContainer").innerHTML = "";
     }
 
-
-    $(document).ready(function() {
-        FastClick.attach(document.body);
+    function clearInput() {
+       $("#field").val('');
+    }
+    function maxCapacityCheck() {
         var maxc = {!event.maxCapacity};
         var checkins = {!event.checkedIn};
         if (checkins >= maxc) {
             $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab red_border hover_red_text"> <p> Check In </p> </div> </div>');
         }
-    });
+    }
     </script>
   </html>
 </apex:page>

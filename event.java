@@ -1,5 +1,5 @@
 global class Event{
-
+    
     public String name {get;set;}
     public String start {get;set;}
     public String description {get;set;}
@@ -11,12 +11,12 @@ global class Event{
     public String picData {get;set;}
     public String cal {get;set;}
     public List<String> checkedInTimes {get;set;}
-    global static String registeredStatus = 'Sent';
-    global static String checkedInStatus = 'Responded';
+    global static String registeredStatus = RollCall_Settings__c.getAll().isEmpty()?'Sent':RollCall_Settings__c.getAll().values()[0].Registered_Status__c;
+    global static String checkedInStatus = RollCall_Settings__c.getAll().isEmpty()?'Responded':RollCall_Settings__c.getAll().values()[0].Check_in_Status__c;
     public ID cid {get;set;}
-
-
-    /** Main constructor for an event. */
+    
+   
+    /** Main constructor for an event. */ 
     public Event (Campaign c) {
         name = c.Name;
         if (c.StartDate != null) {
@@ -29,7 +29,8 @@ global class Event{
             new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
             Id FROM Campaign WHERE ParentId=:c.Id OR Id=:c.Id]);
         registered = [SELECT Count() FROM CampaignMember
-                      WHERE CampaignId in :potential_children.keySet()];
+                      WHERE CampaignId in :potential_children.keySet() and (Status=:RegisteredStatus 
+                      or Status=:checkedInStatus)];
         checkedIn = [SELECT Count() FROM CampaignMember
                      WHERE CampaignId in :potential_children.keySet() AND
                      (Status=:checkedInStatus)];
@@ -41,7 +42,7 @@ global class Event{
         titleColor = 'title blue';
         textColor = 'blue_text';
         cid = c.id;
-        CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status='Responded' AND CampaignId in :potential_children.keySet()];
+        CampaignMember[] checked_in = [SELECT LastModifiedDate, Lead.Firstname, Lead.Lastname, Lead.Email, Contact.Firstname, Contact.Lastname, Contact.Email, Contact.Company__c FROM CampaignMember WHERE Status=:Event.checkedInStatus AND CampaignId in :potential_children.keySet()];
         List<String> data = new List<String>();
         for (CampaignMember check_in: checked_in) {
             data.add('\'' + check_in.LastModifiedDate.format('HH:mm:ss') + '\'');

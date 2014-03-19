@@ -9,6 +9,9 @@
  >
 
 	<head>
+	    <apex:includeScript value="{!$Resource.fastclick}"/>
+		<apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
+	    <title>RollCall Settings</title>
 	</head>
 
 	<body>
@@ -17,18 +20,52 @@
 		<p>
 			The default CampaignMember statuses used are "Sent" and "Received." If you want to change this, please specify what status you would like to use.
 	 	</p>
+ 	    
+ 	    <div>
+	 	    <div class="statuses">
+		     	<p id="checkin_status"> Enter the status your application will use to <b>check in</b> CampaignMembers: </p>
+		     	<input class="normal"  type="text" name="checkin" id="checkin"/>
+		     	<p id="register_status"> Enter the status your application will use to <b>register</b> CampaignMembers: </p>
+		     	<input class="normal"  type="text" name="register" id="register"/>
+		     	<br></br>
+		    </div>
+			<button type="button" onclick="update_settings()">Update Statuses</button>
+		</div>
+
+		<div>
+		    <div>
+		     	<p id="checkin_background"> Upload an image/logo to use for your checkin page: </p>
+				<button type="button" onclick="upload_background()">Upload custom image/logo</button>
+		    </div>
+		</div>
+
+		<br></br>
+		<div id="messages" class="messages"></div>
 
 	 <script>
-		function update_settings(args) {
+		function update_settings() {
+			var checkin = $("#checkin").val();
+			var register = $("#register").val();
+			if (checkin == '' || register == '') {
+				if (checkin == '' && register == '') {
+	                $("#messages").text('The checkin and register statuses both need to be filled in');
+				} else if (checkin == '') {
+	                $("#messages").text('Invalid checkin status');
+				} else {
+	                $("#messages").text('Invalid register status');
+				}
+                return;
+			}
+
 	        Visualforce.remoting.Manager.invokeAction(
-	            '{!$RemoteAction.EventController.attendee_search}',
-	            '{!event.cid}', searchName, offset,
+	            '{!$RemoteAction.SettingsController.update_settings}',
+	            checkin, register,
 	            function(result, event){
 	                if (event.status) {
 	                    //stuff
+	                    $("#messages").text('Your updated settings were saved!');
 	                } else if (event.type === 'exception') {
-	                    document.getElementById("responseErrors").innerHTML =
-	                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
+	                    $("#messages").text('There was an exception!');
 	                } else {
 	                    document.getElementById("responseErrors").innerHTML = event.message;
 	                }
@@ -36,6 +73,43 @@
 	            {escape: true}
 	        );
 	    }
+
+	    function upload_background() {
+	        Visualforce.remoting.Manager.invokeAction(
+	            '{!$RemoteAction.SettingsController.upload_background}',
+	            'arg',
+	            function(result, event){
+	                if (event.status) {
+	                    //stuff
+	                    $("#messages").text('Your updated settings were saved!');
+	                } else if (event.type === 'exception') {
+	                    $("#messages").text('There was an exception!');
+	                } else {
+	                    document.getElementById("responseErrors").innerHTML = event.message;
+	                }
+	            },
+	            {escape: true}
+	        );
+	    }
+
+	    $(document).ready(function(){
+            FastClick.attach(document.body);
+            // Remoting call to get current status values
+            Visualforce.remoting.Manager.invokeAction(
+	            '{!$RemoteAction.SettingsController.check_settings}',
+	            function(result, event){
+	                if (event.status) {
+	                    $('#checkin').val(result[0]);
+	                    $('#register').val(result[1]);
+	                } else if (event.type === 'exception') {
+	                    $("#messages").text('There was an exception!');
+	                } else {
+	                    document.getElementById("responseErrors").innerHTML = event.message;
+	                }
+	            },
+	            {escape: true}
+	        );
+        })
 	 </script>
 	</body>
 
