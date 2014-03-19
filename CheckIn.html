@@ -113,6 +113,13 @@ id="todo"
         <p id="confirm_end"> If none of these are you then please <a class="blue_text" data-section="one" href="#"> retry</a> </p>
     </div>
   </section>
+  <!-- Future Max Capacity page -->
+  <section id="seven">
+    <div class="checkin">
+        <p id="confirm_end"> Sorry, our event if at max capacity: <p id='max_reg_count'></p>. There can be no more sign ins. 
+        </p>
+    </div>
+  </section>
 </div>
 <script>
     // Double Tap Implementation for iPad
@@ -218,13 +225,24 @@ $(document).ready(function() {
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
         $("#email").blur();
-        
-        // HANDLES MAX CAPACITY
-        // if ({!event.checkedIn} >= {!event.maxCapacity}) {
-        //     console.log('Event is already at capacity');
-        //     return;
-        // }
 
+        // HANDLES MAX CAPACITY
+        typeof {!event.maxCapacity};
+        var maxc = '{!event.maxCapacity}';
+        var checkedin = {!event.checkedIn};
+        if (maxc == 'Unlimited') {
+            // Allow checkins
+            console.log('recognize that capacity is unlimited');
+        } else {
+            // Check capacity vs current num of checkins
+            if (checkedin >= parseInt(maxc)) {
+              console.log('Event is already at capacity');
+              $('#max_reg_count').text(maxc);
+              setSection($("#container section#"+"#seven"), $('.active'));
+              return;
+            }
+        }
+        
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
