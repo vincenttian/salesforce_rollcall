@@ -115,6 +115,11 @@ id="todo"
   </section>
 </div>
 <script>
+    window.onkeydown = function(e){
+            var $focused = $(':focus');
+            window.focus();
+            $focused.focus();
+        }
     // Double Tap Implementation for iPad
     var HAS_TOUCH = ('ontouchstart' in window);
     function returnHandler() {
