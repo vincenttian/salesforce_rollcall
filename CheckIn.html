@@ -29,9 +29,9 @@ id="todo"
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input class="normal"  type="email" name="email" id="email" onclick='clear_error("checkin_error")'/>
+      <input class="normal"  type="email" name="email" id="email" autocorrect="off" autocomplete="off" onclick='clear_error("checkin_error")'/>
       <p id="checkin_error"> Please enter a valid email </p>
-      <div id="submit" onclick="check_in_attendee()"> <p> Check In </p> </div>
+      <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();"> <p> Check In </p> </div>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -45,10 +45,10 @@ id="todo"
         <p> Company: <span id="checkin_company" class="blue_text"> </span> </p>
         <div id="test"> </div>  <!-- A div for injecting tests into -->
       </div>
-      <a id="confirm" data-section="three" href="#" onclick="update_placeholders()">
+      <a id="confirm" data-section="three" href="#" onclick="update_placeholders(); window.focus(); $(':focus').blur();">
         <p> Confirm </p>
       </a>
-      <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_placeholders()"> update</a> this information </p>
+      <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_placeholders(); window.focus(); $(':focus').blur();"> update</a> this information </p>
     </div>
   </section>
   <!-- Successful checkin -->
@@ -73,15 +73,15 @@ id="todo"
         <p class="label"> *Email: </p>
       </div>
       <div class="column">
-        <input id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" disabled="disabled" onclick='clear_error("first_error")'/>
+        <input id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick='clear_error("first_error")'/>
         <p id="first_error"> Please enter a first name </p>
-        <input id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" disabled="disabled" onclick='clear_error("last_error")'/>
+        <input id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" disabled="disabled" autocorrect="off" autocomplete="off" onclick='clear_error("last_error")'/>
         <p id="last_error"> Please enter a last name </p>
-        <input id="update_company" type="text" name="company" class="input normal" placeholder="" disabled="disabled"/>
+        <input id="update_company" type="text" name="company" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled"/>
         <input id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <!--<div id="submit" data-section="two" onclick="check_in_attendee()"> <p> Check In </p> </div>-->
-      <button id="update" onclick="update_attendee()"><p> Confirm </p></button>
+      <button id="update" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
     </div>
   </section>
   <!-- Haven't registered page -->
@@ -89,7 +89,7 @@ id="todo"
     <div class="checkin">
       <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'help_alt.svg')}"> </img>
       <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
-      <a class="checkin_end" data-section="four" href="#" onclick="static_placeholders()">
+      <a class="checkin_end" data-section="four" href="#" onclick="static_placeholders();window.focus(); $(':focus').blur();">
           <p> Register </p>
       </a>
       <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
@@ -115,11 +115,7 @@ id="todo"
   </section>
 </div>
 <script>
-    window.onkeydown = function(e){
-            var $focused = $(':focus');
-            window.focus();
-            $focused.focus();
-        }
+            
     // Double Tap Implementation for iPad
     var HAS_TOUCH = ('ontouchstart' in window);
     function returnHandler() {
@@ -131,6 +127,9 @@ id="todo"
 
     // Return is equivalent to form submission
     window.onkeydown = function(e){
+        var $focused = $(':focus');
+            window.focus();
+            $focused.focus();
         var code = e.keyCode || e.which;
         if(code == 13) {
             if ($('.active').attr('id') == 'one') {
