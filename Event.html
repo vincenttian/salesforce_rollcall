@@ -426,7 +426,8 @@
         console.log(checkins);
         if (checkins >= maxc) {
             console.log('disable checkin link');
-            $('#checkinLink').replaceWith('<div id="checkinLink">');
+            // Link shows but it does not work
+            $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab red_border hover_red_text"> <p> Check In </p> </div> </div>');
         }
     }
     </script>
