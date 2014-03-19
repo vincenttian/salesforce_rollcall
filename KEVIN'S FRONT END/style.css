@@ -54,12 +54,6 @@ li {
     zoom:1;
 }   
 
-#field {
-    float: left;
-    width: 400px;
-    font-size: 1em;
-}
-
 #search {
     box-sizing: border-box;
     text-align: left;
@@ -626,6 +620,12 @@ li {
 #testGaugeContainer {
     position: relative;
     left: 65px;
+}
+
+#field {
+    float: left;
+    width: 400px;
+    font-size: 1em;
 }
 
 .blue {
