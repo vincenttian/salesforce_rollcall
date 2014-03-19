@@ -1,0 +1,42 @@
+<apex:page docType="html-5.0"
+   sidebar="false"
+   showheader="false"
+   standardStylesheets="false"
+   Controller="SettingsController"
+   applyHtmlTag="false"
+   applyBodyTag="false"
+   id="todo"
+ >
+
+	<head>
+	</head>
+
+	<body>
+		<apex:outputLink value="/apex/index" id="home"> Home </apex:outputLink>
+
+		<p>
+			The default CampaignMember statuses used are "Sent" and "Received." If you want to change this, please specify what status you would like to use.
+	 	</p>
+
+	 <script>
+		function update_settings(args) {
+	        Visualforce.remoting.Manager.invokeAction(
+	            '{!$RemoteAction.EventController.attendee_search}',
+	            '{!event.cid}', searchName, offset,
+	            function(result, event){
+	                if (event.status) {
+	                    //stuff
+	                } else if (event.type === 'exception') {
+	                    document.getElementById("responseErrors").innerHTML =
+	                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
+	                } else {
+	                    document.getElementById("responseErrors").innerHTML = event.message;
+	                }
+	            },
+	            {escape: true}
+	        );
+	    }
+	 </script>
+	</body>
+
+</apex:page>
