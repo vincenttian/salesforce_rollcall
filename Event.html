@@ -1,10 +1,10 @@
 <apex:page docType="html-5.0"
-  sidebar="false" 
+  sidebar="false"
   showheader="false"
   standardStylesheets="false"
-  Controller="EventController" 
+  Controller="EventController"
   applyHtmlTag="false"
-  applyBodyTag="false"   
+  applyBodyTag="false"
   id="todo"
   >
   <html>
@@ -14,10 +14,9 @@
       <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.scrollfix, 'scrollfix/scrollfix.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <script type="text/javascript" src="{!$Resource.gauge}"/>
-      <script type="application/javascript" src="{!URLFOR($Resource.iscroll, 'build/iscroll.js')}"/>
+
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
 
@@ -27,23 +26,23 @@
     .axis line {
       fill: none;
       stroke: #CCC;
-    }    
+    }
     .line {
       fill: none;
       stroke: #ff009d;
       stroke-width: 3px;
-    }   
+    }
     .y {
         display: none;
     }    </style>
-      
+
     </head>
     <body>
       <div id="navbar">
         <div id="navbar_title">
-          <p> You are now managing: <br></br> <span class="blue_text">  
+          <p> You are now managing: <br></br> <span class="blue_text">
             {!event.name}
-            </span> 
+            </span>
           </p>
         </div>
         <a class="tab blue_border hover_blue_text" data-section="one" href="#">
@@ -87,50 +86,47 @@
         <!-- Event Statistics -->
         <section id="two">
           <div class="page" id="page_two">
-            <p class="chart_title"> Flow </p>
+            <p class="chart_title"> Check-in Flow </p>
               <div id="chart_one">
               </div>
               <div id="chart_two">
                   <p class="chart_title"> Attendance </p>
-                  <p class="chart_info"> Checked In: 
-                    <span class="blue_text" id='pie_checkedin'> 
-                      {!event.checkedin} 
-                    </span> 
-                    <br></br> 
-                    Registered: 
-                    <span class="gray_text" id='pie_registered'> 
-                      {!event.registered}
-                    </span> 
+                  <p class="chart_info"> Checked In:
+                    <span class="blue_text" id='pie_checkedin'>
+
+                    </span>
+                    <br></br>
+                    Registered:
+                    <span class="gray_text" id='pie_registered'>
+
+                    </span>
                   </p>
                   <p id="percentage"> </p>
               </div>
               <div id="chart_three">
                   <p class="chart_title"> Capacity </p>
-                  <p class="chart_info"> Checked In: <span class="orange_text" id='gauge_checkedin'> {!event.checkedin} </span> <br></br> Capacity: <span class="gray_text"> {!event.maxCapacity} </span> </p>
+                  <p class="chart_info"> Checked In: <span class="orange_text" id='gauge_checkedin'> </span> <br></br> Capacity: <span id="pie_capacity" class="gray_text"></span> </p>
                   <span id="testGaugeContainer"></span>
               </div>
           </div>
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" style="overflow:auto">
+          <div class="page" style="overflow:auto;-webkit-overflow-scrolling: touch;">
             <div class="information" id="attendee_list">
-              <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/> 
+              <input type="text" id="field" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/>
+              <div>
                <p class="green_text"> <br></br>Attendee List: </p>
-               <ul id="the_list"></ul>
+                <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More
-                </button> 
+                </button>
+              </div>
             </div>
           </div>
         </section>
       </div>
-    
-    
     </body>
-    <script type="text/javascript">
-      var myScroll = new iScroll('attendee_list');
-    </script>
     <script>
         var gauges = [];
         function createGauge(name, label, min, max) {
@@ -146,7 +142,7 @@
             config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
             config.redZones = [{ from: config.min + range*2/3, to: config.max }];
             gauges[name] = new Gauge(name + "GaugeContainer", config);
-            gauges[name].render();        
+            gauges[name].render();
         }
 
         function initialize() {
@@ -160,6 +156,9 @@
                 '{!event.cid}',
                 function(result, event){
                     if (event.status) {
+
+                        $("#chart_two").children("svg").remove();
+
                         var checked_in = result.checkedIn;
                         var registered = result.registered;
                         var math = registered - checked_in;
@@ -167,24 +166,22 @@
                           registered = 1;
                         }
 
-                        // Gauges
-                        createGauge("test", "Test", 0, result.maxCapacity );
-                        var value = result.checkedIn;
-                        gauges["test"].redraw(value);
-
+                        if (result.maxCapacity != 'Unlimited'){
+                            createGauge("test", "Test", 0, result.maxCapacity );
+                              var value = result.checkedIn;
+                              gauges["test"].redraw(value);
+                        }
 
                         // Pie Chart
-                        document.getElementById('gauge_checkedin').innerHTML = checked_in;
-                        document.getElementById('pie_checkedin').innerHTML = checked_in;
-                        document.getElementById('pie_registered').innerHTML = registered;
+                        document.getElementById('gauge_checkedin').innerHTML = result.checkedIn;
+                        document.getElementById('pie_checkedin').innerHTML = result.checkedIn;
+                        document.getElementById('pie_registered').innerHTML = result.registered;
+                        document.getElementById('pie_capacity').innerHTML = result.maxCapacity;
 
                         document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
 
                         var data = [ {name: "attended", value: result.checkedIn},
                                 {name: "absent", value:  math} ];
-
-                        console.log(result.checkedIn);
-                        console.log(math);
 
                         var width = 362,
                             height = 384,
@@ -235,7 +232,7 @@
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
                     }
-                }, 
+                },
             {escape: true}
             );
         }
@@ -249,6 +246,11 @@
         function(result, event){
             if (event.status) {
                 // Get DOM IDs for HTML and Visualforce elements like this
+              if (result.length == 0){
+                  $('#chart_one').append('<p class="chart_info" style="top:150px;">No one has checked in yet</p>');
+                   return;
+              }
+
               var width = 624,
                   height = 214;
               var parseTime = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
@@ -275,7 +277,7 @@
             var data = '{"close": [';
             for (var i=0; i<result.length - 1; i++) {
                 data += (i + 1) + ",";
-            } 
+            }
             data += (i+1) + '], "date": ["';
             for (var i=0; i<result.length - 1; i++) {
                 temp_date = new Date(result[i]);
@@ -283,7 +285,7 @@
                 date_format = d3.time.format("%a %b %e %H:%M:%S %Y");
                 temp_date = date_format(temp_date);
                 data += temp_date + '", "';
-            } 
+            }
             temp_date = new Date(result[result.length-1]);
             temp_date = date_format(temp_date);
             data += temp_date + '"]}';
@@ -295,11 +297,11 @@
               date = date_format(d[1]);
               return {close: close, date: date};
             });
-            x.domain(d3.extent(data, function(d) { 
-              return d.date; 
+            x.domain(d3.extent(data, function(d) {
+              return d.date;
             }));
-            y.domain(d3.extent(data, function(d) { 
-              return d.close; 
+            y.domain(d3.extent(data, function(d) {
+              return d.close;
             }));
             svg.append("g")
                 .attr("class", "x axis")
@@ -315,24 +317,27 @@
             svg.append("path")
                 .datum(data)
                 .attr("class", "line")
-                .attr("d", line);            
+                .attr("d", line);
             } else if (event.type === 'exception') {
                 document.getElementById("responseErrors").innerHTML = event.message + "<br/>\n<pre>" + event.where + "</pre>";
             } else {
                 document.getElementById("responseErrors").innerHTML = event.message;
             }
-        }, 
+        },
         {escape: true}
         );
     }
     </script>
 
     <script type="text/javascript">
-    // 
+
     var page_offset = 50;
     var page = 0;
     function createListElement(attendee) {
-        var element = document.createElement("li")
+        var element = document.createElement("li");
+
+        //element.setAttribute('onclick','javascript:sforce.one.navigateToSObject(\''+attendee.Id+'\')');
+
         var f = document.createElement('p');
         var e = document.createElement('p');
         f.innerHTML = attendee.Name;
@@ -349,7 +354,7 @@
         return element;
     }
     function getAttendees(paginate, searchTerm) {
-        var searchName = searchTerm ? searchTerm : document.getElementById("field").value;       
+        var searchName = searchTerm ? searchTerm : document.getElementById("field").value;
         var offset = 0;
         if(paginate){
             page += 1;
@@ -360,7 +365,7 @@
         }
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.EventController.attendee_search}',
-            '{!event.cid}', searchName, offset, 
+            '{!event.cid}', searchName, offset,
             function(result, event){
                 var objlist = document.getElementById("the_list");
                 var fragment = document.createDocumentFragment();
@@ -380,12 +385,12 @@
                     }
                     objlist.appendChild(fragment);
                 } else if (event.type === 'exception') {
-                    document.getElementById("responseErrors").innerHTML = 
+                    document.getElementById("responseErrors").innerHTML =
                         event.message + "<br/>\n<pre>" + event.where + "</pre>";
                 } else {
                     document.getElementById("responseErrors").innerHTML = event.message;
                 }
-            }, 
+            },
             {escape: true}
         );
     }
