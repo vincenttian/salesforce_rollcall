@@ -15,6 +15,7 @@ id="todo"
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
   <apex:includeScript value="{!$Resource.doubleTap}"/>
+  <apex:includeScript value="{!$Resource.fastclick}"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
   <title>RollCall</title>
 </head>
@@ -30,7 +31,7 @@ id="todo"
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
       <input class="normal"  type="email" name="email" id="email" onclick='clear_error("checkin_error")'/>
       <p id="checkin_error"> Please enter a valid email </p>
-      <div id="submit" onclick="check_in_attendee()"> <p> Check In </p> </div>
+      <div id="submit" ontouch="check_in_attendee()"> <p> Check In </p> </div>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -143,6 +144,7 @@ id="todo"
 
 <script>
 $(document).ready(function() {
+    FastClick.attach(document.body);
     $('a').on('click', function(event) {
         event.preventDefault();
         var sectionId = $(this).attr("data-section");

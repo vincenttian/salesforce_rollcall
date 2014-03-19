@@ -10,6 +10,7 @@
    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Oswald"/>
    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+   <apex:includeScript value="{!$Resource.fastclick}"/>
    <html>
       <head>
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -31,6 +32,7 @@
               /* NOT WORKING
               var scrollingHomeContent = document.getElementById("content");
               new ScrollFix(scrollingHomeContent);*/
+                FastClick.attach(document.body);
                 $('a').click(function(e){
                     redirect = $(this).attr('href');
                     e.preventDefault();
@@ -43,6 +45,7 @@
                     });
                 });
             })
+
          </script>
          <title>RollCall</title>
       </head>
