@@ -133,7 +133,7 @@
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" style="overflow:auto;-webkit-overflow-scrolling: touch;">
+          <div class="page" style="overflow:auto;-webkit-overflow-scrolling: touch;" onscroll='blurrer(); console.log("swag");'>
             <div class="information" id="attendee_list">
               <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" onkeypress="if(event.keyCode == 13){hideKeyboard();} return event.keyCode != 13;" placeholder="Search"/>
               <div>
@@ -149,11 +149,12 @@
       </div>
     </body>
     <script type="text/javascript">
-        window.onscroll = function(e){
+
+        function blurrer(){
             console.log('swaggy');
-            var code = e.keyCode || e.which;
                $("#field").blur();
         }
+        console.log(crack);
     </script>
     <script>
         var gauges = [];
