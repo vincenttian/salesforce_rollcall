@@ -334,7 +334,7 @@ li {
 }
 
 @media (max-width: 900px) {
-    #flow_title {display: none};
+    #flow_title {display: none;}
     #chart_one {display: none;}
 }
 
