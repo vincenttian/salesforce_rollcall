@@ -333,7 +333,8 @@ li {
     height: 280px;
 }
 
-@media (max-width: 1020px) {
+@media (max-width: 900px) {
+    #flow_title {display: none};
     #chart_one {display: none;}
 }
 
@@ -599,6 +600,11 @@ li {
     font-size: 1.5em;
 }
 
+#capacity_reached {
+    margin-top: 150px;
+    font-size: 2em;
+}
+
 .chart_info {
     position: relative;
     text-align: center;
@@ -624,7 +630,8 @@ li {
 
 #field {
     float: left;
-    width: 400px;
+    width: 300px;
+    margin-right: 400px;
     font-size: 1em;
 }
 
