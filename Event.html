@@ -135,7 +135,7 @@
         <section id="three">
           <div class="page" style="overflow:auto;-webkit-overflow-scrolling: touch;" onscroll='blurrer();'>
             <div class="information" id="attendee_list">
-              <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" placeholder="Search"/>
+              <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
               <div>
                <p class="green_text"> <br></br>Attendee List: </p>
                 <ul id="the_list"></ul>
@@ -429,7 +429,7 @@
         var maxc = {!event.maxCapacity};
         var checkins = {!event.checkedIn};
         if (checkins >= maxc) {
-            $('#checkinLink').replaceWith('<div id="checkinLink">');
+            $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab red_border hover_red_text"> <p> Check In </p> </div> </div>');
         }
     }
     </script>
