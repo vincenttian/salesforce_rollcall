@@ -1,10 +1,10 @@
 <apex:page docType="html-5.0"
-sidebar="false" 
+sidebar="false"
 showheader="false"
 standardStylesheets="false"
-Controller="CheckInController" 
+Controller="CheckInController"
 applyHtmlTag="false"
-applyBodyTag="false"   
+applyBodyTag="false"
 id="todo"
 >
 <html>
@@ -19,9 +19,9 @@ id="todo"
   <title>RollCall</title>
 </head>
 <body>
-  <input class='normal' id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/> 
+  <input class='normal' id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/>
   <div id="select_event">
-    <p> Salesforce Workday </p>          
+    <p> Salesforce Workday </p>
   </div>
   <div class="invisible" id="doubletap"></div>
   <div id="container">
@@ -52,7 +52,7 @@ id="todo"
         </div>
         <div id="test"> </div>  <!-- A div for injecting tests into -->
       </div>
-      <a id="confirm" data-section="three" href="#" onclick="update_placeholders()"> 
+      <a id="confirm" data-section="three" href="#" onclick="update_placeholders()">
         <p> Confirm </p>
       </a>
       <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_placeholders()"> update</a> this information </p>
@@ -63,7 +63,7 @@ id="todo"
     <div class="checkin">
       <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'checkin.svg')}"> </img>
       <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
-      <a class="checkin_end" data-section="one" href="#"> 
+      <a class="checkin_end" data-section="one" href="#">
         <p> Return </p>
       </a>
     </div>
@@ -80,12 +80,12 @@ id="todo"
         <p class="label"> *Email: </p>
       </div>
       <div class="column">
-        <input  id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" onclick='clear_error("first_error")'/>
+        <input id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" disabled="disabled" onclick='clear_error("first_error")'/>
         <p id="first_error"> Please enter a first name </p>
-        <input  id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" onclick='clear_error("last_error")'/>
+        <input id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" disabled="disabled" onclick='clear_error("last_error")'/>
         <p id="last_error"> Please enter a last name </p>
-        <input  id="update_company" type="text" name="company" class="input normal" placeholder=""/>
-        <input  id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
+        <input id="update_company" type="text" name="company" class="input normal" placeholder="" disabled="disabled"/>
+        <input id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <!--<div id="submit" data-section="two" onclick="check_in_attendee()"> <p> Check In </p> </div>-->
       <button id="update" onclick="update_attendee()"><p> Confirm </p></button>
@@ -96,7 +96,7 @@ id="todo"
     <div class="checkin">
       <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'help_alt.svg')}"> </img>
       <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
-      <a class="checkin_end" data-section="four" href="#" onclick="static_placeholders()"> 
+      <a class="checkin_end" data-section="four" href="#" onclick="static_placeholders()">
           <p> Register </p>
       </a>
       <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
@@ -127,14 +127,16 @@ id="todo"
     // Return is equivalent to form submission
     window.onkeydown = function(e){
         var code = e.keyCode || e.which;
-        if(code == 13) { 
+        if(code == 13) {
             if ($('.active').attr('id') == 'one') {
                 check_in_attendee();
+                $("#email").blur();
             } else {
                 update_attendee();
                 $('#update_firstname').blur();
                 $('#update_lastname').blur();
-            } 
+                $('#update_company').blur();
+            }
         }
     }
 </script>
@@ -146,16 +148,32 @@ $(document).ready(function() {
         event.preventDefault();
         var sectionId = $(this).attr("data-section");
         if (sectionId == 'one'){
-            $("#email").val(''); 
+            $("#email").val('');
+            $('#email').removeClass('error');
+            $("#one").find('input').each(function() {
+                $(this).prop('disabled', false);
+            });
+            $("#four").find('input').each(function() {
+                $(this).prop('disabled', true);
+            });
         }
+        else if (sectionId == 'four'){
+            $("#one").find('input').each(function() {
+                $(this).prop('disabled', true);
+            });
+            $("#four").find('input').each(function() {
+                $(this).prop('disabled', false);
+            });
+        }
+
         $toSlide= $("#container section#"+sectionId);
         $fromSlide= $('.active');
-        if (!($toSlide.hasClass("active"))) {  
+        if (!($toSlide.hasClass("active"))) {
             $fromSlide.animate({"left":"-100%"},100,'linear')
-            $toSlide.animate({"left":"0%"},100,'linear',function() {    
+            $toSlide.animate({"left":"0%"},100,'linear',function() {
                 $fromSlide.css("left","100%");
-                $fromSlide.removeClass("active");    
-                $toSlide.addClass("active");    
+                $fromSlide.removeClass("active");
+                $toSlide.addClass("active");
             });
         }
     });
@@ -167,7 +185,7 @@ $(document).ready(function() {
     var last_name;
     var company;
     var name;
-    
+
     var mult_email;
 
     function clear_error(id) {
@@ -184,18 +202,18 @@ $(document).ready(function() {
 
     function check_in_attendee() {
         // Email Validation
-        var email = document.getElementById("email").value;    
-        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
+        var email = document.getElementById("email").value;
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (email == '' || re.test(email) == false) {
             console.log('STOPPED! Not a valid email according to regex');
             var error = document.getElementById('checkin_error');
             error.style.display = 'block';
-            $('#email').addClass('error'); 
+            $('#email').addClass('error');
             return;
-        }    
+        }
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
-        $("#email").blur();  
+        $("#email").blur();
         // HANDLES MAX CAPACITY
         // if ({!event.checkedIn} >= {!event.maxCapacity}) {
         //     console.log('Event is already at capacity');
@@ -222,18 +240,18 @@ $(document).ready(function() {
                             last_name = contact.LastName;
                             company = contact.Company__c;
                         }
-    
+
                         document.getElementById('error').innerHTML = "<p></p>";
-                        document.getElementById("checkin_email").innerHTML = document.getElementById("email").value; 
-                        document.getElementById("checkin_name").innerHTML = name; 
-                        document.getElementById("checkin_company").innerHTML = company;  
+                        document.getElementById("checkin_email").innerHTML = document.getElementById("email").value;
+                        document.getElementById("checkin_name").innerHTML = name;
+                        document.getElementById("checkin_company").innerHTML = company;
                         setSection($("#container section#"+"#two"), $('.active'));
                     } else if (result.length == 0){ // no match in DB - Register page
                         setSection($("#container section#"+"#five"), $('.active'));
                     } else { // could not find match in database
                         mult_email = document.getElementById("email").value;
                         document.getElementById("multiple").innerHTML = "There seem to be multiple " + mult_email + "'s. Which of these do you want to check in as?";
-                        
+
                         for(var i=0;i<result.length;i++){
                            if (result[i].ContactId == null) {
                                 var lead = result[i].Lead;
@@ -250,7 +268,7 @@ $(document).ready(function() {
                             }
                             var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + name + ", " + company + "</p></a>");
                             newA.appendTo("#multipleAttendees");
-                            document.getElementById("checkin_email").innerHTML = mult_email; 
+                            document.getElementById("checkin_email").innerHTML = mult_email;
                         }
                         setSection($("#container section#"+"#six"), $('.active'));
                     }
@@ -259,7 +277,7 @@ $(document).ready(function() {
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
                 }
-            }, 
+            },
         {escape: true}
         );
     }
@@ -275,21 +293,23 @@ $(document).ready(function() {
             if (firstname == '' && lastname == '') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                $('#update_firstname').addClass('error');   
+                $('#update_firstname').addClass('error');
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                $('#update_lastname').addClass('error');   
+                $('#update_lastname').addClass('error');
             } else if (firstname =='') {
                 var error = document.getElementById('first_error');
                 error.style.display = 'block';
-                $('#update_firstname').addClass('error'); 
+                $('#update_firstname').addClass('error');
             } else if (lastname == '') {
                 var error = document.getElementById('last_error');
                 error.style.display = 'block';
-                $('#update_lastname').addClass('error'); 
+                $('#update_lastname').addClass('error');
             }
             return;
         }
+        // $('#update_firstname').blur();
+        // $('#update_lastname').blur();
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
@@ -305,7 +325,7 @@ $(document).ready(function() {
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
                     }
-                }, 
+                },
             {escape: true}
         );
     }
@@ -316,7 +336,7 @@ $(document).ready(function() {
         document.getElementById('update_lastname').value = last_name;
         document.getElementById('update_company').value = company;
     }
-    
+
     function static_placeholders() {
         document.getElementById('update_email').value = document.getElementById("email").value;
         document.getElementById('update_firstname').value = "";
@@ -324,7 +344,7 @@ $(document).ready(function() {
         document.getElementById('update_company').value = "";
     }
 
-    function checkInMultiple(campaignMemberId) {    
+    function checkInMultiple(campaignMemberId) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_multiple}',
             campaignMemberId,
@@ -332,11 +352,11 @@ $(document).ready(function() {
                 if (event.status) {
                     setSection($("#container section#"+"#three"), $('.active'));
                 } else if (event.type === 'exception') {
-                    // 
+                    //
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
                 }
-            }, 
+            },
             {escape: true}
         );
     }
