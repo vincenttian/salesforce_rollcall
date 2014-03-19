@@ -1,5 +1,5 @@
 <apex:page docType="html-5.0"
-   sidebar="false" 
+   sidebar="false"
    showheader="false"
    standardStylesheets="false"
    Controller="RollCall"
@@ -28,6 +28,8 @@
          </style>
          <script>
             $(document).ready(function(){
+              var scrollingHomeContent = document.getElementById("content");
+              new ScrollFix(scrollingHomeContent);
                 $('a').click(function(e){
                     redirect = $(this).attr('href');
                     e.preventDefault();
@@ -54,9 +56,10 @@
          <div id="list_events">
             <apex:repeat value="{!events}" var="event" id="theRepeat">
                <a href="/apex/event?event_id={!event.cId}">
+               <!--a href="#" onClick="javascript:sforce.one.navigateToURL('/apex/event?event_id={!event.cId}');"-->
                   <div class="card">
                      <div class="{!event.titlecolor}">
-                        <p> 
+                        <p>
                            {!event.Name}
                         </p>
                      </div>
@@ -66,7 +69,7 @@
                         <p>Registered: <span class="{!event.textcolor}">{!event.registered}</span></p>
                         <!-- <p>Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span></p> -->
                      </div>
-                     <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>  
+                     <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>
                   </div>
                </a>
             </apex:repeat>
