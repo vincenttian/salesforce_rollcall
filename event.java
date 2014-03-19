@@ -1,5 +1,5 @@
 global class Event{
-    
+
     public String name {get;set;}
     public String start {get;set;}
     public String description {get;set;}
@@ -14,9 +14,9 @@ global class Event{
     global static String registeredStatus = 'Sent';
     global static String checkedInStatus = 'Responded';
     public ID cid {get;set;}
-    
-   
-    /** Main constructor for an event. */ 
+
+
+    /** Main constructor for an event. */
     public Event (Campaign c) {
         name = c.Name;
         if (c.StartDate != null) {
