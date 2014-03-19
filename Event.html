@@ -36,6 +36,27 @@
         display: none;
     }    </style>
 
+    <!-- Styling and scripting for active tabs -->
+    <style>
+      .active_tab {
+        background: #EEEEEE;
+      }
+    </style>
+    <script>
+      function activate(id)
+      {
+          $(".active_tab").removeClass("active_tab");
+          if (id == 1) {
+            $("#tab_one").addClass("active_tab");
+          } else if (id == 2) {
+            $("#tab_two").addClass("active_tab");
+          }  else if (id == 3) {
+            $("#tab_three").addClass("active_tab");
+          } else {
+            $("#tab_four").addClass("active_tab");
+          }
+      }
+    </script>
     </head>
     <body>
       <div id="navbar">
@@ -45,17 +66,17 @@
             </span>
           </p>
         </div>
-        <a class="tab blue_border hover_blue_text" data-section="one" href="#">
+        <a id="tab_one" class="tab blue_border hover_blue_text active_tab" data-section="one" href="#" onclick='activate(1);'>
           <p> Information </p>
         </a>
-        <a class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();initialize(); line_chart_info();">
+        <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();initialize(); line_chart_info(); activate(2);">
           <p> Statistics </p>
         </a>
-        <a class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false);'>
+        <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='getAttendees(false); activate(3);'>
           <p> Attendees </p>
         </a>
-        <div onclick='javascript:window.location.href="/apex/checkin?event_id={!event.cId}";'>
-          <div class="tab red_border hover_red_text">
+        <div onclick='javascript:window.location.href="/apex/checkin?event_id={!event.cId}"; activate(4);'>
+          <div id="tab_four" class="tab red_border hover_red_text">
             <p> Check In </p>
           </div>
         </div>
