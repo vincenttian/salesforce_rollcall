@@ -31,7 +31,7 @@ id="todo"
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
       <input class="normal"  type="email" name="email" id="email" onclick='clear_error("checkin_error")'/>
       <p id="checkin_error"> Please enter a valid email </p>
-      <div id="submit" ontouch="check_in_attendee()"> <p> Check In </p> </div>
+      <div id="submit" onclick="check_in_attendee()"> <p> Check In </p> </div>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -219,22 +219,6 @@ $(document).ready(function() {
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
         $("#email").blur();
-
-        // HANDLES MAX CAPACITY
-        var maxc = '{!event.maxCapacity}';
-        var checkedin = {!event.checkedIn};
-        if (maxc == 'Unlimited') {
-            // Allow checkins
-            console.log('recognize that capacity is unlimited');
-        } else {
-            // Check capacity vs current num of checkins
-            if (checkedin >= parseInt(maxc)) {
-              console.log('Event is already at capacity');
-              $('#max_reg_count').text(maxc);
-              setSection($("#container section#"+"#seven"), $('.active'));
-              return;
-            }
-        }
         
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
@@ -289,7 +273,8 @@ $(document).ready(function() {
                         setSection($("#container section#"+"#six"), $('.active'));
                     }
                 } else if (event.type === 'exception') {
-                    // should never go here
+                    console.log('Event is already at capacity');
+                    setSection($("#container section#"+"#seven"), $('.active'));
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
                 }
