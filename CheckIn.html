@@ -191,8 +191,12 @@ $(document).ready(function() {
     function clear_error(id) {
         if (id == 'first_error') {
           $('#update_firstname').removeClass('error');
+          var spacer = document.getElementById('first_spacer');
+          spacer.style.display = 'none';
         } else if (id == 'last_error') {
           $('#update_lastname').removeClass('error');
+          var spacer = document.getElementById('last_spacer');
+          spacer.style.display = 'none';
         } else {
           $('#email').removeClass('error');
         }
@@ -292,18 +296,26 @@ $(document).ready(function() {
         if (firstname == '' || lastname == '') {
             if (firstname == '' && lastname == '') {
                 var error = document.getElementById('first_error');
+                var spacer = document.getElementById('first_spacer');
                 error.style.display = 'block';
+                spacer.style.display = 'block';
                 $('#update_firstname').addClass('error');
                 var error = document.getElementById('last_error');
+                var spacer = document.getElementById('last_spacer');
                 error.style.display = 'block';
+                spacer.style.display = 'block';
                 $('#update_lastname').addClass('error');
             } else if (firstname =='') {
                 var error = document.getElementById('first_error');
+                var spacer = document.getElementById('first_spacer');
                 error.style.display = 'block';
+                spacer.style.display = 'block';
                 $('#update_firstname').addClass('error');
             } else if (lastname == '') {
                 var error = document.getElementById('last_error');
+                var spacer = document.getElementById('last_spacer');
                 error.style.display = 'block';
+                spacer.style.display = 'block';
                 $('#update_lastname').addClass('error');
             }
             return;

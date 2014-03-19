@@ -1,8 +1,8 @@
-#simubar {
+/*#simubar {
     height: 70px;
     width: 100%;
     background: #000000;
-}
+}*/
 
 body {
     margin: 0px;
@@ -62,8 +62,8 @@ li {
     text-align: left;
     margin-top: 25px;
     padding-left: 25px;
+    padding-right: 25px;
     height: 50px;
-    width: 200px;
     font-size: 0.5em;
     color: #FFFFFF;
     background: #7ac100;
@@ -324,7 +324,7 @@ li {
     padding: 50px;
     line-height: 1.5em;
     font-size: 2em;
-    overflow: auto;
+    overflow: scroll;
 }
 
 #chart_one {
@@ -361,11 +361,10 @@ li {
 }
 
 #email {
-    box-sizing: border-box;
     margin-top: 25px;
     padding: 20px;
-    height: 90px;
-    width: 600px;
+    height: 50px;
+    width: 558px;
     font-size: 2em;
     color: #666666;
     border-radius: 10px;
@@ -423,17 +422,16 @@ li {
 
 #submit {
     float: none;
-    box-sizing: border-box;
     display: block;
-    margin-left: 212px;
+    margin: auto;
     border-style: none;
     background: #0096ff;
     margin-top: 32px;
     font-size: 2em;
     padding: 25px;
-    height: 90px;
+    height: 50px;
     text-decoration: none;
-    width: 600px;
+    width: 550px;
     color: #FFFFFF;
     border-radius: 10px;
 }
@@ -449,16 +447,15 @@ li {
 
 #confirm_info {
     color: #aaaaaa;
-    margin-top: 110px;
-    margin-left: 188px;
     text-align: left;
     width: 600px;
+    margin-left: 212px;
+    margin-top: 110px;
     line-height: 1.5em;
     font-size: 2em;
 }
 
 #confirm {
-    box-sizing: border-box;
     display: block;
     margin: auto;
     border-style: none;
@@ -466,9 +463,9 @@ li {
     margin-top: 345px;
     font-size: 2em;
     padding: 25px;
-    height: 90px;
+    height: 40px;
     text-decoration: none;
-    width: 600px;
+    width: 550px;
     color: #FFFFFF;
     border-radius: 10px;
 }
@@ -480,7 +477,7 @@ li {
 #confirm_end {
     margin-top: 50px;
     text-align: left;
-    margin-left: 190px;
+    margin-left: 212px;
     font-size: 1.25em;
     line-height: 1.5em;
     width: 600px;
@@ -525,6 +522,10 @@ li {
     background: #333333;
 }
 
+#account_container .checkin_end:hover {
+    background: #0096ff;
+}
+
 .column {
     width: 39%;
     padding-top: 65px;
@@ -554,8 +555,9 @@ li {
 
 #register_end {
     margin-top: 25px;
+    margin-bottom: 25px;
     text-align: center;
-    margin-left: 190px;
+    margin-left: 212px;
     font-size: 1.25em;
     width: 600px;
     color: #aaaaaa;
@@ -565,6 +567,7 @@ li {
     box-sizing: border-box;
     text-align: right;
     margin-top: 25px;
+    margin-bottom: 29px;
     padding: 5px;
     padding-right: 15px;
     height: 50px;
