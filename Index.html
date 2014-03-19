@@ -57,7 +57,6 @@
          <div id="list_events">
             <apex:repeat value="{!events}" var="event" id="theRepeat">
                <a href="/apex/event?event_id={!event.cId}">
-               <!--a href="#" onClick="javascript:sforce.one.navigateToURL('/apex/event?event_id={!event.cId}');"-->
                   <div class="card">
                      <div class="{!event.titlecolor}">
                         <p>
@@ -65,10 +64,8 @@
                         </p>
                      </div>
                      <div class="info">
-
                         <p>Capacity: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
                         <p>Registered: <span class="{!event.textcolor}">{!event.registered}</span></p>
-                        <!-- <p>Checked In: <span class="{!event.textcolor}">{!event.checkedin}</span></p> -->
                      </div>
                      <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>
                   </div>

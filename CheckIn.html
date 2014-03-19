@@ -218,6 +218,7 @@ $(document).ready(function() {
         var error = document.getElementById('checkin_error');
         error.style.display = 'none';
         $("#email").blur();
+        
         // HANDLES MAX CAPACITY
         // if ({!event.checkedIn} >= {!event.maxCapacity}) {
         //     console.log('Event is already at capacity');
@@ -320,8 +321,6 @@ $(document).ready(function() {
             }
             return;
         }
-        // $('#update_firstname').blur();
-        // $('#update_lastname').blur();
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,

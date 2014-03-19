@@ -356,9 +356,6 @@
     var page = 0;
     function createListElement(attendee) {
         var element = document.createElement("li");
-
-        //element.setAttribute('onclick','javascript:sforce.one.navigateToSObject(\''+attendee.Id+'\')');
-
         var f = document.createElement('p');
         var e = document.createElement('p');
         f.innerHTML = attendee.Name;
