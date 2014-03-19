@@ -149,11 +149,17 @@
       </div>
     </body>
     <script type="text/javascript">
+
+
         function blurrer(){
                
                $("#field").blur();
                window.focus();
         }
+            $("#field").focusout(function() {
+                $("#field").blur();
+               window.focus();
+            });
     </script>
     <script>
         var gauges = [];
