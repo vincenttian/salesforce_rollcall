@@ -19,7 +19,7 @@ id="todo"
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
   <title>RollCall</title>
 </head>
-<body>
+<body style="background: url({!$Resource.RollCall_Background_Img}); background-size: cover;">
   <input class='normal' id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/>
   <div id="select_event">
     <p> Salesforce Workday </p>
@@ -33,6 +33,7 @@ id="todo"
       <p id="checkin_error"> Please enter a valid email </p>
       <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();"> <p> Check In </p> </div>
     </div>
+  <button id="clear" onclick="clearInput();"></button>
   </section>
   <!-- Confirmation Page -->
   <section id="two">
@@ -394,6 +395,10 @@ $(document).ready(function() {
             },
             {escape: true}
         );
+    }
+
+    function clearInput() {
+        $("#email").val('');
     }
 
 </script>
