@@ -20,10 +20,13 @@ global class Event{
     /** Main constructor for an event. */ 
     public Event (Campaign c) {
         name = c.Name;
+        if (c.StartDate == Date.today()) {
+            start = 'Today';
+        }
         if (c.StartDate != null) {
             start = c.StartDate.format();
         } else {
-            start = 'Today';
+            start = '';
         }
         description = c.description;
         Map<Id, Campaign> potential_children =
@@ -54,7 +57,9 @@ global class Event{
     /** Special constructor for an event to add color. */
     public Event (Campaign c, Integer i) {
         name = c.Name;
-        if (c.StartDate != null) {
+        if (c.StartDate == Date.today()) {
+            start = 'Today';
+        } else if (c.StartDate != null) {
             Integer month = c.StartDate.month();
             if (month == 1) {
                 start = 'JAN ' + c.StartDate.day();
@@ -82,7 +87,7 @@ global class Event{
                 start = 'Dec ' + c.StartDate.day();
             }
         } else {
-            start = 'Today';
+            start = '';
         }
         description = c.description;
         if (c.MaxCapacity__c != null) {
