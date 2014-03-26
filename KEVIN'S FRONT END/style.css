@@ -637,7 +637,6 @@ li {
 
 .checked {
     float: right;
-    margin-right: 75px;
     width: 100px;
     height: 100px;
     background: url(checked.svg);
