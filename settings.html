@@ -80,7 +80,7 @@
          <button id="update" onclick="update_settings();"><p> Update </p></button>    
         <!-- <img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif"></img> -->
         <p id="messages" class="chart_title blue_text"></p>
-        <img id="loading" src="http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/6-0.gif" style="position: absolute; top: 650px; left: 497px; width: 30px; height: 30px; display:none"></img>
+        <img id="loading" src="http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/6-0.gif" style="margin: auto; margin-top: 25px; width: 30px; height: 30px; display:none"></img>
     </div>
     </div>    
      <script>
@@ -99,6 +99,7 @@
                 return;
             }
 
+            $("#update").prop('disabled', true);
             loading.style.display = 'block';
 
             if ((typeof imageData != 'undefined') && imageData != ''){
@@ -177,6 +178,8 @@
                         setTimeout(function() {
                           loading.style.display = 'none'
                           $("#messages").text('Your settings have been updated');
+                          $("#update").prop('disabled', false);
+                          $("#update").blur();
                         }, 2000);         
                     } else if (event.type === 'exception') {
                         $("#messages").text('There was an exception!');
