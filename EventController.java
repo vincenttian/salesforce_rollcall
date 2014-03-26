@@ -48,6 +48,7 @@ global with sharing class EventController {
                 registered2.add(m);
             }
         }
+        registered2.sort();
         return registered2;
     }
 

@@ -1,4 +1,4 @@
-global class Member{
+global class Member implements Comparable{
     
     public String name {get;set;}
     public String company {get;set;}
@@ -12,6 +12,13 @@ global class Member{
         company = memberCompany;
         email = memberEmail;
         status = checkedIn;
+    }
+
+    global Integer compareTo(Object comp) 
+    {
+        Member m = (Member) comp;
+        String n = m.name;
+        return name.compareTo(n); 
     }
 
 }
