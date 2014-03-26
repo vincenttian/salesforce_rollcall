@@ -20,28 +20,38 @@
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
 
-      <!-- Styling for graphs -->
-    <style>
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #CCC;
-    }
-    .line {
-      fill: none;
-      stroke: #ff009d;
-      stroke-width: 3px;
-    }
-    .y {
-        display: none;
-    }    </style>
+      <!-- Dynamic styling -->
+      <style>
+        .registered {
+          float: left;
+          margin-top: 10px;
+          width: 100px;
+          height: 100px;
+          background: url(checkin.svg);
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
 
-    <!-- Styling and scripting for active tabs -->
-    <style>
-      .active_tab {
-        background: #EEEEEE;
-      }
-    </style>
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #CCC;
+        }
+
+        .line {
+          fill: none;
+          stroke: #ff009d;
+          stroke-width: 3px;
+        }
+
+        .y {
+            display: none;
+        }    
+
+        .active_tab {
+          background: #EEEEEE;
+        }
+      </style>
     <script>
       function activate(id)
       {
@@ -284,7 +294,6 @@
 
               var width = 624,
                   height = 214;
-              var parseTime = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
               var x = d3.time.scale()
                   .range([0, width - 100]);
               var y = d3.scale.linear()
@@ -310,10 +319,11 @@
                 data += (i + 1) + ",";
             }
             data += (i+1) + '], "date": ["';
+            date_format = d3.time.format("%a %b %e %H:%M:%S:%p %Y");
+            // date_format = d3.time.format("%c");
             for (var i=0; i<result.length - 1; i++) {
                 temp_date = new Date(result[i]);
                 // CHANGE THE DATE FORMAT HERE
-                date_format = d3.time.format("%a %b %e %H:%M:%S %Y");
                 temp_date = date_format(temp_date);
                 data += temp_date + '", "';
             }
@@ -324,7 +334,8 @@
             var date_list = [];
             data = d3.zip(data.close, data.date).map(function(d) {
               close = d[0];
-              date_format = d3.time.format("%a %b %e %H:%M:%S %Y").parse;
+              date_format = d3.time.format("%a %b %e %H:%M:%S:%p %Y").parse;
+              // date_format = d3.time.format("%c").parse;
               date = date_format(d[1]);
               return {close: close, date: date};
             });
@@ -369,8 +380,10 @@
         element.onclick = function() {
             sforce.one.navigateToSObject(attendee.Id);
         }
+        var status = document.createElement('div');
         var f = document.createElement('p');
         var e = document.createElement('p');
+        $(status).addClass("registered");
         f.innerHTML = attendee.Name;
         if (attendee.Email) {
             e.innerHTML = attendee.Email;
@@ -380,6 +393,7 @@
         } else if (attendee.Company) {
             f.innerHTML += ', ' + attendee.Company;
         }
+        element.appendChild(status);
         element.appendChild(f);
         element.appendChild(e);
         return element;

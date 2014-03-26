@@ -304,7 +304,7 @@ li {
     box-shadow: 0px 1px 5px 0px #000000;
 }
 
-#return:hover {
+#return:focus {
     background-color: #ff9d00;
 }
 
@@ -441,7 +441,7 @@ li {
     border-radius: 10px;
 }
 
-#submit:hover {
+#submit:focus {
     background: #333333;
 }
 
@@ -475,7 +475,7 @@ li {
     border-radius: 10px;
 }
 
-#confirm:hover {
+#confirm:focus {
     background: #333333;
 }
 
@@ -523,11 +523,11 @@ li {
     border-radius: 10px;
 }
 
-.checkin_end:hover {
+.checkin_end:focus {
     background: #333333;
 }
 
-#account_container .checkin_end:hover {
+#account_container .checkin_end:focus {
     background: #0096ff;
 }
 
@@ -554,7 +554,7 @@ li {
     border-radius: 10px;
 }
 
-#update:hover {
+#update:focus {
     background: #333333;
 }
 
@@ -633,6 +633,17 @@ li {
     width: 300px;
     margin-right: 400px;
     font-size: 1em;
+}
+
+
+.registered {
+  float: left;
+  padding-top: 10px;
+  width: 100px;
+  height: 100px;
+  background: url(checkin.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .blue {
