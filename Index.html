@@ -49,11 +49,11 @@
          </script>
          <title>RollCall</title>
       </head>
-      <body style="background: url({!$Resource.RollCall_Background_Img});">
+      <body style="background: url({!$Resource.RollCall_Background_Img}); background-size: cover;">
          <div id="animation"></div>
          <div id="select_event">
             <p> Select An Event </p>
-            <div id="rollcall"></div>
+            <div id="rollcall" style="background: url({!$Resource.RollCall_Logo_Img}); background-size: cover;"></div>
             <a href="javascript:sforce.one.navigateToURL('/apex/settings');">
             <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}"></img>
             </a>
