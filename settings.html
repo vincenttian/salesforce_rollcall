@@ -57,7 +57,7 @@
             <p class="label" style="font-size:1em;"> Campaign Members status for <span class="blue_text">Checked-in</span> attendees </p>
             <p class="label" style="font-size:1em;"> Show Parent Campaigns of <span class="blue_text">Type</span> </p>
             <p class="label" style="font-size:1em;"> Background Image (optional) </p>
-            <p class="label" style="font-size:1em; padding-top:1.65cm;"> Logo (optional) </p>            
+            <p class="label" style="font-size:1em; margin-top:10px;"> Logo (optional) </p>            
         </div> 
         <div class="column" style="padding-left:60px;">
             <input class="input normal" type="text" name="register" autocorrect="off" autocomplete="off" id="register"/>
@@ -69,21 +69,18 @@
             </select>
             <div>
                 <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile" accept="image/*"/>
-                <img id="uploadPreview" style="width: 75px; height: 40px;float:left;" src="{!$Resource.RollCall_Background_Img}"/>
+                <img id="uploadPreview" style="width: 75px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Background_Img}"/>
             </div>
             <!-- Logo -->
             <div>
                 <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile2" accept="image/*"/>
-                <img id="uploadPreview2" style="width: 75px; height: 40px;float:left;" src="{!$Resource.RollCall_Logo_Img}"/>
+                <img id="uploadPreview2" style="width: 75px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
             </div>
-            <!-- <div>
-            <input class="custom-file-input input" style="padding:0px;" type="file" id="logoFile" accept="image/*"/>
-            <div id="uploadPreviewLogo" style="width: 75px; height: 75px;float:left;background:url({!URLFOR($Resource.RollCall_Logo_Img)});background-color:#333333;"/>
-            </div> -->
-
          </div>
          <button id="update" onclick="update_settings();"><p> Update </p></button>    
+        <!-- <img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif"></img> -->
         <p id="messages" class="chart_title blue_text"></p>
+        <img id="loading" src="http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/6-0.gif" style="position: absolute; top: 650px; left: 497px; width: 30px; height: 30px; display:none"></img>
     </div>
     </div>    
      <script>
@@ -91,17 +88,9 @@
         var imageData2;
         var forcetkClient = new forcetk.Client();
         forcetkClient.setSessionToken('{!$Api.Session_ID}');
+        var loading = document.getElementById('loading');
 
         function update_settings() {
-
-            // Spinner implementation
-            console.log('got here!');
-            $('#messages').html('<img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif" />');
-            // setTimeout(function(){
-            //     $('#messages').html($('It worked!').html());
-            // }, 1000);
-
-
             $("#messages").text('');
             var checkin = $("#checkin").val();
             var register = $("#register").val();
@@ -109,6 +98,8 @@
                 $("#messages").text('Please enter valid values for Registered and Checked-in statuses');
                 return;
             }
+
+            loading.style.display = 'block';
 
             if ((typeof imageData != 'undefined') && imageData != ''){
                 forcetkClient.query("SELECT Id FROM StaticResource where name LIKE '%RollCall_Background_Img%' LIMIT 1", function(response){
@@ -183,8 +174,10 @@
                 checkin, register, campaignType,
                 function(result, event){
                     if (event.status) {
-                        //stuff
-                        $("#messages").text('Your settings have been updated');
+                        setTimeout(function() {
+                          loading.style.display = 'none'
+                          $("#messages").text('Your settings have been updated');
+                        }, 2000);         
                     } else if (event.type === 'exception') {
                         $("#messages").text('There was an exception!');
                     } else {
@@ -192,7 +185,7 @@
                     }
                 },
                 {escape: true}
-            );            
+            );   
         }
 
         $(document).ready(function(){
