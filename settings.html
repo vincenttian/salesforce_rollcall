@@ -4,122 +4,191 @@
    standardStylesheets="false"
    Controller="SettingsController"
    applyHtmlTag="false"
-   applyBodyTag="false"
-   id="todo"
- >
+   applyBodyTag="false">
 
-	<head>
-		<apex:includeScript value="{!$Resource.fastclick}"/>
-		<apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
-		<title>RollCall Settings</title>
-	</head>
+    <head>
+        <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+        <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
+        <apex:includeScript value="{!$Resource.fastclick}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
+        <apex:includeScript value="{!$Resource.forceTK}"  />
+        <title>RollCall Settings</title>
+        <style type="text/css">
+            .custom-file-input {
+              color: transparent;
+            }
+            .custom-file-input::-webkit-file-upload-button {
+              visibility: hidden;
+            }
+            .custom-file-input::before {
+              content: 'Upload Image';
+              color: black;
+              display: inline-block;
+              background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+              border: 1px solid #999;
+              border-radius: 3px;
+              padding: 5px 8px;
+              outline: none;
+              white-space: nowrap;
+              -webkit-user-select: none;
+              cursor: pointer;
+              text-shadow: 1px 1px #fff;
+              font-weight: 700;
+              font-size: 10pt;
+            }
+            .custom-file-input:hover::before {
+              border-color: black;
+            }
+            .custom-file-input:active {
+              outline: 0;
+            }
+            .custom-file-input:active::before {
+              background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
+            }
+        </style>
+    </head>
 
-	<body>
-		<apex:outputLink value="/apex/index" id="home"> Home </apex:outputLink>
+    <body>
+    <div id="container">
+    <div class="checkin">
+        <p class="chart_title"> RollCall Settings </p>
+        <div class="column" >
+            <p class="label" style="font-size:1em;"> Campaign Members status for <span class="blue_text">Registered</span> attendees </p>
+            <p class="label" style="font-size:1em;"> Campaign Members status for <span class="blue_text">Checked-in</span> attendees </p>
+            <p class="label" style="font-size:1em;"> Show Parent Campaigns of <span class="blue_text">Type</span> </p>
+            <p class="label" style="font-size:1em;"> Background Image (optional) </p>
+            <!--p class="label" style="font-size:1em;"> Background Logo (optional) </p-->
+            
+        </div> 
+        <div class="column" style="padding-left:60px;">
+            <input class="input normal" type="text" name="register" autocorrect="off" autocomplete="off" id="register"/>
+            <input class="input normal" type="text" name="checkin" autocorrect="off" autocomplete="off" id="checkin"/>
+            <select class="input normal" id="campaignType">
+                <apex:repeat value="{!campaignTypes}" var="type">
+                    <option value="{!type}">{!type}</option>
+                </apex:repeat>
+            </select>
+            <div>
+                <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile" accept="image/*"/>
+                <img id="uploadPreview" style="width: 75px; height: 75px;float:left;" src="{!$Resource.RollCall_Background_Img}"/>
+            </div>
+            <!--div>
+            <input class="custom-file-input input" style="padding:0px;" type="file" id="logoFile" accept="image/*"/>
+            <div id="uploadPreviewLogo" style="width: 75px; height: 75px;float:left;background:url({!URLFOR($Resource.RollCall_Logo)});background-color:#333333;"/>
+            </div-->
 
-		<p>
-			The default CampaignMember statuses used are "Sent" and "Received." If you want to change this, please specify what status you would like to use.
-		</p>
-		
-		<div>
-			<div class="statuses">
-				<p id="checkin_status"> Enter the status your application will use to <b>check in</b> CampaignMembers: </p>
-				<input class="normal"  type="text" name="checkin" id="checkin"/>
-				<p id="register_status"> Enter the status your application will use to <b>register</b> CampaignMembers: </p>
-				<input class="normal"  type="text" name="register" id="register"/>
-				<br></br>
-			</div>
-			<button type="button" onclick="update_settings()">Update Statuses</button>
-		</div>
+         </div>
+         <button id="update" onclick="update_settings();"><p> Update </p></button>    
+        <p id="messages" class="chart_title blue_text"></p>
+        <!--a id="return" href="javascript:sforce.one.navigateToURL('/apex/index');"></a-->
+    </div>
+    </div>    
+     <script>
+        var imageData;
+        var forcetkClient = new forcetk.Client();
+        forcetkClient.setSessionToken('{!$Api.Session_ID}');
 
-		<div>
-			<div>
-				<p id="checkin_background"> Upload an image/logo to use for your checkin page: </p>
-				<input class="normal"  type="file" id="photoFile" accept="image/*"/>
-				<br></br>
-				<button type="button" onclick="upload_background()">Upload custom image/logo</button>
-			</div>
-		</div>
+        function update_settings() {
+            $("#messages").text('');
+            var checkin = $("#checkin").val();
+            var register = $("#register").val();
+            if (checkin == '' || register == '') {
+                $("#messages").text('Please enter valid values for Registered and Checked-in statuses');
+                return;
+            }
 
-		<br></br>
-		<div id="messages" class="messages"></div>
+            if ((typeof imageData != 'undefined') && imageData != ''){
+                forcetkClient.query("SELECT Id FROM StaticResource where name LIKE '%RollCall_Background_Img%' LIMIT 1", function(response){
+                    var image = {'Body':imageData};
+                    forcetkClient.update('StaticResource',
+                             response.records[0].Id,
+                             image,
+                             function(){
+                                imageData = '';
+                                updateSettings();
+                             },
+                             function (err) {
+                                console.log('Error!');
+                             }
+                    );
+                });
+            }else{
+                updateSettings();
+            }
 
-	 <script>
-		function update_settings() {
-			var checkin = $("#checkin").val();
-			var register = $("#register").val();
-			if (checkin == '' || register == '') {
-				if (checkin == '' && register == '') {
-					$("#messages").text('The checkin and register statuses both need to be filled in');
-				} else if (checkin == '') {
-					$("#messages").text('Invalid checkin status');
-				} else {
-					$("#messages").text('Invalid register status');
-				}
-				return;
-			}
+        }
 
-			Visualforce.remoting.Manager.invokeAction(
-				'{!$RemoteAction.SettingsController.update_settings}',
-				checkin, register,
-				function(result, event){
-					if (event.status) {
-						//stuff
-						$("#messages").text('Your updated settings were saved!');
-					} else if (event.type === 'exception') {
-						$("#messages").text('There was an exception!');
-					} else {
-						document.getElementById("responseErrors").innerHTML = event.message;
-					}
-				},
-				{escape: true}
-			);
-		}
+        function handlePhoto(evt){
+          var file = evt.target.files[0];
+          var reader = new FileReader();
 
-		$(document).ready(function(){
-			FastClick.attach(document.body);
-			// Remoting call to get current status values
-			Visualforce.remoting.Manager.invokeAction(
-				'{!$RemoteAction.SettingsController.check_settings}',
-				function(result, event){
-					if (event.status) {
-						$('#checkin').val(result[0]);
-						$('#register').val(result[1]);
-					} else if (event.type === 'exception') {
-						$("#messages").text('There was an exception!');
-					} else {
-						document.getElementById("responseErrors").innerHTML = event.message;
-					}
-				},
-				{escape: true}
-			);
-			$("#photoFile").change(handlePhoto);
-		})
+          reader.onload = (function(theFile) {
+            return function(e) {
+              // Extract raw base64 data from data URL
+              $("#uploadPreview").attr('src',e.target.result);
+              imageData = e.target.result.split(',')[1];
+            };
+          })(file);
 
-		function handlePhoto(evt){
-		  var file = evt.target.files[0];
-		  var reader = new FileReader();
+          reader.readAsDataURL(file);
+        }
 
-		  reader.onload = (function(theFile) {
-			return function(e) {
-			  // Extract raw base64 data from data URL
-			  imageData = e.target.result.split(',')[1];
-			  // use imageData and force api to create string to backend
-			  forcetkClient.create('ContentVersion', {
-				"Origin": "H",
-				"PathOnClient": file.name;,
-				"VersionData": imageData
-			  }, function(data) {
-				$('#status').html("<p>Uploaded image</p>");
-			  }, function(error){
-				alert(JSON.stringify(error));
-			  });
-			};
-		  })(file);
+        function updateSettings(){
+            var checkin = $("#checkin").val();
+            var register = $("#register").val();
+            var campaignType = $("#campaignType").val();
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SettingsController.update_settings}',
+                checkin, register, campaignType,
+                function(result, event){
+                    if (event.status) {
+                        //stuff
+                        $("#messages").text('Your settings have been updated');
+                    } else if (event.type === 'exception') {
+                        $("#messages").text('There was an exception!');
+                    } else {
+                        $("#messages").text('There was an exception!');
+                    }
+                },
+                {escape: true}
+            );            
+        }
 
-		  reader.readAsDataURL(file);
-		}
-	 </script>
-	</body>
+        $(document).ready(function(){
+            FastClick.attach(document.body);
+            $("#photoFile").change(handlePhoto);
+            // Remoting call to get current status values
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SettingsController.check_settings}',
+                function(result, event){
+                    if (event.status) {
+                        $('#checkin').val(result[0]);
+                        $('#register').val(result[1]);
+                        $('#campaignType').val(result[2]);
+                    } else if (event.type === 'exception') {
+                        $("#messages").text('There was an exception!');
+                    } else {
+                        document.getElementById("responseErrors").innerHTML = event.message;
+                    }
+                },
+                {escape: true}
+            );
+        })
+
+        window.onkeydown = function(e){
+            var $focused = $(':focus');
+                window.focus();
+                $focused.focus();
+            var code = e.keyCode || e.which;
+            if(code == 13) {
+                update_settings();
+                $("#register").blur();
+                $("#checkin").blur();
+                $("#photoFile").blur();
+            }
+        }
+
+     </script>
+    </body>
 
 </apex:page>
