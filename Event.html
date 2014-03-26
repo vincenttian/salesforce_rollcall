@@ -391,9 +391,7 @@
         } else {
             e.innerHTML = ' ';
         }
-        if (attendee.Company__c) {
-            f.innerHTML += ', ' + attendee.Company__c;
-        } else if (attendee.company) {
+        if (attendee.company) {
             f.innerHTML += ', ' + attendee.company;
         }
         console.log(attendee.status);
