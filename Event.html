@@ -143,11 +143,11 @@
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" style="overflow:auto;-webkit-overflow-scrolling: touch;" onscroll='blurrer();'>
+          <div class="page" style="overflow-y:auto;-webkit-overflow-scrolling: touch;" onscroll='blurrer();'>
             <div class="information" id="attendee_list">
               <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
               <div>
-               <p class="green_text"> <br></br>Attendee List: </p>
+               <p> <br></br>Attendee List </p>
                 <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
                   <span class="glyphicon glyphicon-cloud-download"></span> Show More
@@ -380,10 +380,8 @@
         element.onclick = function() {
             sforce.one.navigateToSObject(attendee.Id);
         }
-        var status = document.createElement('div');
         var f = document.createElement('p');
         var e = document.createElement('p');
-        $(status).addClass("registered");
         f.innerHTML = attendee.Name;
         if (attendee.Email) {
             e.innerHTML = attendee.Email;
@@ -393,7 +391,7 @@
         } else if (attendee.Company) {
             f.innerHTML += ', ' + attendee.Company;
         }
-        element.appendChild(status);
+        f.innerHTML += ', <span class="green_text">Checked In</span>'
         element.appendChild(f);
         element.appendChild(e);
         return element;
