@@ -93,6 +93,15 @@
         forcetkClient.setSessionToken('{!$Api.Session_ID}');
 
         function update_settings() {
+
+            // Spinner implementation
+            console.log('got here!');
+            $('#messages').html('<img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif" />');
+            // setTimeout(function(){
+            //     $('#messages').html($('It worked!').html());
+            // }, 1000);
+
+
             $("#messages").text('');
             var checkin = $("#checkin").val();
             var register = $("#register").val();
@@ -109,7 +118,6 @@
                              image,
                              function(){
                                 imageData = '';
-                                updateSettings();
                              },
                              function (err) {
                                 console.log('Error!');
@@ -126,16 +134,14 @@
                              image,
                              function(){
                                 imageData2 = '';
-                                updateSettings();
                              },
                              function (err) {
                                 console.log('Error!');
                              }
                     );
                 });
-            }else{
-                updateSettings();
             }
+            updateSettings();
         }
 
         function handlePhoto(evt){
