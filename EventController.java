@@ -19,27 +19,36 @@ global with sharing class EventController {
     }
 
     @RemoteAction
-    global static sObject[] attendee_search(ID cid, String name, Integer offset) {
+    global static Member[] attendee_search(ID cid, String name, Integer offset) {
         String search_name = '%' + String.escapeSingleQuotes(name) + '%';
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, 
                                                                       ParentId, Id FROM Campaign WHERE ParentId=:cid OR 
                                                                       Id=:cid]);
         CampaignMember[] registered = [SELECT Lead.Name, Lead.Email, 
-                                        Contact.Name, Contact.Email, Contact.Company__c, LeadID, ContactID
+                                        Contact.Name, Contact.Email, Contact.Company__c, Lead.Company, LeadID, ContactID, Status
                                         FROM CampaignMember WHERE 
                                         (Status=:Event.checkedInStatus OR Status=:Event.registeredStatus) AND
                                         CampaignId in :potential_children.keySet() AND 
                                         (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name 
                                         OR Contact.Company__c LIKE :search_name OR Lead.Company LIKE :search_name)
                                         ORDER BY LastModifiedDate DESC LIMIT 50 OFFSET :offset];
-        sObject[] registered2 = new sObject[]{};
+        Member[] registered2 = new Member[]{};
         for (CampaignMember cm : registered) {
             if (cm.ContactID != null) { 
-                registered2.add(cm.Contact);
+                Member m = new Member(cm.Contact.name, cm.Contact.Company__c, cm.Contact.Email, false);
+                if (cm.Status == Event.checkedInStatus) {
+                    m.Status = true;
+                }
+                registered2.add(m);
             } else {
-                registered2.add(cm.Lead);
+                Member m = new Member(cm.Lead.name, cm.Lead.Company, cm.Lead.Email, false);
+                if (cm.Status == Event.checkedInStatus) {
+                    m.Status = true;
+                }
+                registered2.add(m);
             }
         }
+        registered2.sort();
         return registered2;
     }
 

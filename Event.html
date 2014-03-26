@@ -23,6 +23,10 @@
 
       <!-- Dynamic styling -->
       <style>
+        body {
+          background: #fff;
+        }
+        
         .registered {
           float: left;
           margin-top: 10px;
@@ -144,8 +148,8 @@
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" style="overflow-y:auto;-webkit-overflow-scrolling: touch;" onscroll='blurrer();'>
-            <div class="information" id="attendee_list">
+          <div class="page" style="overflow-x: hidden;" onscroll='blurrer();'>
+            <div class="information" id="attendee_list" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;" >
               <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
               <div style="width: 100%;">
                <p class="green_text"> <br></br>Attendee List </p>
@@ -381,20 +385,23 @@
         element.onclick = function() {
             sforce.one.navigateToSObject(attendee.Id);
         }
-        var status = document.createElement('p');
+        var status = document.createElement('div');
         var f = document.createElement('p');
         var e = document.createElement('p');
         $(status).addClass("checked");
-        f.innerHTML = attendee.Name;
-        if (attendee.Email) {
-            e.innerHTML = attendee.Email;
+        f.innerHTML = attendee.name;
+        if (attendee.email) {
+            e.innerHTML = attendee.email;
+        } else {
+            e.innerHTML = '<br></br>';
         }
-        if (attendee.Company__c) {
-            f.innerHTML += ', ' + attendee.Company__c;
-        } else if (attendee.Company) {
-            f.innerHTML += ', ' + attendee.Company;
+        if (attendee.company) {
+            f.innerHTML += ', ' + attendee.company;
         }
-        element.appendChild(status);
+        console.log(attendee.status);
+        if (attendee.status) {
+            element.appendChild(status);
+        }
         element.appendChild(f);
         element.appendChild(e);
         return element;
@@ -415,6 +422,7 @@
             function(result, event){
                 var objlist = document.getElementById("the_list");
                 var fragment = document.createDocumentFragment();
+                console.log(result);
                 if (event.status) {
                     if(!paginate){
                         while (objlist.hasChildNodes()) {

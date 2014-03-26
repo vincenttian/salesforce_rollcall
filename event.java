@@ -10,6 +10,7 @@ global class Event{
     public String textColor {get;set;}
     public String picData {get;set;}
     public String cal {get;set;}
+    public String status {get;set;}
     public List<String> checkedInTimes {get;set;}
     global static String registeredStatus = RollCall_Settings__c.getAll().isEmpty()?'Sent':RollCall_Settings__c.getAll().values()[0].Registered_Status__c;
     global static String checkedInStatus = RollCall_Settings__c.getAll().isEmpty()?'Responded':RollCall_Settings__c.getAll().values()[0].Check_in_Status__c;
@@ -20,6 +21,7 @@ global class Event{
     /** Main constructor for an event. */ 
     public Event (Campaign c) {
         name = c.Name;
+        status = checkedInStatus;
         if (c.StartDate == Date.today()) {
             start = 'Today';
         } else if (c.StartDate != null) {
