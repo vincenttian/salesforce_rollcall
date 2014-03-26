@@ -2,22 +2,22 @@
 private class EventControllerTest {
 
     static testMethod void test_attendee_search() {
+        Campaign c = RollCallTestUtility.createEventCampaign();
+        SObject[] events = EventController.attendee_search(c.ID, 'Lee', 0);
+        System.assertNotEquals(events, null);
     }
-
-    static testMethod void test_get_attendees() {
-        RollCall r = new RollCall();
-        Date test_date = Date.newInstance(2014, 2, 17);
-        r.create_event('test_event7', test_date, 'test_description', 'Open');
-        Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
-        EventController.attendee_search(c.ID, 'test', 0);
-    }
-
+    
     static testMethod void test_get_checkedin_times() {
-        RollCall r = new RollCall();
-        Date test_date = Date.newInstance(2014, 2, 17);
-        r.create_event('test_event7', test_date, 'test_description', 'Open');
-        Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
-        EventController.get_checkedin_times(c.ID);
+        Campaign c = RollCallTestUtility.createEventCampaign();
+        String cid = c.ID + '';
+        List<DateTime> dates = EventController.get_checkedin_times(cid);
+        System.assertNotEquals(dates, null);
     }
-
+    
+    static testMethod void test_update_stats() {
+        Campaign c = RollCallTestUtility.createEventCampaign();
+        String cid = c.ID + '';
+        Event e = EventController.update_stats(cid);
+        System.assertNotEquals(e, null);
+    }
 }

@@ -11,9 +11,11 @@ global with sharing class EventController {
     public Event event{get; set;} 
 
     public EventController() {
-        Campaign c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
+        Campaign[] c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
                       WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
-        event = new Event(c);
+        if (c.size() != 0) {
+            event = new Event(c[0]);
+        }
     }
 
     @RemoteAction
