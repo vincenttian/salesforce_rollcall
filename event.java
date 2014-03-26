@@ -22,8 +22,7 @@ global class Event{
         name = c.Name;
         if (c.StartDate == Date.today()) {
             start = 'Today';
-        }
-        if (c.StartDate != null) {
+        } else if (c.StartDate != null) {
             start = c.StartDate.format();
         } else {
             start = '';
