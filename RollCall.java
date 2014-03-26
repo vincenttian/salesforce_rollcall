@@ -6,22 +6,33 @@
 *
 */
 
-global class RollCall{
+global with sharing class RollCall{
 
 
     // For apex: repeat    
     public Event[] getEvents() {
-        Campaign[] campaigns = [SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ORDER BY StartDate ASC NULLS FIRST];
+
+        String soql = 'SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ';
+        
+        if (Event.campaignType != '' && Event.campaignType != 'All'){
+            soql += ' AND Type=\''+Event.campaignType+'\' ';
+        }
+
+        soql += ' ORDER BY StartDate ASC NULLS LAST';
+
+        Campaign[] campaigns = Database.query(soql);
+
         ID[] parentIds = new Id[]{};
         for (campaign c: campaigns) {
             parentIds.add(c.ID);
         }
         Map<Id, Campaign> potential_children =
             new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
-            Id FROM Campaign WHERE ParentId IN :parentIds OR ID IN :parentIds]);
+                                    Id FROM Campaign WHERE ParentId IN :parentIds OR ID IN :parentIds]);
         CampaignMember[] registered = [SELECT Status, CampaignID, Campaign.ParentID FROM CampaignMember
-                      WHERE CampaignId in :potential_children.keySet() AND (Status =:Event.registeredStatus
-                        OR Status =:Event.checkedInStatus)];
+                                        WHERE CampaignId in :potential_children.keySet() AND 
+                                        (Status =:Event.registeredStatus
+                                        OR Status =:Event.checkedInStatus)];
         Map<Id, Integer> regMap = new Map<Id, Integer>();
         Map<Id, Integer> checkMap = new Map<Id, Integer>();
         CampaignMember[] ps = new CampaignMember[]{};
