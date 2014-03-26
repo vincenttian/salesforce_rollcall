@@ -57,8 +57,7 @@
             <p class="label" style="font-size:1em;"> Campaign Members status for <span class="blue_text">Checked-in</span> attendees </p>
             <p class="label" style="font-size:1em;"> Show Parent Campaigns of <span class="blue_text">Type</span> </p>
             <p class="label" style="font-size:1em;"> Background Image (optional) </p>
-            <!--p class="label" style="font-size:1em;"> Background Logo (optional) </p-->
-            
+            <p class="label" style="font-size:1em; padding-top:1.65cm;"> Logo (optional) </p>            
         </div> 
         <div class="column" style="padding-left:60px;">
             <input class="input normal" type="text" name="register" autocorrect="off" autocomplete="off" id="register"/>
@@ -70,21 +69,26 @@
             </select>
             <div>
                 <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile" accept="image/*"/>
-                <img id="uploadPreview" style="width: 75px; height: 75px;float:left;" src="{!$Resource.RollCall_Background_Img}"/>
+                <img id="uploadPreview" style="width: 75px; height: 40px;float:left;" src="{!$Resource.RollCall_Background_Img}"/>
             </div>
-            <!--div>
+            <!-- Logo -->
+            <div>
+                <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile2" accept="image/*"/>
+                <img id="uploadPreview2" style="width: 75px; height: 40px;float:left;" src="{!$Resource.RollCall_Logo_Img}"/>
+            </div>
+            <!-- <div>
             <input class="custom-file-input input" style="padding:0px;" type="file" id="logoFile" accept="image/*"/>
-            <div id="uploadPreviewLogo" style="width: 75px; height: 75px;float:left;background:url({!URLFOR($Resource.RollCall_Logo)});background-color:#333333;"/>
-            </div-->
+            <div id="uploadPreviewLogo" style="width: 75px; height: 75px;float:left;background:url({!URLFOR($Resource.RollCall_Logo_Img)});background-color:#333333;"/>
+            </div> -->
 
          </div>
          <button id="update" onclick="update_settings();"><p> Update </p></button>    
         <p id="messages" class="chart_title blue_text"></p>
-        <!--a id="return" href="javascript:sforce.one.navigateToURL('/apex/index');"></a-->
     </div>
     </div>    
      <script>
         var imageData;
+        var imageData2;
         var forcetkClient = new forcetk.Client();
         forcetkClient.setSessionToken('{!$Api.Session_ID}');
 
@@ -112,10 +116,26 @@
                              }
                     );
                 });
+            } 
+
+            if ((typeof imageData2 != 'undefined') && imageData2 != '') { 
+                forcetkClient.query("SELECT Id FROM StaticResource where name LIKE '%RollCall_Logo_Img%' LIMIT 1", function(response){
+                    var image = {'Body':imageData2};
+                    forcetkClient.update('StaticResource',
+                             response.records[0].Id,
+                             image,
+                             function(){
+                                imageData2 = '';
+                                updateSettings();
+                             },
+                             function (err) {
+                                console.log('Error!');
+                             }
+                    );
+                });
             }else{
                 updateSettings();
             }
-
         }
 
         function handlePhoto(evt){
@@ -127,6 +147,21 @@
               // Extract raw base64 data from data URL
               $("#uploadPreview").attr('src',e.target.result);
               imageData = e.target.result.split(',')[1];
+            };
+          })(file);
+
+          reader.readAsDataURL(file);
+        }
+
+        function handlePhoto2(evt){
+          var file = evt.target.files[0];
+          var reader = new FileReader();
+
+          reader.onload = (function(theFile) {
+            return function(e) {
+              // Extract raw base64 data from data URL
+              $("#uploadPreview2").attr('src',e.target.result);
+              imageData2 = e.target.result.split(',')[1];
             };
           })(file);
 
@@ -157,6 +192,7 @@
         $(document).ready(function(){
             FastClick.attach(document.body);
             $("#photoFile").change(handlePhoto);
+            $("#photoFile2").change(handlePhoto2);
             // Remoting call to get current status values
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.SettingsController.check_settings}',
@@ -185,6 +221,7 @@
                 $("#register").blur();
                 $("#checkin").blur();
                 $("#photoFile").blur();
+                $("#photoFile2").blur();
             }
         }
 
