@@ -16,6 +16,7 @@
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
       <script type="text/javascript" src="{!$Resource.gauge}"/>
+      <apex:includeScript value="{!$Resource.fastclick}"/>
 
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
@@ -457,6 +458,7 @@
 
     $(document).ready(function() {
         maxCapacityCheck();
+        FastClick.attach(document.body);
     });
     </script>
   </html>
