@@ -1,6 +1,10 @@
 @isTest
 private class EventControllerTest {
 
+    static testMethod void contstructor() {
+        EventController c = new EventController();
+    }
+
     static testMethod void test_attendee_search() {
         Campaign c = RollCallTestUtility.createEventCampaign();
         SObject[] events = EventController.attendee_search(c.ID, 'Lee', 0);
