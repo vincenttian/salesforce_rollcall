@@ -20,9 +20,13 @@ global class Event{
     public Event (Campaign c) {
         name = c.Name;
         if (c.StartDate != null) {
-            start = c.StartDate.format();
+            if (c.StartDate.isSameDay(Date.today())) {
+                start = 'Today'
+            } else {
+                start = c.StartDate.format();
+            }
         } else {
-            start = 'Today';
+            start = '';
         }
         description = c.description;
         Map<Id, Campaign> potential_children =
@@ -55,7 +59,9 @@ global class Event{
         name = c.Name;
         if (c.StartDate != null) {
             Integer month = c.StartDate.month();
-            if (month == 1) {
+            if (c.StartDate.isSameDay(Date.today())) {
+                start = 'Today';
+            } else if (month == 1) {
                 start = 'JAN ' + c.StartDate.day();
             } else if (month == 2) {
                 start = 'FEB ' + c.StartDate.day();
@@ -81,7 +87,7 @@ global class Event{
                 start = 'Dec ' + c.StartDate.day();
             }
         } else {
-            start = 'Today';
+            start = '';
         }
         description = c.description;
         if (c.MaxCapacity__c != null) {

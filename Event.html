@@ -58,7 +58,7 @@
       }
     </script>
     </head>
-    <body onload="maxCapacityCheck()">
+    <body>
       <div id="navbar">
         <div id="navbar_title">
           <p> You are now managing: <br></br> <span class="blue_text">
@@ -75,12 +75,12 @@
         <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3);'>
           <p> Attendees </p>
         </a>
-        <div id="checkinLink" onclick='javascript:window.location.href="/apex/checkin?event_id={!event.cId}"; activate(4);'>
+        <div id="checkinLink" onclick="javascript:sforce.one.navigateToURL('/apex/checkin?event_id={!event.cId}'); activate(4);">
           <div id="tab_four" class="tab red_border hover_red_text">
             <p> Check In </p>
           </div>
         </div>
-        <div id="return" onclick="javascript:window.location.href='{!$Page.index}';"></div>
+        <!--div id="return" onclick="javascript:sforce.one.navigateToURL('/apex/index');"></div-->
       </div>
       <div id="container">
         <!-- Event Information -->
@@ -149,18 +149,14 @@
       </div>
     </body>
     <script type="text/javascript">
-
-
-        function blurrer(){
-               
-               $("#field").blur();
-               window.focus();
-        }
-        window.onkeydown = function(e){
-            window.focus();
-            $("#field").focus();
-        }
-    
+      function blurrer(){               
+             $("#field").blur();
+             window.focus();
+      }
+      window.onkeydown = function(e){
+          window.focus();
+          $("#field").focus();
+      }    
     </script>
     <script>
         var gauges = [];
@@ -370,6 +366,9 @@
     var page = 0;
     function createListElement(attendee) {
         var element = document.createElement("li");
+        element.onclick = function() {
+            sforce.one.navigateToSObject(attendee.Id);
+        }
         var f = document.createElement('p');
         var e = document.createElement('p');
         f.innerHTML = attendee.Name;
@@ -436,12 +435,17 @@
        $("#field").val('');
     }
     function maxCapacityCheck() {
-        var maxc = {!event.maxCapacity};
         var checkins = {!event.checkedIn};
-        if (checkins >= maxc) {
+        var maxc_string = '{!event.maxCapacity}';
+
+        if (maxc_string != 'Unlimited' && checkins >= parseInt(maxc_string)) {
             $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab red_border hover_red_text"> <p> Check In </p> </div> </div>');
         }
     }
+
+    $(document).ready(function() {
+        maxCapacityCheck();
+    });
     </script>
   </html>
 </apex:page>
