@@ -20,28 +20,38 @@
       <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
 
-      <!-- Styling for graphs -->
-    <style>
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #CCC;
-    }
-    .line {
-      fill: none;
-      stroke: #ff009d;
-      stroke-width: 3px;
-    }
-    .y {
-        display: none;
-    }    </style>
+      <!-- Dynamic styling -->
+      <style>
+        .registered {
+          float: left;
+          margin-top: 10px;
+          width: 100px;
+          height: 100px;
+          background: url(checkin.svg);
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
 
-    <!-- Styling and scripting for active tabs -->
-    <style>
-      .active_tab {
-        background: #EEEEEE;
-      }
-    </style>
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #CCC;
+        }
+
+        .line {
+          fill: none;
+          stroke: #ff009d;
+          stroke-width: 3px;
+        }
+
+        .y {
+            display: none;
+        }    
+
+        .active_tab {
+          background: #EEEEEE;
+        }
+      </style>
     <script>
       function activate(id)
       {
@@ -370,8 +380,10 @@
         element.onclick = function() {
             sforce.one.navigateToSObject(attendee.Id);
         }
+        var status = document.createElement('div');
         var f = document.createElement('p');
         var e = document.createElement('p');
+        $(status).addClass("registered");
         f.innerHTML = attendee.Name;
         if (attendee.Email) {
             e.innerHTML = attendee.Email;
@@ -381,6 +393,7 @@
         } else if (attendee.Company) {
             f.innerHTML += ', ' + attendee.Company;
         }
+        element.appendChild(status);
         element.appendChild(f);
         element.appendChild(e);
         return element;
