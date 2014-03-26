@@ -73,19 +73,18 @@
             </div>
             <!-- Logo -->
             <div>
-                <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile2" accept="image/*"/>
-                <img id="uploadPreview2" style="width: 75px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
+                <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFileLogo" accept="image/*"/>
+                <img id="uploadPreviewLogo" style="width: 75px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
             </div>
          </div>
-         <button id="update" onclick="update_settings();"><p> Update </p></button>    
-        <!-- <img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif"></img> -->
+         <a id="update" onclick="update_settings();"><p> Update </p></a>    
         <p id="messages" class="chart_title blue_text"></p>
-        <img id="loading" src="http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/6-0.gif" style="position: absolute; top: 650px; left: 497px; width: 30px; height: 30px; display:none"></img>
+        <img id="loading" src="http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/6-0.gif" style="margin: auto; margin-top: 25px; width: 30px; height: 30px; display:none"></img>
     </div>
     </div>    
      <script>
         var imageData;
-        var imageData2;
+        var imageDataLogo;
         var forcetkClient = new forcetk.Client();
         forcetkClient.setSessionToken('{!$Api.Session_ID}');
         var loading = document.getElementById('loading');
@@ -99,6 +98,7 @@
                 return;
             }
 
+            $("#update").prop('disabled', true);
             loading.style.display = 'block';
 
             if ((typeof imageData != 'undefined') && imageData != ''){
@@ -117,14 +117,14 @@
                 });
             } 
 
-            if ((typeof imageData2 != 'undefined') && imageData2 != '') { 
+            if ((typeof imageDataLogo != 'undefined') && imageDataLogo != '') { 
                 forcetkClient.query("SELECT Id FROM StaticResource where name LIKE '%RollCall_Logo_Img%' LIMIT 1", function(response){
-                    var image = {'Body':imageData2};
+                    var image = {'Body':imageDataLogo};
                     forcetkClient.update('StaticResource',
                              response.records[0].Id,
                              image,
                              function(){
-                                imageData2 = '';
+                                imageDataLogo = '';
                              },
                              function (err) {
                                 console.log('Error!');
@@ -150,15 +150,15 @@
           reader.readAsDataURL(file);
         }
 
-        function handlePhoto2(evt){
+        function handlePhotoLogo(evt){
           var file = evt.target.files[0];
           var reader = new FileReader();
 
           reader.onload = (function(theFile) {
             return function(e) {
               // Extract raw base64 data from data URL
-              $("#uploadPreview2").attr('src',e.target.result);
-              imageData2 = e.target.result.split(',')[1];
+              $("#uploadPreviewLogo").attr('src',e.target.result);
+              imageDataLogo = e.target.result.split(',')[1];
             };
           })(file);
 
@@ -177,6 +177,8 @@
                         setTimeout(function() {
                           loading.style.display = 'none'
                           $("#messages").text('Your settings have been updated');
+                          $("#update").prop('disabled', false);
+                          $("#update").blur();
                         }, 2000);         
                     } else if (event.type === 'exception') {
                         $("#messages").text('There was an exception!');
@@ -191,7 +193,7 @@
         $(document).ready(function(){
             FastClick.attach(document.body);
             $("#photoFile").change(handlePhoto);
-            $("#photoFile2").change(handlePhoto2);
+            $("#photoFileLogo").change(handlePhotoLogo);
             // Remoting call to get current status values
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.SettingsController.check_settings}',
@@ -220,7 +222,7 @@
                 $("#register").blur();
                 $("#checkin").blur();
                 $("#photoFile").blur();
-                $("#photoFile2").blur();
+                $("#photoFileLogo").blur();
             }
         }
 

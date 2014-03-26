@@ -635,15 +635,15 @@ li {
     font-size: 1em;
 }
 
-
-.registered {
-  float: left;
-  padding-top: 10px;
-  width: 100px;
-  height: 100px;
-  background: url(checkin.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
+.checked {
+    float: right;
+    margin-right: 75px;
+    width: 100px;
+    height: 100px;
+    background: url(checked.svg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .blue {
