@@ -266,7 +266,6 @@ applyBodyTag="false">
                         var company;
                         if (result[0].ContactId == null) {
                             attendee = result[0].Lead;
-                            console.log(attendee);
                             attendeeType = 'Lead';
                             if (attendee.Company != null && typeof attendee.Company != 'undefined'){
                               company = attendee.Company;
@@ -276,13 +275,12 @@ applyBodyTag="false">
                         } else {
                             attendee = result[0].Contact;
                             attendeeType = 'Contact';
-                            if (attendee.Company != null && typeof attendee.Company__c != 'undefined') {
+                            if (attendee.Company__c != null && typeof attendee.Company__c != 'undefined') {
                                 company = attendee.Company__c;
                             } else {
                                 company = '';
                             }
                         }
-
                         document.getElementById('error').innerHTML = "<p></p>";
                         document.getElementById("checkin_email").innerHTML = document.getElementById("email").value;
                         document.getElementById("checkin_name").innerHTML = attendee.Name;
@@ -326,8 +324,6 @@ applyBodyTag="false">
                     }
                 } else if (event.type === 'exception') {
                     console.log('Event is already at capacity');
-                    console.log(event);
-                    console.log(status);
                     setSection($("#container section#"+"#seven"), $('.active'));
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
@@ -376,7 +372,6 @@ applyBodyTag="false">
                         setSection($("#container section#"+"#three"), $('.active'));
                     } else if (event.type === 'exception') {
                         document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                        console.log('goes to the exception');
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
                     }

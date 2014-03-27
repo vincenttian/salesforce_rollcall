@@ -19,12 +19,10 @@ global with sharing class CheckInController{
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {
         insert attendee;
-        system.debug('got right before creating campaign member');
         CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
                                                                CampaignId=campaign_id, 
                                                                Status = Event.checkedInStatus);
         insert new_event_attendee;
-        system.debug('finish creating campaign member');
     }
 
     public static void check_in(CampaignMember attendee) {
