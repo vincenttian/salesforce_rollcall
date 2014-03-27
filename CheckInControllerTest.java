@@ -1,6 +1,10 @@
 @isTest
 private class CheckInControllerTest {
 
+    static testMethod void testConstruction() {
+        CheckInController c = new CheckInController();
+    }
+
     static testMethod void test_register_event_attendee() {
         Campaign c = RollCallTestUtility.createEventCampaign();
         String cID = c.ID + '';
