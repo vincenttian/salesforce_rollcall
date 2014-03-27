@@ -11,7 +11,7 @@
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
       <meta name="apple-mobile-web-app-capable" content="yes" />
-      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
       <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
       <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
@@ -23,6 +23,15 @@
 
       <!-- Dynamic styling -->
       <style>
+        p, input, li {
+          font-family: Source Sans Pro, sans-serif;
+          font-weight: 600;
+        }
+
+        .disabled {
+          opacity: 0.5;
+        }
+
         body {
           background: #fff;
         }
@@ -151,7 +160,7 @@
           <div class="page" style="overflow-x: hidden;" onscroll='blurrer();'>
             <div class="information" id="attendee_list" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;" >
               <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
-              <div style="width: 100%;">
+              <div id="attendee_container">
                <p class="green_text"> <br></br>Attendee List </p>
                 <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
@@ -321,7 +330,7 @@
                   .attr("width", width + 100)
                   .attr("height", height + 100)
                 .append("g")
-                  .attr("transform", "translate(" + 50 + "," + 50 + ")");
+                  .attr("transform", "translate(" + 100 + "," + 75 + ")");
             // Formatting response to JSON object
             var data = '{"close": [';
             for (var i=0; i<result.length - 1; i++) {
@@ -466,7 +475,7 @@
         var maxc_string = '{!event.maxCapacity}';
 
         if (maxc_string != 'Unlimited' && checkins >= parseInt(maxc_string)) {
-            $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab red_border hover_red_text"> <p> Check In </p> </div> </div>');
+            $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab hover_red_text disabled"> <p> Check In (Capacity Reached) </p> </div> </div>');
         }
     }
 

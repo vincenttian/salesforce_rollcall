@@ -7,7 +7,7 @@
    applyBodyTag="false"
    id="todo"
    >
-   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Oswald"/>
    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
    <apex:includeScript value="{!$Resource.fastclick}"/>
@@ -15,6 +15,11 @@
       <head>
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
          <style>
+            p, input, li {
+              font-family: Source Sans Pro, sans-serif;
+              font-weight: 600;
+            }
+
             #animation {
                position: fixed;
                z-index: 2;
@@ -55,9 +60,8 @@
             <p> Select An Event </p>
             <div id="rollcall" style="background: url({!$Resource.RollCall_Logo_Img}); background-size: cover;"></div>
             <a href="javascript:sforce.one.navigateToURL('/apex/settings');">
-            <img class="action" id="help" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}"></img>
+            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'help.svg')}"></img>
             </a>
-            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'plus.svg')}"></img>
          </div>
          <div id="list_events">
             <apex:repeat value="{!events}" var="event" id="theRepeat">

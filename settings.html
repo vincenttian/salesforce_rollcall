@@ -7,13 +7,17 @@
    applyBodyTag="false">
 
     <head>
-        <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+        <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
         <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
         <apex:includeScript value="{!$Resource.fastclick}"/>
         <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
         <apex:includeScript value="{!$Resource.forceTK}"  />
         <title>RollCall Settings</title>
         <style type="text/css">
+            p, input, li {
+              font-family: Source Sans Pro, sans-serif;
+              font-weight: 600;
+            }
             .custom-file-input {
               color: transparent;
             }
@@ -53,8 +57,8 @@
     <div class="checkin">
         <p class="chart_title"> RollCall Settings </p>
         <div class="column" >
-            <p class="label" style="font-size:1em;"> Campaign Members status for <span class="blue_text">Registered</span> attendees </p>
-            <p class="label" style="font-size:1em;"> Campaign Members status for <span class="blue_text">Checked-in</span> attendees </p>
+            <p class="label" style="font-size:1em;"> Campaign Members status for <br></br> <span class="blue_text">Registered</span> attendees </p>
+            <p class="label" style="font-size:1em;"> Campaign Members status for <br></br> <span class="blue_text">Checked-in</span> attendees </p>
             <p class="label" style="font-size:1em;"> Show Parent Campaigns of <span class="blue_text">Type</span> </p>
             <p class="label" style="font-size:1em;"> Background Image (optional) </p>
             <p class="label" style="font-size:1em; margin-top:10px;"> Logo (optional) </p>            
