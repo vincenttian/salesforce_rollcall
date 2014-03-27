@@ -318,10 +318,10 @@ li {
 
 #attendee_container {width: 100%;}
 
-@media (max-width: 900px) {
-    #flow_title {display: none;}
-    #chart_one {display: none;}
-    #attendee_container {width:470px;}
+#remove_flow {
+    padding: 75px;
+    padding-bottom: 0px;
+    display: none;
 }
 
 #chart_two {
@@ -334,6 +334,15 @@ li {
     float: left;
     width: 362px;
     height: 384px;
+}
+
+
+@media (max-width: 900px) {
+    #remove_flow {display: block;}
+    #chart_one {display: none;}
+    #flow_title {margin-left: -25px;}
+    #page_two {padding-left: 350px;}
+    #attendee_container {width: 470px;}
 }
 
 .checkin {
