@@ -67,7 +67,7 @@ private class CheckInControllerTest {
     }
 
     static testMethod void test_multiple_checkin() {
-        SObject[] arr = RollCallTestUtility.createEventCampaign3();
+        SObject[] arr = RollCallTestUtility.createEventCampaign4();
         Campaign c = (Campaign) arr[0];
         Lead l = (Lead) arr[1];
         Contact cn = (Contact) arr[2];
@@ -75,6 +75,16 @@ private class CheckInControllerTest {
         System.assertEquals(events[0].status, false);
         events = EventController.attendee_search(c.ID, cn.FirstName, 0);
         System.assertEquals(events[0].status, false);
+        CheckInController.check_in_multiple(arr[3].ID);
+        events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, true);
+        events = EventController.attendee_search(c.ID, cn.FirstName, 0);
+        System.assertEquals(events[0].status, false);
+        CheckInController.check_in_multiple(arr[4].ID);
+        events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, true);
+        events = EventController.attendee_search(c.ID, cn.FirstName, 0);
+        System.assertEquals(events[0].status, true);
 
     }
 }
