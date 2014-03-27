@@ -110,9 +110,9 @@
                 <p class="blue_text"> Date: </p>
                 <p> {!event.start} </p>
                 <p class="blue_text"> Number Registered: </p>
-                <p> {!event.registered} </p>
+                <p id="event_registered"> {!event.registered} </p>
                 <p class="blue_text"> Number Checked In: </p>
-                <p> {!event.checkedIn} </p>
+                <p id="event_checkedIn"> {!event.checkedIn} </p>
                 <p class="blue_text"> Max Capacity: </p>
                 <p> {!event.maxCapacity} </p>
               </div>
@@ -202,6 +202,10 @@
                 '{!event.cid}',
                 function(result, event){
                     if (event.status) {
+
+                        // Update event information in information tab
+                        $("#event_checkedIn").text(result.checkedIn);
+                        $("#event_registered").text(result.registered);
 
                         $("#chart_two").children("svg").remove();
 
