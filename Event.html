@@ -28,6 +28,20 @@
           font-weight: 600;
         }
 
+        .ellipses {
+            text-overflow:ellipsis;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 500px;
+        }
+
+        @media (max-width: 900px) {
+          .ellipses {
+            width: 270px;
+          }
+        }
+
         .disabled {
           opacity: 0.5;
         }
@@ -160,7 +174,7 @@
           <div class="page" style="overflow-x: hidden;" onscroll='blurrer();'>
             <div class="information" id="attendee_list" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;" >
               <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
-              <div id="attendee_container">
+              <div id="attendee_container" style="text-overflow: auto;">
                <p class="green_text"> <br></br>Attendee List </p>
                 <ul id="the_list"></ul>
                <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
@@ -401,6 +415,8 @@
         var status = document.createElement('div');
         var f = document.createElement('p');
         var e = document.createElement('p');
+        $(f).addClass("ellipses");
+        $(e).addClass("ellipses");
         $(status).addClass("checked");
         f.innerHTML = attendee.name;
         if (attendee.email) {
