@@ -17,8 +17,8 @@ global class Member implements Comparable{
     global Integer compareTo(Object comp) 
     {
         Member m = (Member) comp;
-        String n = m.name;
-        return name.compareTo(n); 
+        String n = m.name.toUpperCase();
+        return name.toUpperCase().compareTo(n); 
     }
 
 }
