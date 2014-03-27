@@ -23,10 +23,12 @@ global with sharing class CheckInController{
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {
         insert attendee;
+        system.debug('got right before creating campaign member');
         CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
                                                                CampaignId=campaign_id, 
                                                                Status = Event.checkedInStatus);
         insert new_event_attendee;
+        system.debug('finish creating campaign member');
     }
 
     public static void check_in(CampaignMember attendee) {
@@ -97,7 +99,6 @@ global with sharing class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static void update_attendee(String event_id, SObject attendee) {
-        System.debug(attendee);
         if (attendee.Id == null){
             register_event_attendee(event_id, (Contact)attendee);
         }else{

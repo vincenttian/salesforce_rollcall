@@ -1,9 +1,3 @@
-/*#simubar {
-    height: 70px;
-    width: 100%;
-    background: #000000;
-}*/
-
 body {
     margin: 0px;
     height: 100%;
@@ -13,8 +7,7 @@ body {
 }
 
 p {
-    font-family: Open Sans, sans-serif;
-    font-weight: 600;
+    /* font */
     margin: 0px;
 }
 
@@ -24,8 +17,7 @@ div {
 }
 
 input {
-    font-family: Open Sans, sans-serif;
-    font-weight: 600;
+    /* font */
 }
 
 input:focus {
@@ -34,8 +26,7 @@ input:focus {
 
 li {
     list-style-type: none;
-    font-family: Open Sans, sans-serif;
-    font-weight: 600;
+    /* font */
     color: #AAAAAA;
     margin-bottom: 50px;
     margin-left: -40px;
@@ -325,9 +316,12 @@ li {
     height: 280px;
 }
 
-@media (max-width: 900px) {
-    #flow_title {display: none;}
-    #chart_one {display: none;}
+#attendee_container {width: 100%;}
+
+#remove_flow {
+    padding: 75px;
+    padding-bottom: 0px;
+    display: none;
 }
 
 #chart_two {
@@ -340,6 +334,15 @@ li {
     float: left;
     width: 362px;
     height: 384px;
+}
+
+
+@media (max-width: 900px) {
+    #remove_flow {display: block;}
+    #chart_one {display: none;}
+    #flow_title {margin-left: -25px;}
+    #page_two {padding-left: 350px;}
+    #attendee_container {width: 470px;}
 }
 
 .checkin {
@@ -629,6 +632,7 @@ li {
 
 .checked {
     float: right;
+    margin-right: 75px;
     width: 100px;
     height: 100px;
     background: url(checked.svg);

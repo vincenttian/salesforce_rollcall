@@ -77,7 +77,7 @@ applyBodyTag="false">
       </div>
       <div class="column">
         <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
-          <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" required="{!f.Required}"/>
+          <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" isRequired="{!f.Required}"/>
           <p id="Contact_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
         </apex:repeat>
         <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
@@ -97,7 +97,7 @@ applyBodyTag="false">
       </div>
       <div class="column">
         <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
-          <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" required="{!f.Required}"/>
+          <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" isRequired="{!f.Required}"/>
           <p id="Lead_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
         </apex:repeat>
         <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
@@ -252,7 +252,10 @@ applyBodyTag="false">
         var error = document.getElementById('email_error');
         error.style.display = 'none';
         $("#email").blur();
-        
+
+        $("#Contact_Email").val($("#email").val());
+        $("#Lead_Email").val($("#email").val());
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
@@ -263,6 +266,7 @@ applyBodyTag="false">
                         var company;
                         if (result[0].ContactId == null) {
                             attendee = result[0].Lead;
+                            console.log(attendee);
                             attendeeType = 'Lead';
                             if (attendee.Company != null && typeof attendee.Company != 'undefined'){
                               company = attendee.Company;
@@ -285,6 +289,11 @@ applyBodyTag="false">
                         document.getElementById("checkin_company").innerHTML = company;
                         setSection($("#container section#"+"#two"), $('.active'));
                     } else if (result.length == 0){ // no match in DB - Register page
+                        attendeeType = 'Contact';
+
+                        // TODO: MAKE ATTENDEE AN EMPTY 
+                        attendee = {sobjectType: 'Contact', email: email};
+                        clear_attendee_info();
                         setSection($("#container section#"+"#five"), $('.active'));
                     } else { // could not find match in database
                         mult_email = document.getElementById("email").value;
@@ -309,7 +318,7 @@ applyBodyTag="false">
                                   company = '';
                               }
                             }
-                            var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + attendee.Name + ", " + company + "</p></a>");
+                            var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + attendee.Name + " " + company + "</p></a>");
                             newA.appendTo("#multipleAttendees");
                             document.getElementById("checkin_email").innerHTML = mult_email;
                         }
@@ -317,6 +326,8 @@ applyBodyTag="false">
                     }
                 } else if (event.type === 'exception') {
                     console.log('Event is already at capacity');
+                    console.log(event);
+                    console.log(status);
                     setSection($("#container section#"+"#seven"), $('.active'));
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
@@ -327,12 +338,20 @@ applyBodyTag="false">
     }
 
     function update_attendee() {
+
         var requiredCheckPassed = true;
-        Object.keys(attendee).forEach(function(key) {
+        var fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        if (attendeeType == 'Lead') {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        } 
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+        for (var i = 0; i < fieldset.length; i++) {
+            var key = fieldset[i];        
             var inputElement = $('#'+attendeeType+'_'+key);
+
             if (inputElement!= null && inputElement.length != 0){
                 var value = inputElement.val().trim();
-                if (inputElement.prop("required") &&  value == ''){
+                if (inputElement.attr("isRequired") == "true" &&  value == ''){                  
                   requiredCheckPassed = false;
                   var error = $('#'+attendeeType+'_'+key+'_error');
                   var spacer = $('#'+attendeeType+'_'+key+'_spacer');
@@ -343,8 +362,7 @@ applyBodyTag="false">
                     attendee[key] = value;
                 }
             }
-        });
-
+        }
         if (!requiredCheckPassed){
           return;
         }
@@ -358,6 +376,7 @@ applyBodyTag="false">
                         setSection($("#container section#"+"#three"), $('.active'));
                     } else if (event.type === 'exception') {
                         document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                        console.log('goes to the exception');
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
                     }
@@ -380,12 +399,20 @@ applyBodyTag="false">
     }
 
     function clear_attendee_info() {
-        Object.keys(attendee).forEach(function(key) {
+        var fieldset;
+        if (attendeeType == 'Contact') {
+            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        } else {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        }
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+        for (var i = 0; i < fieldset.length; i++) {
+            var key = fieldset[i]; 
             var inputElement = document.getElementById('Contact'+'_'+key);
             if (inputElement!= null && typeof inputElement != 'undefined'){
                 inputElement.value = '';
             }
-        });
+        }
         document.getElementById('Contact_Email').value = document.getElementById("email").value;
     }
 
