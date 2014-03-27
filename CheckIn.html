@@ -4,9 +4,7 @@ showheader="false"
 standardStylesheets="false"
 Controller="CheckInController"
 applyHtmlTag="false"
-applyBodyTag="false"
-id="todo"
->
+applyBodyTag="false">
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
@@ -18,8 +16,14 @@ id="todo"
   <apex:includeScript value="{!$Resource.fastclick}"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
   <title>RollCall</title>
+  <style type="text/css">
+      .errorStyle{
+        display: none;
+        color: #ff4040;
+      }
+  </style>
 </head>
-<body style="background: url({!$Resource.RollCall_Background_Img}); background-size: cover;">
+<body>
   <input class='normal' id='event_id' type='hidden' value='{!$CurrentPage.parameters.event_id}'/>
   <div id="select_event">
     <p> Salesforce Workday </p>
@@ -29,11 +33,10 @@ id="todo"
    <section id="one" class="active">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
-      <input class="normal"  type="email" name="email" id="email" autocorrect="off" autocomplete="off" onclick='clear_error("checkin_error")'/>
-      <p id="checkin_error"> Please enter a valid email </p>
+      <input class="normal"  type="email" name="email" id="email" autocorrect="off" autocomplete="off" onclick='clear_error("email")'/>
+      <p id="email_error"> Please enter a valid email </p>
       <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();"> <p> Check In </p> </div>
     </div>
-  <button id="clear" onclick="clearInput();"></button>
   </section>
   <!-- Confirmation Page -->
   <section id="two">
@@ -46,10 +49,10 @@ id="todo"
         <p> Company: <span id="checkin_company" class="blue_text"> </span> </p>
         <div id="test"> </div>  <!-- A div for injecting tests into -->
       </div>
-      <a id="confirm" data-section="three" href="#" onclick="update_placeholders(); window.focus(); $(':focus').blur();">
+      <a id="confirm" data-section="three" href="#" onclick="window.focus(); $(':focus').blur();">
         <p> Confirm </p>
       </a>
-      <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_placeholders(); window.focus(); $(':focus').blur();"> update</a> this information </p>
+      <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#" onclick="update_attendee_info(); window.focus(); $(':focus').blur();"> update</a> this information </p>
     </div>
   </section>
   <!-- Successful checkin -->
@@ -62,35 +65,53 @@ id="todo"
       </a>
     </div>
   </section>
-  <!-- Update Attendee Information -->
-  <section id="four">
+  <!-- Update Contact Attendee Information -->
+  <section id="four_Contact">
     <div class="checkin">
       <div class="column">
-        <p class="label"> *First Name: </p>
-        <p id="first_spacer"> <br></br> </p>
-        <p class="label"> *Last Name: </p>
-        <p id="last_spacer"> <br></br> </p>
-        <p class="label"> Company: </p>
+        <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
+          <p class="label"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
+          <p id="Contact_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
+        </apex:repeat>
         <p class="label"> *Email: </p>
       </div>
       <div class="column">
-        <input id="update_firstname" type="text" name="firstname" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick='clear_error("first_error")'/>
-        <p id="first_error"> Please enter a first name </p>
-        <input id="update_lastname" type="text" name="lastname" class="input normal" placeholder="" disabled="disabled" autocorrect="off" autocomplete="off" onclick='clear_error("last_error")'/>
-        <p id="last_error"> Please enter a last name </p>
-        <input id="update_company" type="text" name="company" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled"/>
-        <input id="update_email" type="text" name="email" class="input normal" placeholder="" readonly="readonly"/>
+        <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
+          <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" required="{!f.Required}"/>
+          <p id="Contact_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
+        </apex:repeat>
+        <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
-      <!--<div id="submit" data-section="two" onclick="check_in_attendee()"> <p> Check In </p> </div>-->
       <button id="update" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
     </div>
   </section>
+  <!-- Update Lead Attendee Information -->  
+  <section id="four_Lead">
+    <div class="checkin">
+      <div class="column">
+        <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
+          <p class="label"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
+          <p id="Lead_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
+        </apex:repeat>
+        <p class="label"> *Email: </p>
+      </div>
+      <div class="column">
+        <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
+          <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" required="{!f.Required}"/>
+          <p id="Lead_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
+        </apex:repeat>
+        <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
+      </div>
+      <button id="update" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
+    </div>
+  </section>
+
   <!-- Haven't registered page -->
   <section id="five">
     <div class="checkin">
       <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'help_alt.svg')}"> </img>
       <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
-      <a class="checkin_end" data-section="four" href="#" onclick="static_placeholders();window.focus(); $(':focus').blur();">
+      <a class="checkin_end" data-section="four_Contact" href="#" onclick="clear_attendee_info();window.focus(); $(':focus').blur();">
           <p> Register </p>
       </a>
       <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
@@ -115,17 +136,8 @@ id="todo"
     </div>
   </section>
 </div>
-<script>
-            
-    // Double Tap Implementation for iPad
-    var HAS_TOUCH = ('ontouchstart' in window);
-    function returnHandler() {
-        window.location.href="/apex/event?event_id={!event.cId}";
-    }
-    var ret = document.getElementById('doubletap');
-    ret.addEventListener(HAS_TOUCH ? 'touchend' : 'mouseup', doubleTap(), false);
-    ret.addEventListener('dbltap', returnHandler, false);
 
+<script>          
     // Return is equivalent to form submission
     window.onkeydown = function(e){
         var $focused = $(':focus');
@@ -148,66 +160,83 @@ id="todo"
 </body>
 
 <script>
-$(document).ready(function() {
-    FastClick.attach(document.body);
-    $('a').on('click', function(event) {
-        event.preventDefault();
-        var sectionId = $(this).attr("data-section");
-        if (sectionId == 'one'){
-            $("#email").val('');
-            $('#email').removeClass('error');
-            $("#one").find('input').each(function() {
-                $(this).prop('disabled', false);
-            });
-            $("#four").find('input').each(function() {
-                $(this).prop('disabled', true);
-            });
-        }
-        else if (sectionId == 'four'){
-            $("#one").find('input').each(function() {
-                $(this).prop('disabled', true);
-            });
-            $("#four").find('input').each(function() {
-                $(this).prop('disabled', false);
-            });
-        }
+    $(document).ready(function() {
+        FastClick.attach(document.body);
+        $('a').on('click', function(event) {
+            event.preventDefault();
+            var sectionId = $(this).attr("data-section");
 
-        $toSlide= $("#container section#"+sectionId);
-        $fromSlide= $('.active');
-        if (!($toSlide.hasClass("active"))) {
-            $fromSlide.animate({"left":"-100%"},100,'linear')
-            $toSlide.animate({"left":"0%"},100,'linear',function() {
-                $fromSlide.css("left","100%");
-                $fromSlide.removeClass("active");
-                $toSlide.addClass("active");
-            });
-        }
+            if (sectionId == 'four'){
+               sectionId = sectionId + '_' + attendeeType;
+            }
+
+            if (sectionId == 'one'){
+                $("#email").val('');
+                $('#email').removeClass('error');
+                $("#one").find('input').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $("#four_Contact").find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                $("#four_Lead").find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+            }
+            else if (sectionId == 'four_Contact'){
+                $("#one").find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                $("#four_Lead").find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                $("#four_Contact").find('input').each(function() {
+                    $(this).prop('disabled', false);
+                });
+            }
+            else if (sectionId == 'four_Lead'){
+                $("#one").find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                $("#four_Contact").find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                $("#four_Lead").find('input').each(function() {
+                    $(this).prop('disabled', false);
+                });
+            }
+
+            $toSlide= $("#container section#"+sectionId);
+            $fromSlide= $('.active');
+            if (!($toSlide.hasClass("active"))) {
+                $fromSlide.animate({"left":"-100%"},100,'linear')
+                $toSlide.animate({"left":"0%"},100,'linear',function() {
+                    $fromSlide.css("left","100%");
+                    $fromSlide.removeClass("active");
+                    $toSlide.addClass("active");
+                });
+            }
+        });
     });
-});
 </script>
 
 <script type="text/javascript">
-    var first_name;
-    var last_name;
-    var company;
-    var name;
+    var attendee;
+    var attendeeType;
 
     var mult_email;
 
     function clear_error(id) {
-        if (id == 'first_error') {
-          $('#update_firstname').removeClass('error');
-          var spacer = document.getElementById('first_spacer');
-          spacer.style.display = 'none';
-        } else if (id == 'last_error') {
-          $('#update_lastname').removeClass('error');
-          var spacer = document.getElementById('last_spacer');
-          spacer.style.display = 'none';
-        } else {
-          $('#email').removeClass('error');
+        $('#'+id).removeClass('error');
+        var spacer = $('#'+id+'_spacer');
+        if (spacer != null){
+          spacer.css("display","none");
         }
-        var error = document.getElementById(id);
-        error.style.display = 'none';
+ 
+        var error = $('#'+id+'_error');
+        if (error != null){ 
+          error.css("display","none");
+        }
     }
 
     function check_in_attendee() {
@@ -215,13 +244,12 @@ $(document).ready(function() {
         var email = document.getElementById("email").value;
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (email == '' || re.test(email) == false) {
-            console.log('STOPPED! Not a valid email according to regex');
-            var error = document.getElementById('checkin_error');
+            var error = document.getElementById('email_error');
             error.style.display = 'block';
             $('#email').addClass('error');
             return;
         }
-        var error = document.getElementById('checkin_error');
+        var error = document.getElementById('email_error');
         error.style.display = 'none';
         $("#email").blur();
         
@@ -232,27 +260,20 @@ $(document).ready(function() {
             function(result, event){
                 if (event.status) {
                     if (result.length == 1) { // successfully found match in database !
+                        var company;
                         if (result[0].ContactId == null) {
-                            var lead = result[0].Lead;
-                            name = lead.Name;
-                            if (lead.FirstName != null) {
-                                first_name = lead.FirstName;
-                            } else {
-                                first_name = '';
+                            attendee = result[0].Lead;
+                            attendeeType = 'Lead';
+                            if (attendee.Company != null && typeof attendee.Company != 'undefined'){
+                              company = attendee.Company;
+                            }else{
+                              company = '';
                             }
-                            last_name = lead.LastName;
-                            company = lead.Company;
                         } else {
-                            var contact = result[0].Contact;
-                            name = contact.Name;
-                            if (contact.FirstName) {
-                                first_name = contact.FirstName;
-                            } else {
-                                first_name = '';
-                            }
-                            last_name = contact.LastName;
-                            if (contact.Company__c != null) {
-                                company = contact.Company__c;
+                            attendee = result[0].Contact;
+                            attendeeType = 'Contact';
+                            if (attendee.Company != null && typeof attendee.Company__c != 'undefined') {
+                                company = attendee.Company__c;
                             } else {
                                 company = '';
                             }
@@ -260,7 +281,7 @@ $(document).ready(function() {
 
                         document.getElementById('error').innerHTML = "<p></p>";
                         document.getElementById("checkin_email").innerHTML = document.getElementById("email").value;
-                        document.getElementById("checkin_name").innerHTML = name;
+                        document.getElementById("checkin_name").innerHTML = attendee.Name;
                         document.getElementById("checkin_company").innerHTML = company;
                         setSection($("#container section#"+"#two"), $('.active'));
                     } else if (result.length == 0){ // no match in DB - Register page
@@ -269,33 +290,26 @@ $(document).ready(function() {
                         mult_email = document.getElementById("email").value;
                         document.getElementById("multiple").innerHTML = "There seem to be multiple " + mult_email + "'s. Which of these do you want to check in as?";
                          $("#multipleAttendees").empty();
+                        var company; 
                         for(var i=0;i<result.length;i++){
                            if (result[i].ContactId == null) {
-                                var lead = result[i].Lead;
-                                name = lead.Name;
-                                if (lead.FirstName != null) {
-                                    first_name = lead.FirstName;
-                                } else {
-                                first_name = '';
-                                }
-                                last_name = lead.LastName;
-                                company = lead.Company;
+                              attendee = result[i].Lead;
+                              attendeeType = 'Lead';
+                              if (attendee.Company != null && typeof attendee.Company != 'undefined'){
+                                company = attendee.Company;
+                              }else{
+                                company = '';
+                              }
                             } else {
-                                var contact = result[i].Contact;
-                                name = contact.Name;
-                                if (contact.firstname != null) {
-                                    first_name = contact.FirstName;
-                                } else {
-                                    first_name = '';
-                                }
-                                last_name = contact.LastName;
-                                if (contact.Company__c != null) {
-                                    company = contact.Company__c;
-                                } else {
-                                    company = '';
+                              attendee = result[i].Contact;
+                              attendeeType = 'Contact';
+                              if (attendee.Company != null && typeof attendee.Company__c != 'undefined') {
+                                  company = attendee.Company__c;
+                              } else {
+                                  company = '';
+                              }
                             }
-                            }
-                            var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + name + ", " + company + "</p></a>");
+                            var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + attendee.Name + ", " + company + "</p></a>");
                             newA.appendTo("#multipleAttendees");
                             document.getElementById("checkin_email").innerHTML = mult_email;
                         }
@@ -313,46 +327,32 @@ $(document).ready(function() {
     }
 
     function update_attendee() {
-        var firstname = document.getElementById("update_firstname").value;
-        var lastname = document.getElementById("update_lastname").value;
-        var error = document.getElementById('first_error');
-        error.style.display = 'none';
-        var error = document.getElementById('last_error');
-        error.style.display = 'none';
-        if (firstname == '' || lastname == '') {
-            if (firstname == '' && lastname == '') {
-                var error = document.getElementById('first_error');
-                var spacer = document.getElementById('first_spacer');
-                error.style.display = 'block';
-                spacer.style.display = 'block';
-                $('#update_firstname').addClass('error');
-                var error = document.getElementById('last_error');
-                var spacer = document.getElementById('last_spacer');
-                error.style.display = 'block';
-                spacer.style.display = 'block';
-                $('#update_lastname').addClass('error');
-            } else if (firstname =='') {
-                var error = document.getElementById('first_error');
-                var spacer = document.getElementById('first_spacer');
-                error.style.display = 'block';
-                spacer.style.display = 'block';
-                $('#update_firstname').addClass('error');
-            } else if (lastname == '') {
-                var error = document.getElementById('last_error');
-                var spacer = document.getElementById('last_spacer');
-                error.style.display = 'block';
-                spacer.style.display = 'block';
-                $('#update_lastname').addClass('error');
+        var requiredCheckPassed = true;
+        Object.keys(attendee).forEach(function(key) {
+            var inputElement = $('#'+attendeeType+'_'+key);
+            if (inputElement!= null && inputElement.length != 0){
+                var value = inputElement.val().trim();
+                if (inputElement.prop("required") &&  value == ''){
+                  requiredCheckPassed = false;
+                  var error = $('#'+attendeeType+'_'+key+'_error');
+                  var spacer = $('#'+attendeeType+'_'+key+'_spacer');
+                  error.css("display","block");
+                  spacer.css("display","block");
+                  inputElement.addClass('error');
+                } else{
+                    attendee[key] = value;
+                }
             }
-            return;
+        });
+
+        if (!requiredCheckPassed){
+          return;
         }
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
-            document.getElementById("update_firstname").value,
-            document.getElementById("update_lastname").value,
-            document.getElementById("update_email").value,
-            document.getElementById("update_company").value,
+            attendee,
                 function(result, event){
                     if (event.status) {
                         setSection($("#container section#"+"#three"), $('.active'));
@@ -366,18 +366,27 @@ $(document).ready(function() {
         );
     }
 
-    function update_placeholders() {
-        document.getElementById('update_email').value = document.getElementById("email").value;
-        document.getElementById('update_firstname').value = first_name;
-        document.getElementById('update_lastname').value = last_name;
-        document.getElementById('update_company').value = company;
+    function update_attendee_info() {
+        Object.keys(attendee).forEach(function(key) {
+            var inputElement = document.getElementById(attendeeType+'_'+key);
+            if (inputElement!= null && typeof inputElement != 'undefined'){
+              if (attendee[key] != null && typeof attendee[key] != 'undefined'){
+                inputElement.value = attendee[key];
+              }else{
+                inputElement.value = '';
+              }
+            }
+        });
     }
 
-    function static_placeholders() {
-        document.getElementById('update_email').value = document.getElementById("email").value;
-        document.getElementById('update_firstname').value = "";
-        document.getElementById('update_lastname').value = "";
-        document.getElementById('update_company').value = "";
+    function clear_attendee_info() {
+        Object.keys(attendee).forEach(function(key) {
+            var inputElement = document.getElementById('Contact'+'_'+key);
+            if (inputElement!= null && typeof inputElement != 'undefined'){
+                inputElement.value = '';
+            }
+        });
+        document.getElementById('Contact_Email').value = document.getElementById("email").value;
     }
 
     function checkInMultiple(campaignMemberId) {
@@ -395,10 +404,6 @@ $(document).ready(function() {
             },
             {escape: true}
         );
-    }
-
-    function clearInput() {
-        $("#email").val('');
     }
 
 </script>
