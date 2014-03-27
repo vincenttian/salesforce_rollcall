@@ -22,7 +22,7 @@ public class RollCallTestUtility{
         insert cn2;
         CampaignMember m4 = new CampaignMember(ContactId=cn2.ID, campaignId=c2.ID);
         insert m4;
-        return new SObject[]{c, le2, cn};
+        return new SObject[]{c, le2, cn, le, cn2};
     }
     public static Campaign createEventCampaign() {
         return (Campaign) campaignGeneration()[0];
@@ -41,6 +41,15 @@ public class RollCallTestUtility{
         SObject[] retList = new SObject[]{};
         retList.add(getList.get(0));
         retList.add(getList.get(2));
+        return retList;
+    }
+
+    public static SObject[] createEventCampaign4() {
+        SObject[] getList = campaignGeneration();
+        SObject[] retList = new SObject[]{};
+        retList.add(getList.get(0));
+        retList.add(getList.get(3));
+        retList.add(getList.get(4));
         return retList;
     }
 }
