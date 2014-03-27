@@ -252,7 +252,10 @@ applyBodyTag="false">
         var error = document.getElementById('email_error');
         error.style.display = 'none';
         $("#email").blur();
-        
+
+        $("#Contact_Email").val($("#email").val());
+        $("#Lead_Email").val($("#email").val());
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
@@ -263,6 +266,7 @@ applyBodyTag="false">
                         var company;
                         if (result[0].ContactId == null) {
                             attendee = result[0].Lead;
+                            console.log(attendee);
                             attendeeType = 'Lead';
                             if (attendee.Company != null && typeof attendee.Company != 'undefined'){
                               company = attendee.Company;
@@ -285,6 +289,11 @@ applyBodyTag="false">
                         document.getElementById("checkin_company").innerHTML = company;
                         setSection($("#container section#"+"#two"), $('.active'));
                     } else if (result.length == 0){ // no match in DB - Register page
+                        attendeeType = 'Contact';
+
+                        // TODO: MAKE ATTENDEE AN EMPTY 
+                        attendee = {sobjectType: 'Contact', email: email};
+                        clear_attendee_info();
                         setSection($("#container section#"+"#five"), $('.active'));
                     } else { // could not find match in database
                         mult_email = document.getElementById("email").value;
@@ -317,6 +326,8 @@ applyBodyTag="false">
                     }
                 } else if (event.type === 'exception') {
                     console.log('Event is already at capacity');
+                    console.log(event);
+                    console.log(status);
                     setSection($("#container section#"+"#seven"), $('.active'));
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
@@ -327,27 +338,20 @@ applyBodyTag="false">
     }
 
     function update_attendee() {
-        var requiredCheckPassed = true;
-        var fieldset;
-        if (attendeeType == 'Contact') {
-            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
-        } else {
-            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
-        }
-        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
 
+        var requiredCheckPassed = true;
+        var fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        if (attendeeType == 'Lead') {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        } 
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
         for (var i = 0; i < fieldset.length; i++) {
             var key = fieldset[i];        
             var inputElement = $('#'+attendeeType+'_'+key);
+
             if (inputElement!= null && inputElement.length != 0){
                 var value = inputElement.val().trim();
-                
-
-                console.log(key);
-                console.log(inputElement.attr("isRequired"));
-
-                if (inputElement.attr("isRequired") == "true" &&  value == ''){
-                  console.log('got here');
+                if (inputElement.attr("isRequired") == "true" &&  value == ''){                  
                   requiredCheckPassed = false;
                   var error = $('#'+attendeeType+'_'+key+'_error');
                   var spacer = $('#'+attendeeType+'_'+key+'_spacer');
@@ -359,10 +363,10 @@ applyBodyTag="false">
                 }
             }
         }
-
         if (!requiredCheckPassed){
           return;
         }
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
@@ -372,6 +376,7 @@ applyBodyTag="false">
                         setSection($("#container section#"+"#three"), $('.active'));
                     } else if (event.type === 'exception') {
                         document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                        console.log('goes to the exception');
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
                     }
@@ -394,6 +399,13 @@ applyBodyTag="false">
     }
 
     function clear_attendee_info() {
+        var fieldset;
+        if (attendeeType == 'Contact') {
+            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        } else {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        }
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
         for (var i = 0; i < fieldset.length; i++) {
             var key = fieldset[i]; 
             var inputElement = document.getElementById('Contact'+'_'+key);
