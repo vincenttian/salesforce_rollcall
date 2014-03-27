@@ -31,7 +31,7 @@ global with sharing class EventController {
                                         CampaignId in :potential_children.keySet() AND 
                                         (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name 
                                         OR Contact.Company__c LIKE :search_name OR Lead.Company LIKE :search_name)
-                                        ];
+                                        ORDER BY Attendee_Name__c ASC LIMIT 50 OFFSET :offset];
         Member[] registered2 = new Member[]{};
         for (CampaignMember cm : registered) {
             if (cm.ContactID != null) { 
@@ -48,12 +48,7 @@ global with sharing class EventController {
                 registered2.add(m);
             }
         }
-        registered2.sort();
-        Member[] registered3 = new Member[]{};
-        for (Integer i = 0; i < Math.min(50, registered2.size() - offset)) {
-            registered3.add(registered2.get(offset + i));
-        }
-        return registered3;
+        return registered2;
     }
 
     // For d3    
