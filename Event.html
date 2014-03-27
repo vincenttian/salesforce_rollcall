@@ -148,8 +148,8 @@
         </section>
         <!-- Event Attendees -->
         <section id="three">
-          <div class="page" style="overflow-y:auto;-webkit-overflow-scrolling: touch;" onscroll='blurrer();'>
-            <div class="information" id="attendee_list">
+          <div class="page" style="overflow-x: hidden;" onscroll='blurrer();'>
+            <div class="information" id="attendee_list" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;" >
               <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
               <div style="width: 100%;">
                <p class="green_text"> <br></br>Attendee List </p>
