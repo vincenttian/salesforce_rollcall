@@ -11,12 +11,16 @@ applyBodyTag="false">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-  <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:600"/>
+  <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
   <apex:includeScript value="{!$Resource.doubleTap}"/>
   <apex:includeScript value="{!$Resource.fastclick}"/>
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
   <title>RollCall</title>
   <style type="text/css">
+      p, input, li {
+        font-family: Source Sans Pro, sans-serif;
+        font-weight: 600;
+      }
       .errorStyle{
         display: none;
         color: #ff4040;
@@ -28,7 +32,7 @@ applyBodyTag="false">
   <div id="select_event">
     <p> Salesforce Workday </p>
   </div>
-  <div class="invisible" id="doubletap"></div>
+  <div id="rollcall" style="background: url({!$Resource.RollCall_Logo_Img}); background-size: cover; z-index: 2;"></div>
   <div id="container">
    <section id="one" class="active">
     <div class="checkin">
