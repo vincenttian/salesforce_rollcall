@@ -14,7 +14,11 @@ global with sharing class CheckInController{
     public CheckInController() {
         Campaign c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
                       WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
-        event = new Event(c);
+        if (c != null) {
+            event = new Event(c);
+        } else {
+            event = null;
+        }
     }
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {
@@ -51,7 +55,7 @@ global with sharing class CheckInController{
         for(Schema.FieldSetMember f : SObjectType.Contact.FieldSets.RollCall.getFields()) {
             if (f.getFieldPath() != 'Name' && f.getFieldPath() != 'Email')
             soql += 'Contact.'+f.getFieldPath() + ', ';
-        } 
+        }
 
         for(Schema.FieldSetMember f : SObjectType.Lead.FieldSets.RollCall.getFields()) {
             if (f.getFieldPath() != 'Name' && f.getFieldPath() != 'Email')

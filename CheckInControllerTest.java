@@ -85,6 +85,31 @@ private class CheckInControllerTest {
         System.assertEquals(events[0].status, true);
         events = EventController.attendee_search(c.ID, cn.FirstName, 0);
         System.assertEquals(events[0].status, true);
+    }
 
+    static testMethod void test_check_in_contact2() {
+        SObject[] arr = RollCallTestUtility.createEventCampaign5();
+        Campaign c = (Campaign) arr[0];
+        Contact l = (Contact) arr[1];
+        Member[] events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, false);
+        CheckInController.check_in_attendee(c.ID + '', l.email);
+        events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, true);
+    }
+
+    static testMethod void test_check_in_contact3() {
+        SObject[] arr = RollCallTestUtility.createEventCampaign6();
+        Campaign c = (Campaign) arr[0];
+        Contact l = (Contact) arr[1];
+        Member[] events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, false);
+        try {
+            CheckInController.check_in_attendee(c.ID + '', l.email);
+        } catch (CheckInController.CapacityException e) {
+            events = EventController.attendee_search(c.ID, l.FirstName, 0);
+            System.assertEquals(events[0].status, false);
+        }
+        
     }
 }
