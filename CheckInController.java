@@ -12,9 +12,13 @@ global with sharing class CheckInController{
     public Event event{get; set;}
 
     public CheckInController() {
-        Campaign c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
+        Campaign c[] = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
                       WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
-        event = new Event(c);
+        if (c.size() != 0) {
+            event = new Event(c[0]);
+        } else {
+            event = null;
+        }
     }
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {

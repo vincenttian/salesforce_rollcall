@@ -40,6 +40,7 @@ applyBodyTag="false">
       <input class="normal"  type="email" name="email" id="email" autocorrect="off" autocomplete="off" onclick='clear_error("email")'/>
       <p id="email_error"> Please enter a valid email </p>
       <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();"> <p> Check In </p> </div>
+      <button id="clear" onclick="clearInput();"></button>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -51,7 +52,6 @@ applyBodyTag="false">
         <p> Name: <span id="checkin_name" class="blue_text"> </span> </p>
         <p> Email: <span id="checkin_email" class="blue_text"> </span> </p>
         <p> Company: <span id="checkin_company" class="blue_text"> </span> </p>
-        <div id="test"> </div>  <!-- A div for injecting tests into -->
       </div>
       <a id="confirm" data-section="three" href="#" onclick="window.focus(); $(':focus').blur();">
         <p> Confirm </p>
@@ -87,6 +87,7 @@ applyBodyTag="false">
         <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <button id="update" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
+      <div id="Contact_error"> </div>  <!-- A div for injecting tests into -->
     </div>
   </section>
   <!-- Update Lead Attendee Information -->  
@@ -107,6 +108,7 @@ applyBodyTag="false">
         <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <button id="update" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
+      <div id="Lead_error"> </div>  <!-- A div for injecting tests into -->
     </div>
   </section>
 
@@ -154,9 +156,10 @@ applyBodyTag="false">
                 $("#email").blur();
             } else {
                 update_attendee();
-                $('#update_firstname').blur();
-                $('#update_lastname').blur();
-                $('#update_company').blur();
+                var allInputs = $(":input");
+                for (var i=0; i<allInputs.length; i++) {
+                    allInputs[i].blur();
+                }
             }
         }
     }
@@ -256,7 +259,10 @@ applyBodyTag="false">
         var error = document.getElementById('email_error');
         error.style.display = 'none';
         $("#email").blur();
-        
+
+        $("#Contact_Email").val($("#email").val());
+        $("#Lead_Email").val($("#email").val());
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.check_in_attendee}',
             document.getElementById('event_id').value,
@@ -276,19 +282,23 @@ applyBodyTag="false">
                         } else {
                             attendee = result[0].Contact;
                             attendeeType = 'Contact';
-                            if (attendee.Company != null && typeof attendee.Company__c != 'undefined') {
+                            if (attendee.Company__c != null && typeof attendee.Company__c != 'undefined') {
                                 company = attendee.Company__c;
                             } else {
                                 company = '';
                             }
                         }
-
                         document.getElementById('error').innerHTML = "<p></p>";
                         document.getElementById("checkin_email").innerHTML = document.getElementById("email").value;
                         document.getElementById("checkin_name").innerHTML = attendee.Name;
                         document.getElementById("checkin_company").innerHTML = company;
                         setSection($("#container section#"+"#two"), $('.active'));
                     } else if (result.length == 0){ // no match in DB - Register page
+                        attendeeType = 'Contact';
+
+                        // TODO: MAKE ATTENDEE AN EMPTY 
+                        attendee = {sobjectType: 'Contact', email: email};
+                        clear_attendee_info();
                         setSection($("#container section#"+"#five"), $('.active'));
                     } else { // could not find match in database
                         mult_email = document.getElementById("email").value;
@@ -331,27 +341,20 @@ applyBodyTag="false">
     }
 
     function update_attendee() {
-        var requiredCheckPassed = true;
-        var fieldset;
-        if (attendeeType == 'Contact') {
-            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
-        } else {
-            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
-        }
-        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
 
+        var requiredCheckPassed = true;
+        var fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        if (attendeeType == 'Lead') {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        } 
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
         for (var i = 0; i < fieldset.length; i++) {
             var key = fieldset[i];        
             var inputElement = $('#'+attendeeType+'_'+key);
+
             if (inputElement!= null && inputElement.length != 0){
                 var value = inputElement.val().trim();
-                
-
-                console.log(key);
-                console.log(inputElement.attr("isRequired"));
-
-                if (inputElement.attr("isRequired") == "true" &&  value == ''){
-                  console.log('got here');
+                if (inputElement.attr("isRequired") == "true" &&  value == ''){                  
                   requiredCheckPassed = false;
                   var error = $('#'+attendeeType+'_'+key+'_error');
                   var spacer = $('#'+attendeeType+'_'+key+'_spacer');
@@ -363,10 +366,10 @@ applyBodyTag="false">
                 }
             }
         }
-
         if (!requiredCheckPassed){
           return;
         }
+
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
@@ -375,7 +378,8 @@ applyBodyTag="false">
                     if (event.status) {
                         setSection($("#container section#"+"#three"), $('.active'));
                     } else if (event.type === 'exception') {
-                        document.getElementById("test").innerHTML += event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                        console.log(attendeeType);
+                        $("#" + attendeeType + "_error").text(event.message + event.where);
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
                     }
@@ -385,7 +389,15 @@ applyBodyTag="false">
     }
 
     function update_attendee_info() {
-        Object.keys(attendee).forEach(function(key) {
+        var fieldset;
+        if (attendeeType == 'Contact') {
+            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        } else {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        }
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+        for (var i = 0; i < fieldset.length; i++) {
+            var key = fieldset[i]; 
             var inputElement = document.getElementById(attendeeType+'_'+key);
             if (inputElement!= null && typeof inputElement != 'undefined'){
               if (attendee[key] != null && typeof attendee[key] != 'undefined'){
@@ -394,10 +406,17 @@ applyBodyTag="false">
                 inputElement.value = '';
               }
             }
-        });
+        }
     }
 
     function clear_attendee_info() {
+        var fieldset;
+        if (attendeeType == 'Contact') {
+            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        } else {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        }
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
         for (var i = 0; i < fieldset.length; i++) {
             var key = fieldset[i]; 
             var inputElement = document.getElementById('Contact'+'_'+key);
@@ -423,6 +442,11 @@ applyBodyTag="false">
             },
             {escape: true}
         );
+    }
+
+    function clearInput() {
+        $("#email").val('');
+
     }
 
 </script>
