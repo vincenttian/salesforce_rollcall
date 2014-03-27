@@ -77,7 +77,7 @@ applyBodyTag="false">
       </div>
       <div class="column">
         <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
-          <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" required="{!f.Required}"/>
+          <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" isRRRRRRRRRRRequired="{!f.Required}"/>
           <p id="Contact_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
         </apex:repeat>
         <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
@@ -97,7 +97,7 @@ applyBodyTag="false">
       </div>
       <div class="column">
         <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
-          <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" required="{!f.Required}"/>
+          <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" isRequired="{!f.Required}"/>
           <p id="Lead_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
         </apex:repeat>
         <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
@@ -328,11 +328,20 @@ applyBodyTag="false">
 
     function update_attendee() {
         var requiredCheckPassed = true;
-        Object.keys(attendee).forEach(function(key) {
+        var fieldset;
+        if (attendeeType == 'Contact') {
+            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+        } else {
+            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+        }
+        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+
+        for (var i = 0; i < fieldset.length; i++) {
+            var key = fieldset[i];        
             var inputElement = $('#'+attendeeType+'_'+key);
             if (inputElement!= null && inputElement.length != 0){
                 var value = inputElement.val().trim();
-                if (inputElement.prop("required") &&  value == ''){
+                if (inputElement.attr("isRequired") == "true" &&  value == ''){
                   requiredCheckPassed = false;
                   var error = $('#'+attendeeType+'_'+key+'_error');
                   var spacer = $('#'+attendeeType+'_'+key+'_spacer');
@@ -343,12 +352,11 @@ applyBodyTag="false">
                     attendee[key] = value;
                 }
             }
-        });
+        }
 
         if (!requiredCheckPassed){
           return;
         }
-
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.CheckInController.update_attendee}',
             document.getElementById('event_id').value,
@@ -380,12 +388,13 @@ applyBodyTag="false">
     }
 
     function clear_attendee_info() {
-        Object.keys(attendee).forEach(function(key) {
+        for (var i = 0; i < fieldset.length; i++) {
+            var key = fieldset[i]; 
             var inputElement = document.getElementById('Contact'+'_'+key);
             if (inputElement!= null && typeof inputElement != 'undefined'){
                 inputElement.value = '';
             }
-        });
+        }
         document.getElementById('Contact_Email').value = document.getElementById("email").value;
     }
 

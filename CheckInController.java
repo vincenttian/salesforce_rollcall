@@ -93,7 +93,6 @@ global with sharing class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static void update_attendee(String event_id, SObject attendee) {
-        System.debug(attendee);
         if (attendee.Id == null){
             register_event_attendee(event_id, (Contact)attendee);
         }else{
