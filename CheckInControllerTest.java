@@ -1,29 +1,69 @@
 @isTest
 private class CheckInControllerTest {
 
-    static testMethod void test_update_event_attendee() {
-      RollCall r = new RollCall();
-      Date test_date = Date.newInstance(2014, 2, 17);
-      r.create_event('test_event7', test_date, 'test_description', 'Open');
-      Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
-      update_attendee(c.ID, String 'test', 'last_name', 'email', 'company')
-
-    }
-
     static testMethod void test_register_event_attendee() {
-      RollCall r = new RollCall();
-      Date test_date = Date.newInstance(2014, 2, 17);
-      r.create_event('test_event7', test_date, 'test_description', 'Open');
-      Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
-      update_attendee(c.ID, String 'test', 'last_name', 'email', 'company')
+        Campaign c = RollCallTestUtility.createEventCampaign();
+        String cID = c.ID + '';
+        Contact testContact = new Contact(firstName = 'TestContact', lastName = 'Empty');
+        CheckInController.update_attendee(cID, testContact);
+        Member[] events = EventController.attendee_search(c.ID, 'Empty', 0);
+        System.assertEquals(events.size(), 1);
     }
 
-    static testMethod void test_check_in() {
-      RollCall r = new RollCall();
-      Date test_date = Date.newInstance(2014, 2, 17);
-      r.create_event('test_event7', test_date, 'test_description', 'Open');
-      Campaign c = [SELECT Id, isActive FROM Campaign WHERE Name = 'test_event7'];
-      check_in_attendee(ID, 'test@test.com');
+    static testMethod void test_register_event_attendee2() {
+        SObject[] arr = RollCallTestUtility.createEventCampaign2();
+        Campaign c = (Campaign) arr[0];
+        Lead l = (Lead) arr[1];
+        String oldName = l.firstName;
+        l.firstName = 'RareFirstName';
+        Member[] events = EventController.attendee_search(c.ID, 'RareFirstName', 0);
+        System.assertEquals(events.size(), 0);
+        events = EventController.attendee_search(c.ID, oldName, 0);
+        System.assertEquals(events.size(), 1);
+        CheckInController.update_attendee(c.ID + '', l);
+        events = EventController.attendee_search(c.ID, 'RareFirstName', 0);
+        System.assertEquals(events.size(), 1);
+        events = EventController.attendee_search(c.ID, oldName, 0);
+        System.assertEquals(events.size(), 0);
+    }
+
+    static testMethod void test_register_event_attendee3() {
+        SObject[] arr = RollCallTestUtility.createEventCampaign3();
+        Campaign c = (Campaign) arr[0];
+        Contact l = (Contact) arr[1];
+        String oldName = l.firstName;
+        l.firstName = 'RareFirstName';
+        Member[] events = EventController.attendee_search(c.ID, 'RareFirstName', 0);
+        System.assertEquals(events.size(), 0);
+        events = EventController.attendee_search(c.ID, oldName, 0);
+        System.assertEquals(events.size(), 2);
+        CheckInController.update_attendee(c.ID + '', l);
+        events = EventController.attendee_search(c.ID, 'RareFirstName', 0);
+        System.assertEquals(events.size(), 1);
+        events = EventController.attendee_search(c.ID, oldName, 0);
+        System.assertEquals(events.size(), 1);
+    }
+
+    static testMethod void test_check_in_lead() {
+        SObject[] arr = RollCallTestUtility.createEventCampaign2();
+        Campaign c = (Campaign) arr[0];
+        Lead l = (Lead) arr[1];
+        Member[] events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, false);
+        CheckInController.check_in_attendee(c.ID + '', l.email);
+        events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, true);
+    }
+
+    static testMethod void test_check_in_contact() {
+        SObject[] arr = RollCallTestUtility.createEventCampaign3();
+        Campaign c = (Campaign) arr[0];
+        Contact l = (Contact) arr[1];
+        Member[] events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, false);
+        CheckInController.check_in_attendee(c.ID + '', l.email);
+        events = EventController.attendee_search(c.ID, l.FirstName, 0);
+        System.assertEquals(events[0].status, true);
     }
 
 }

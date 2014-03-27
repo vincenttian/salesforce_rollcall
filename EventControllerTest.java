@@ -7,7 +7,7 @@ private class EventControllerTest {
 
     static testMethod void test_attendee_search() {
         Campaign c = RollCallTestUtility.createEventCampaign();
-        SObject[] events = EventController.attendee_search(c.ID, 'Lee', 0);
+        Member[] events = EventController.attendee_search(c.ID, 'Lee', 0);
         System.assertNotEquals(events, null);
     }
     
