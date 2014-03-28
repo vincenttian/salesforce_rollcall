@@ -49,7 +49,17 @@
             .custom-file-input:active::before {
               background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
             }
+
+            @media (max-width: 900px) {
+              .input {width: 300px;}
+            }
         </style>
+        <script>
+          document.ontouchmove = function(e) {
+              if (!($(e).hasClass("scrollable")))
+                e.preventDefault();
+          };
+        </script>
     </head>
 
     <body>
@@ -73,12 +83,12 @@
             </select>
             <div>
                 <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile" accept="image/*"/>
-                <img id="uploadPreview" style="width: 75px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Background_Img}"/>
+                <img id="uploadPreview" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Background_Img}"/>
             </div>
             <!-- Logo -->
             <div>
                 <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFileLogo" accept="image/*"/>
-                <img id="uploadPreviewLogo" style="width: 75px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
+                <img id="uploadPreviewLogo" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
             </div>
          </div>
          <a id="update" onclick="update_settings();"><p> Update </p></a>    
