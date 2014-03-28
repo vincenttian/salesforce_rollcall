@@ -20,7 +20,7 @@ input {
     /* font */
 }
 
-input:focus {
+input:hover {
     outline: none;
 }
 
@@ -287,7 +287,7 @@ li {
     box-shadow: 0px 1px 5px 0px #000000;
 }
 
-#return:focus {
+#return:hover {
     background-color: #ff9d00;
 }
 
@@ -436,7 +436,7 @@ li {
     border-radius: 10px;
 }
 
-#submit:focus {
+#submit:hover {
     background: #333333;
 }
 
@@ -470,7 +470,7 @@ li {
     border-radius: 10px;
 }
 
-#confirm:focus {
+#confirm:hover {
     background: #333333;
 }
 
@@ -518,11 +518,11 @@ li {
     border-radius: 10px;
 }
 
-.checkin_end:focus {
+.checkin_end:hover {
     background: #333333;
 }
 
-#account_container .checkin_end:focus {
+#account_container .checkin_end:hover {
     background: #0096ff;
 }
 
@@ -549,7 +549,7 @@ li {
     border-radius: 10px;
 }
 
-#update:focus {
+#update:hover {
     background: #333333;
 }
 
