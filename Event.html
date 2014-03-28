@@ -107,7 +107,7 @@
         <a id="tab_one" class="tab blue_border hover_blue_text active_tab" data-section="one" href="#" onclick='activate(1);'>
           <p> Information </p>
         </a>
-        <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();initialize(); line_chart_info(); activate(2);">
+        <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();line_chart_info(); activate(2);initialize();">
           <p> Statistics </p>
         </a>
         <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3);'>
@@ -428,7 +428,6 @@
         if (attendee.company) {
             f.innerHTML += ', ' + attendee.company;
         }
-        console.log(attendee.status);
         if (attendee.status) {
             element.appendChild(status);
         }
@@ -452,7 +451,6 @@
             function(result, event){
                 var objlist = document.getElementById("the_list");
                 var fragment = document.createDocumentFragment();
-                console.log(result);
                 if (event.status) {
                     if(!paginate){
                         while (objlist.hasChildNodes()) {

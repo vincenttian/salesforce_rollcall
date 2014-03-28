@@ -326,7 +326,6 @@ applyBodyTag="false">
                         setSection($("#container section#"+"#six"), $('.active'));
                     }
                 } else if (event.type === 'exception') {
-                    console.log('Event is already at capacity');
                     setSection($("#container section#"+"#seven"), $('.active'));
                 } else {
                     document.getElementById("test").innerHTML +=event.message;
@@ -374,7 +373,6 @@ applyBodyTag="false">
                     if (event.status) {
                         setSection($("#container section#"+"#three"), $('.active'));
                     } else if (event.type === 'exception') {
-                        console.log(attendeeType);
                         $("#" + attendeeType + "_error").text(event.message + event.where);
                     } else {
                         document.getElementById("test").innerHTML +=event.message;
@@ -442,7 +440,7 @@ applyBodyTag="false">
 
     function clearInput() {
         $("#email").val('');
-
+        $("#email").focus();        
     }
 
 </script>
