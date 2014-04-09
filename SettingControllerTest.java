@@ -20,6 +20,11 @@ private class SettingControllerTest {
         System.assertEquals(info[0], '1');
         System.assertEquals(info[1], '2');
         System.assertEquals(info[2], 'None');
+        SettingsController.update_settings('2', '1', 'None');
+        info = SettingsController.check_settings();
+        System.assertEquals(info[0], '2');
+        System.assertEquals(info[1], '1');
+        System.assertEquals(info[2], 'None');
 
     }
 
