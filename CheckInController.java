@@ -110,5 +110,7 @@ global with sharing class CheckInController{
     }
 
     public class CapacityException extends Exception {}
+    public class ProfilePermissionException extends Exception {}
+
 
 }

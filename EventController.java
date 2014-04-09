@@ -50,7 +50,7 @@ global with sharing class EventController {
                 }
             }
             return registered2;
-        else {
+        } else {
             throw new CheckInController.ProfilePermissionException('Profile does not have read permission');
         }
     }
@@ -78,7 +78,5 @@ global with sharing class EventController {
         Event e = new Event(c);
         return e;
     }
-
-    public class ProfilePermissionException extends Exception {}
 
 }

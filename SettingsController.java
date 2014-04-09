@@ -14,7 +14,7 @@ global class SettingsController{
         Map<String, RollCall_Settings__c> settings = RollCall_Settings__c.getAll();
         checkin_status = checkin_status.escapeHtml4();
         register_status = register_status.escapeHtml4();
-        campaign_type = campaing_type.escapeHtml4();
+        campaign_type = campaign_type.escapeHtml4();
         if (settings.isempty()) { 
             if (Schema.sObjectType.Contact.fields.Email.isCreateable()) {
                 RollCall_Settings__c setting = new RollCall_Settings__c();

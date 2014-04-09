@@ -63,8 +63,8 @@ global with sharing class RollCall{
                 i++;
             }
             return events;
-        else {
-            throw new ProfilePermissionException('Profile does not have read permission');
+        } else {
+            throw new CheckInController.ProfilePermissionException('Profile does not have read permission');
         }
     }
 
