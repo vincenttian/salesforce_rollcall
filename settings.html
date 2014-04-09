@@ -183,6 +183,25 @@
             var checkin = $("#checkin").val();
             var register = $("#register").val();
             var campaignType = $("#campaignType").val();
+            
+            // javascript escape
+            var entityMap = {
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': '&quot;',
+              "'": '&#39;',
+              "/": '&#x2F;'
+            };
+            function escapeHtml(string) {
+              return String(string).replace(/[&<>"'\/]/g, function (s) {
+                return entityMap[s];
+              });
+            }
+            checkin = escapeHtml(checkin);
+            register = escapeHtml(register);
+            campaignType = escapeHtml(campaignType);
+
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.SettingsController.update_settings}',
                 checkin, register, campaignType,
