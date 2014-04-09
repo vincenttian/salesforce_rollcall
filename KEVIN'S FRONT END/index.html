@@ -3,16 +3,120 @@
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-    <title>RollCall</title>
+    <title>RollCall</title>  
+  <style type="text/css">
+      p, input, li {
+        font-family: Source Sans Pro, sans-serif;
+        font-weight: 600;
+      }
+      @media (max-width: 641px) {
+        p, input, li {
+            font-weight: 200;
+        }
+        body {
+            background: #CCCCCC;
+        }
+        
+        #rollcall {
+            display: none;
+        }
+          
+        #select_event {
+            color: #FFFFFF;
+            margin: 0;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            background: #333333;
+            text-transform: uppercase;
+        }
+
+        .title {
+            height: 150px;
+            font-size: 2em;
+            background: #fff;
+            color: #666666;
+            text-transform: uppercase;
+            padding-left: 50px;
+            padding-top: 50px;
+        }
+          
+        .blue {
+            border-left: 10px solid #0096ff;
+        }
+          
+        .magenta {
+            border-left: 10px solid #ff009d;
+        }
+          
+        .green {
+            border-left: 10px solid #7ac100;
+        }
+          
+        .red {
+            border-left: 10px solid #ff4040;
+        }
+          
+        .orange {
+            border-left: 10px solid #ff9d00;
+        }
+
+        .card {
+            width: 100%;
+            height: 150px;
+            border-radius: 0px;
+            margin: 0px;
+            box-shadow: none;
+            border-top: 1px solid #CCCCCC;
+        }
+
+        .card:hover {
+            box-shadow: none;
+        }
+
+        .checkin {
+            left: 0px;
+            top: 100px;
+            height: 100%;
+            bottom: 0px;
+            width: 100%;
+            border-radius: 0px;
+            box-shadow: none;
+        }
+
+        #navbar {
+            left: -290px;
+            transition: 1s;
+            -webkit-transition: 1s;
+        }
+
+        #navbar:hover {
+            left: 0px;
+        }
+
+        .page {
+            padding-left: 0px;
+        }
+
+        #email, #submit, #confirm_info, #confirm, #confirm_end, .checkin_end, #update, #register_end, #multiple {
+            width: 500px;
+        }
+
+        #confirm_info, #confirm_end, #register_end {
+            margin-left: 75px;
+        }
+
+        .input {
+            width: 300px;
+        }
+    }
+  </style>
 </head>
 <body>
     <div id="select_event">
         <p> Select An Event </p>
         <div id="rollcall"></div>
-        <img class="action" id="help" src="help.svg">
-        <img class="action" id="plus" src="plus.svg">
     </div>
     <div id="card_salesforce_workday" class="card" onclick="javascript:window.location='event.html';">
         <div class="title blue">
