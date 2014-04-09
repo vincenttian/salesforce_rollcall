@@ -8,10 +8,11 @@
 
     <head>
         <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
-        <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-        <apex:includeScript value="{!$Resource.fastclick}"/>
-        <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
-        <apex:includeScript value="{!$Resource.forceTK}"  />
+        <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'forceTK/forceTK.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'jquery/jquery-2.0.3.min.js')}"/>
+
         <title>RollCall Settings</title>
         <style type="text/css">
             p, input, li {
@@ -93,7 +94,7 @@
          </div>
          <a id="update" onclick="update_settings();"><p> Update </p></a>    
         <p id="messages" class="chart_title blue_text"></p>
-        <img id="loading" src="{!URLFOR($Resource.LoadingGif)}" style="margin: auto; margin-top: 25px; width: 30px; height: 30px; display:none"></img>
+        <img id="loading" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/ajax-loader.gif')}" style="margin: auto; margin-top: 25px; width: 30px; height: 30px; display:none"></img>
     </div>
     </div>    
      <script>

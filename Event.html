@@ -12,13 +12,12 @@
       <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
-      <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'scroll.js')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.d3, 'd3.min.js')}"/>
-      <script type="text/javascript" src="{!$Resource.gauge}"/>
-      <apex:includeScript value="{!$Resource.fastclick}"/>
-
-      <apex:includeScript value="{!URLFOR($Resource.jayquery, 'jquery/jquery-2.0.3.min.js')}"/>
+      <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
+      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/scroll.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'd3/d3.min.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'd3/gauge.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
+      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'jquery/jquery-2.0.3.min.js')}"/>
       <title>RollCall</title>
 
       <!-- Dynamic styling -->
