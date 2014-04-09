@@ -24,7 +24,7 @@ global class SettingsController{
                 setting.name = 'Default Settings';
                 insert setting;
             } else {
-                throw new ProfilePermissionException('Profile does not have create permission');
+                throw new CheckInController.ProfilePermissionException('Profile does not have create permission');
             }
         } else {
             if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
@@ -34,7 +34,7 @@ global class SettingsController{
                 first_setting.Campaign_Type__c = campaign_type;
                 update first_setting;
             } else {
-                throw new ProfilePermissionException('Profile does not have update permission');
+                throw new CheckInController.ProfilePermissionException('Profile does not have update permission');
             }
         }       
     }
@@ -57,10 +57,8 @@ global class SettingsController{
                 return info;
             }
         } else {
-            throw new ProfilePermissionException('Profile does not have read permission');
+            throw new CheckInController.ProfilePermissionException('Profile does not have read permission');
         }
     }
-
-    public class ProfilePermissionException extends Exception {}
 
 }

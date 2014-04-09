@@ -104,6 +104,4 @@ global with sharing class RollCall{
         }
     }
 
-    public class ProfilePermissionException extends Exception {}
-
 }
