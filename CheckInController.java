@@ -22,7 +22,7 @@ global with sharing class CheckInController{
     }
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {
-        if (Schema.sObjectType.Contact.fields.Email.isCreateable()) {
+        if (Schema.sObjectType.CampaignMember.isCreateable()) {
             insert attendee;
             CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
                                                                    CampaignId=campaign_id, 
@@ -34,7 +34,7 @@ global with sharing class CheckInController{
     }
 
     public static void check_in(CampaignMember attendee) {
-        if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
+        if (Schema.sObjectType.CampaignMember.fields.Status.isUpdateable()) {
             attendee.status = Event.checkedInStatus;
             update attendee;
         } else {
@@ -97,7 +97,7 @@ global with sharing class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static void check_in_multiple(String CampaignMemberId) {
-        if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
+        if (Schema.sObjectType.CampaignMember.fields.Status.isUpdateable()) {
             // login person that has specific attributes above
             CampaignMember event_attendee = [SELECT status FROM CampaignMember WHERE id = :CampaignMemberId];
             event_attendee.status = Event.checkedInStatus;
@@ -113,7 +113,7 @@ global with sharing class CheckInController{
         if (attendee.Id == null){
             register_event_attendee(event_id, (Contact)attendee);
         }else{
-            if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
+            if (Schema.sObjectType.Contact.isUpdateable() && Schema.sObjectType.Lead.isUpdateable()) {
                 CampaignMember[] cm = [ SELECT Status, ContactId, LeadId FROM CampaignMember 
                                         WHERE CampaignId=:event_Id AND (ContactId=:attendee.Id or 
                                         LeadId=:attendee.Id)];

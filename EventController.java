@@ -20,7 +20,7 @@ global with sharing class EventController {
 
     @RemoteAction
     global static Member[] attendee_search(ID cid, String name, Integer offset) {
-        if (Schema.sObjectType.Contact.fields.Email.isAccessible()) {
+        if (Schema.sObjectType.CampaignMember.isAccessible()) {
             String search_name = '%' + String.escapeSingleQuotes(name) + '%';
             Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, 
                                                                           ParentId, Id FROM Campaign WHERE ParentId=:cid OR 

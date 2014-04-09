@@ -16,7 +16,7 @@ global class SettingsController{
         register_status = register_status.escapeHtml4();
         campaign_type = campaign_type.escapeHtml4();
         if (settings.isempty()) { 
-            if (Schema.sObjectType.Contact.fields.Email.isCreateable()) {
+            if (Schema.sObjectType.RollCall_Settings__c.isCreateable()) {
                 RollCall_Settings__c setting = new RollCall_Settings__c();
                 setting.Check_in_Status__c = checkin_status;
                 setting.Registered_Status__c = register_status;
@@ -27,7 +27,7 @@ global class SettingsController{
                 throw new CheckInController.ProfilePermissionException('Profile does not have create permission');
             }
         } else {
-            if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
+            if (Schema.sObjectType.RollCall_Settings__c.isUpdateable()) {
                 RollCall_Settings__c first_setting = settings.values()[0];  
                 first_setting.Check_in_Status__c = checkin_status;
                 first_setting.Registered_Status__c = register_status;
@@ -41,7 +41,7 @@ global class SettingsController{
 
     @RemoteAction
     global static String[] check_settings() {
-        if (Schema.sObjectType.Contact.fields.Email.isAccessible()) {
+        if (Schema.sObjectType.RollCall_Settings__c.isAccessible()) {
             Map<String, RollCall_Settings__c> setting = RollCall_Settings__c.getAll();
             String[] info = new String[3];
             if (setting.isempty()) {
