@@ -20,35 +20,39 @@ global with sharing class EventController {
 
     @RemoteAction
     global static Member[] attendee_search(ID cid, String name, Integer offset) {
-        String search_name = '%' + String.escapeSingleQuotes(name) + '%';
-        Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, 
-                                                                      ParentId, Id FROM Campaign WHERE ParentId=:cid OR 
-                                                                      Id=:cid]);
-        CampaignMember[] registered = [SELECT Lead.Name, Lead.Email, 
-                                        Contact.Name, Contact.Email, Contact.Company__c, Lead.Company, LeadID, ContactID, Status
-                                        FROM CampaignMember WHERE 
-                                        (Status=:Event.checkedInStatus OR Status=:Event.registeredStatus) AND
-                                        CampaignId in :potential_children.keySet() AND 
-                                        (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name 
-                                        OR Contact.Company__c LIKE :search_name OR Lead.Company LIKE :search_name)
-                                        ORDER BY Attendee_Name__c ASC LIMIT 50 OFFSET :offset];
-        Member[] registered2 = new Member[]{};
-        for (CampaignMember cm : registered) {
-            if (cm.ContactID != null) { 
-                Member m = new Member(cm.Contact.name, cm.Contact.Company__c, cm.Contact.Email, false);
-                if (cm.Status == Event.checkedInStatus) {
-                    m.Status = true;
+        if (Schema.sObjectType.Contact.fields.Email.isAccessible()) {
+            String search_name = '%' + String.escapeSingleQuotes(name) + '%';
+            Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, 
+                                                                          ParentId, Id FROM Campaign WHERE ParentId=:cid OR 
+                                                                          Id=:cid]);
+            CampaignMember[] registered = [SELECT Lead.Name, Lead.Email, 
+                                            Contact.Name, Contact.Email, Contact.Company__c, Lead.Company, LeadID, ContactID, Status
+                                            FROM CampaignMember WHERE 
+                                            (Status=:Event.checkedInStatus OR Status=:Event.registeredStatus) AND
+                                            CampaignId in :potential_children.keySet() AND 
+                                            (Contact.Name LIKE :search_name OR Lead.Name LIKE :search_name 
+                                            OR Contact.Company__c LIKE :search_name OR Lead.Company LIKE :search_name)
+                                            ORDER BY Attendee_Name__c ASC LIMIT 50 OFFSET :offset];
+            Member[] registered2 = new Member[]{};
+            for (CampaignMember cm : registered) {
+                if (cm.ContactID != null) { 
+                    Member m = new Member(cm.Contact.name, cm.Contact.Company__c, cm.Contact.Email, false);
+                    if (cm.Status == Event.checkedInStatus) {
+                        m.Status = true;
+                    }
+                    registered2.add(m);
+                } else {
+                    Member m = new Member(cm.Lead.name, cm.Lead.Company, cm.Lead.Email, false);
+                    if (cm.Status == Event.checkedInStatus) {
+                        m.Status = true;
+                    }
+                    registered2.add(m);
                 }
-                registered2.add(m);
-            } else {
-                Member m = new Member(cm.Lead.name, cm.Lead.Company, cm.Lead.Email, false);
-                if (cm.Status == Event.checkedInStatus) {
-                    m.Status = true;
-                }
-                registered2.add(m);
             }
+            return registered2;
+        else {
+            throw new ProfilePermissionException('Profile does not have read permission');
         }
-        return registered2;
     }
 
     // For d3    
@@ -74,5 +78,7 @@ global with sharing class EventController {
         Event e = new Event(c);
         return e;
     }
+
+    public class ProfilePermissionException extends Exception {}
 
 }

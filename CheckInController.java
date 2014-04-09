@@ -22,16 +22,24 @@ global with sharing class CheckInController{
     }
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {
-        insert attendee;
-        CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
-                                                               CampaignId=campaign_id, 
-                                                               Status = Event.checkedInStatus);
-        insert new_event_attendee;
+        if (Schema.sObjectType.Contact.fields.Email.isCreateable()) {
+            insert attendee;
+            CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
+                                                                   CampaignId=campaign_id, 
+                                                                   Status = Event.checkedInStatus);
+            insert new_event_attendee;
+        else {
+            throw new ProfilePermissionException('Profile does not have create permission');
+        }
     }
 
     public static void check_in(CampaignMember attendee) {
-        attendee.status = Event.checkedInStatus;
-        update attendee;
+        if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
+            attendee.status = Event.checkedInStatus;
+            update attendee;
+        } else {
+            throw new ProfilePermissionException('Profile does not have update permission');
+        }
     }
 
     // logic to check if a campaign member needs to register or just check in
@@ -88,10 +96,14 @@ global with sharing class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static void check_in_multiple(String CampaignMemberId) {
-        // login person that has specific attributes above
-        CampaignMember event_attendee = [SELECT status FROM CampaignMember WHERE id = :CampaignMemberId];
-        event_attendee.status = Event.checkedInStatus;
-        update event_attendee;
+        if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
+            // login person that has specific attributes above
+            CampaignMember event_attendee = [SELECT status FROM CampaignMember WHERE id = :CampaignMemberId];
+            event_attendee.status = Event.checkedInStatus;
+            update event_attendee;
+        else {
+            throw new ProfilePermissionException('Profile does not have update permission');
+        }
     }
 
     // Checking in attendees for checkin page
@@ -109,5 +121,6 @@ global with sharing class CheckInController{
     }
 
     public class CapacityException extends Exception {}
+    public class ProfilePermissionException extends Exception {}
 
 }
