@@ -318,8 +318,21 @@ applyBodyTag="false">
                         setSection($("#container section#"+"#two"), $('.active'));
                     } else if (result.length == 0){ // no match in DB - Register page
                         attendeeType = 'Contact';
-
-                        // TODO: MAKE ATTENDEE AN EMPTY 
+                        // javascript escape
+                        var entityMap = {
+                          "&": "&amp;",
+                          "<": "&lt;",
+                          ">": "&gt;",
+                          '"': '&quot;',
+                          "'": '&#39;',
+                          "/": '&#x2F;'
+                        };
+                        function escapeHtml(email) {
+                          return String(string).replace(/[&<>"'\/]/g, function (s) {
+                            return entityMap[s];
+                          });
+                        }
+                        email = escapeHtml(email);
                         attendee = {sobjectType: 'Contact', email: email};
                         clear_attendee_info();
                         setSection($("#container section#"+"#five"), $('.active'));
