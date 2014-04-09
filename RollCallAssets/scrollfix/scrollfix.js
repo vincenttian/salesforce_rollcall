@@ -1,0 +1,1 @@
+var ScrollFix=function(e){var t,n;e=e||document.querySelector(e);if(!e)return;e.addEventListener("touchstart",function(r){t=r.touches[0].pageY;n=e.scrollTop;if(n<=0)e.scrollTop=1;if(n+e.offsetHeight>=e.scrollHeight)e.scrollTop=e.scrollHeight-e.offsetHeight-1},false)}

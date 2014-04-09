@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scroll.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <title>RollCall</title>
+</head>
+<body>
+    <div id="select_event">
+        <p> Salesforce Workday </p>          
+    </div>
+    <div class="invisible" id="doubletap" onclick="javascript:window.location='event.html';"></div>
+    <div id="container">
+ 		<section id="one" class="active">
+            <div class="checkin">
+                <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
+                <form>
+                <input type="text" name="email" class="normal" id="email" />
+                <p id="checkin_error"> Please enter a valid email </p>
+                <a id="submit" data-section="two" href="#">  
+                    <p> Check In </p>
+                </a>
+                </form>
+            </div>
+ 		</section>
+ 		<section id="two">
+            <div class="checkin">
+                <div id="confirm_info">
+                    <p> You are checking in as... </p>
+                    <p> Name: <span class="blue_text"> Kevin TianXiang Wu </span> </p>
+                    <p> Email: <span class="blue_text"> kevintxwu@gmail.com </span> </p>
+                    <p> Company: <span class="blue_text"> Salesforce </span> </p>
+                </div>
+                <a id="confirm" data-section="three" href="#"> 
+                    <p> Confirm </p>
+                </a>
+                <p id="confirm_end"> Otherwise, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in or <a class="blue_text" data-section="four" href="#"> update</a> this information </p>
+            </div>
+ 		</section>
+        <section id="three">
+            <div class="checkin">
+                <img class="checkin_icon" src="checkin.svg">
+                <p id="checkin_confirmation"> Your attendance has been <span class="blue_text"> recorded! </span> </p>
+                <a class="checkin_end" data-section="one" href="#"> 
+                    <p> Return </p>
+                </a>
+            </div>
+ 		</section>
+        <section id="four">
+            <div class="checkin">
+                <div class="column">
+                    <p class="label"> First Name: </p>
+                    <p id="first_spacer"><br></p>
+                    <p class="label"> Last Name: </p>
+                    <div id="last_spacer"></div>
+                    <p class="label"> Email: </p>
+                    <div id="email_error"><br></div>
+                    <p class="label"> Company: </p>
+                </div>
+                <div class="column">
+                    <input type="text" name="firstname" class="input normal" placeholder="Kevin"/>
+                    <p id="first_error"> Please enter a first name </p>
+                    <input type="text" name="lastname" class="input normal" placeholder="Wu"/>
+                    <p id="last_error"> Please enter a last name </p>
+                    <input type="text" name="company" class="input normal" placeholder="Salesforce"/>
+                    <input type="text" name="email" class="input normal" placeholder="kevintxwu@gmail.com"/>
+                    <p id="email_error"> Please enter a valid email </p>
+                </div>
+                <a id="update" data-section="three" href="#"> 
+                    <p> Confirm </p>
+                </a>
+            </div>
+        </section>
+        <section id="five">
+            <div class="checkin">
+                <img class="checkin_icon" src="help_alt.svg">
+                <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
+                <a class="checkin_end" data-section="four" href="#"> 
+                    <p> Register </p>
+                </a>
+                <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
+            </div>
+        </section>
+        <section id="six">
+            <div class="checkin">
+                <p id="multiple"> There seem to be multiple kevintxwu@gmail.com's. Which of these do you want to check in as? </p>
+                <div id="account_container">
+                    <a class="checkin_end" data-section="two" href="#"> 
+                        <p> Kevin Wu, Salesforce </p>
+                    </a>
+                    <a class="checkin_end" data-section="two" href="#"> 
+                        <p> Kevin Wu, Salesforce </p>
+                    </a>
+                    <a class="checkin_end" data-section="two" href="#"> 
+                        <p> Kevin Wu, Salesforce </p>
+                    </a>
+                    <a class="checkin_end" data-section="two" href="#"> 
+                        <p> Kevin Wu, Salesforce </p>
+                    </a>
+                    <a class="checkin_end" data-section="two" href="#"> 
+                        <p> Kevin Wu, Salesforce </p>
+                    </a>
+                </div>
+                <p id="confirm_end"> If none of these are you then please <a class="blue_text" data-section="one" href="#"> retry</a> </p>
+            </div>
+        </section>
+        <section id="seven">
+            <div class="checkin">
+                <p id="capacity_reached"> Sorry, our event is at max capacity: <span id='max_reg_count'></span>.<br> There can be no more sign ins. 
+                </p>
+            </div>
+          </section>
+ 	</div>
+</body>
+</html>
