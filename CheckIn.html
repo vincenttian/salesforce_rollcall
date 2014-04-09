@@ -327,7 +327,7 @@ applyBodyTag="false">
                           "'": '&#39;',
                           "/": '&#x2F;'
                         };
-                        function escapeHtml(email) {
+                        function escapeHtml(string) {
                           return String(string).replace(/[&<>"'\/]/g, function (s) {
                             return entityMap[s];
                           });
@@ -389,6 +389,21 @@ applyBodyTag="false">
 
             if (inputElement!= null && inputElement.length != 0){
                 var value = inputElement.val().trim();
+                // html escape
+                var entityMap = {
+                  "&": "&amp;",
+                  "<": "&lt;",
+                  ">": "&gt;",
+                  '"': '&quot;',
+                  "'": '&#39;',
+                  "/": '&#x2F;'
+                };
+                function escapeHtml(string) {
+                  return String(string).replace(/[&<>"'\/]/g, function (s) {
+                    return entityMap[s];
+                  });
+                }
+                value = escapeHtml(value);
                 if (inputElement.attr("isRequired") == "true" &&  value == ''){                  
                   requiredCheckPassed = false;
                   var error = $('#'+attendeeType+'_'+key+'_error');
