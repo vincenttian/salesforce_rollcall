@@ -12,56 +12,60 @@ global with sharing class RollCall{
     // For apex: repeat    
     public Event[] getEvents() {
 
-        String soql = 'SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ';
-        
-        if (Event.campaignType != '' && Event.campaignType != 'All'){
-            soql += ' AND Type=\''+Event.campaignType+'\' ';
-        }
-
-        soql += ' ORDER BY StartDate ASC NULLS LAST';
-
-        Campaign[] campaigns = Database.query(soql);
-
-        ID[] parentIds = new Id[]{};
-        for (campaign c: campaigns) {
-            parentIds.add(c.ID);
-        }
-        Map<Id, Campaign> potential_children =
-            new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
-                                    Id FROM Campaign WHERE ParentId IN :parentIds OR ID IN :parentIds]);
-        CampaignMember[] registered = [SELECT Status, CampaignID, Campaign.ParentID FROM CampaignMember
-                                        WHERE CampaignId in :potential_children.keySet() AND 
-                                        (Status =:Event.registeredStatus
-                                        OR Status =:Event.checkedInStatus)];
-        Map<Id, Integer> regMap = new Map<Id, Integer>();
-        Map<Id, Integer> checkMap = new Map<Id, Integer>();
-        CampaignMember[] ps = new CampaignMember[]{};
-        CampaignMember[] cs = new CampaignMember[]{};
-        for (CampaignMember m : registered) {
-            if (m.Campaign.ParentId != null) {
-                cs.add(m);
-            } else {
-                ps.add(m);
+        if (Schema.sObjectType.Contact.fields.Email.isAccessible()) {
+            String soql = 'SELECT Name, Description, StartDate, MaxCapacity__c FROM Campaign WHERE IsActive = True AND ParentId = null ';
+            
+            if (Event.campaignType != '' && Event.campaignType != 'All'){
+                soql += ' AND Type=\''+Event.campaignType+'\' ';
             }
-        }
-        mapVals(regMap, checkMap, ps);
-        mapVals2(regMap, checkMap, cs);
-        Event[] events = new Event[]{};
-        Integer i = 0;
-        for (Campaign c : campaigns) {
-            Event e = new Event(c, i);
-            e.registered = regMap.get(c.ID);
-            if (e.registered == null) {
-                e.registered = 0;
+
+            soql += ' ORDER BY StartDate ASC NULLS LAST';
+
+            Campaign[] campaigns = Database.query(soql);
+
+            ID[] parentIds = new Id[]{};
+            for (campaign c: campaigns) {
+                parentIds.add(c.ID);
             }
-            e.checkedin = regMap.get(c.ID);
-            if (e.checkedin == null) {
-                e.checkedin = 0;
+            Map<Id, Campaign> potential_children =
+                new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status, ParentId,
+                                        Id FROM Campaign WHERE ParentId IN :parentIds OR ID IN :parentIds]);
+            CampaignMember[] registered = [SELECT Status, CampaignID, Campaign.ParentID FROM CampaignMember
+                                            WHERE CampaignId in :potential_children.keySet() AND 
+                                            (Status =:Event.registeredStatus
+                                            OR Status =:Event.checkedInStatus)];
+            Map<Id, Integer> regMap = new Map<Id, Integer>();
+            Map<Id, Integer> checkMap = new Map<Id, Integer>();
+            CampaignMember[] ps = new CampaignMember[]{};
+            CampaignMember[] cs = new CampaignMember[]{};
+            for (CampaignMember m : registered) {
+                if (m.Campaign.ParentId != null) {
+                    cs.add(m);
+                } else {
+                    ps.add(m);
+                }
             }
-            events.add(e);
-            i++;
+            mapVals(regMap, checkMap, ps);
+            mapVals2(regMap, checkMap, cs);
+            Event[] events = new Event[]{};
+            Integer i = 0;
+            for (Campaign c : campaigns) {
+                Event e = new Event(c, i);
+                e.registered = regMap.get(c.ID);
+                if (e.registered == null) {
+                    e.registered = 0;
+                }
+                e.checkedin = regMap.get(c.ID);
+                if (e.checkedin == null) {
+                    e.checkedin = 0;
+                }
+                events.add(e);
+                i++;
+            }
+            return events;
+        else {
+            throw new ProfilePermissionException('Profile does not have read permission');
         }
-        return events;
     }
 
     private void mapVals(Map<Id, Integer> rMap, Map<Id, Integer> cMap,
@@ -99,5 +103,7 @@ global with sharing class RollCall{
             }
         }
     }
+
+    public class ProfilePermissionException extends Exception {}
 
 }
