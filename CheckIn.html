@@ -28,8 +28,8 @@ applyBodyTag="false">
 
       #clear {
         position: relative;
-        top: -178px;
-        left: 260px;
+        left: 250px;
+        top: -58px;
         width: 25px;
         height: 25px;
         background: url("http://www.iconsdb.com/icons/preview/gray/x-mark-xxl.png");
@@ -55,9 +55,10 @@ applyBodyTag="false">
     <div class="checkin">
       <p id="checkin_title"> Enter your <span class="blue_text"> email </span> to check in: </p>
       <input class="normal"  type="email" name="email" id="email" autocorrect="off" autocomplete="off" onclick='clear_error("email")'/>
-      <p id="email_error"> Please enter a valid email </p>
-      <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();"> <p> Check In </p> </div>
+      <br></br>
       <button id="clear" onclick="clearInput();"></button>
+      <p id="email_error" style="margin-top: -10px"> Please enter a valid email </p>
+      <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();" style="margin-top: 15px"> <p> Check In </p> </div>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -109,7 +110,7 @@ applyBodyTag="false">
   </section>
   <!-- Update Lead Attendee Information -->  
   <section id="four_Lead">
-    <div class="checkin">
+    <div class="checkin" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;">
       <div class="column">
         <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
           <p class="label"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
@@ -117,14 +118,14 @@ applyBodyTag="false">
         </apex:repeat>
         <p class="label"> *Email: </p>
       </div>
-      <div class="column">
+      <div class="column" style="margin-bottom: 50px;">
         <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
           <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" isRequired="{!f.Required}"/>
           <p id="Lead_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
         </apex:repeat>
         <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
-      <button id="update" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
+      <button id="update"  style="margin-bottom: 50px;" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
       <div id="Lead_error"> </div>  <!-- A div for injecting tests into -->
     </div>
   </section>
