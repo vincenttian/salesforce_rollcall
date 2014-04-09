@@ -50,6 +50,32 @@
     </script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      p, input, li {
+        font-family: Source Sans Pro, sans-serif;
+        font-weight: 600;
+      }
+      @media (max-width: 641px) {
+        p, input, li {
+            font-weight: 200;
+        }
+        
+        
+        #navbar {
+            left: -290px;
+            transition: 1s;
+            -webkit-transition: 1s;
+        }
+
+        #navbar:hover {
+            left: 0px;
+        }
+
+        .page {
+            padding-left: 0px;
+        }
+    }
+  </style>
 </head>
 <body onload="initialize()">
     <div id="navbar">

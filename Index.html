@@ -7,7 +7,7 @@
    applyBodyTag="false"
    id="todo"
    >
-   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
+   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600"/>
    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Oswald"/>
    <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'style.css')}"/>
    <apex:includeScript value="{!$Resource.fastclick}"/>
@@ -18,6 +18,15 @@
             p, input, li {
               font-family: Source Sans Pro, sans-serif;
               font-weight: 600;
+            }
+
+            .titletext {
+              text-overflow:ellipsis;
+              overflow: hidden;
+              display: block; 
+              float:left;
+              white-space: nowrap;
+              width: 200px;
             }
 
             #animation {
@@ -69,7 +78,7 @@
                <a href="javascript:sforce.one.navigateToURL('/apex/event?event_id={!event.cId}');">
                   <div class="card">
                      <div class="{!event.titlecolor}">
-                        <p style="text-overflow:ellipsis; overflow: hidden; display: block; float:left; white-space: nowrap; width: 200px;">
+                        <p class="titletext" style="">
                            {!event.Name}
                         </p>
                      </div>
