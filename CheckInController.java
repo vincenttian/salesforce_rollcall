@@ -12,7 +12,7 @@ global with sharing class CheckInController{
     public Event event{get; set;}
 
     public CheckInController() {
-        Campaign c[] = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
+        Campaign[] c = [SELECT Id, Name, Description, StartDate, MaxCapacity__c FROM Campaign 
                       WHERE Id=:ApexPages.currentPage().getParameters().get('event_id')];
         if (c.size() != 0) {
             event = new Event(c[0]);
@@ -22,28 +22,21 @@ global with sharing class CheckInController{
     }
 
     public static void register_event_attendee(String campaign_id, Contact attendee ) {
-        if (Schema.sObjectType.Contact.fields.Email.isCreateable()) {
-            insert attendee;
-            CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
-                                                                   CampaignId=campaign_id, 
-                                                                   Status = Event.checkedInStatus);
-            insert new_event_attendee;
-        else {
-            throw new ProfilePermissionException('Profile does not have create permission');
-        }
+        insert attendee;
+        CampaignMember new_event_attendee = new CampaignMember(ContactId=attendee.id, 
+                                                               CampaignId=campaign_id, 
+                                                               Status = Event.checkedInStatus);
+        insert new_event_attendee;
     }
 
     public static void check_in(CampaignMember attendee) {
-        if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
-            attendee.status = Event.checkedInStatus;
-            update attendee;
-        } else {
-            throw new ProfilePermissionException('Profile does not have update permission');
-        }
+        attendee.status = Event.checkedInStatus;
+        update attendee;
     }
 
     // logic to check if a campaign member needs to register or just check in
     public static CampaignMember[] handle_parent_events(String campaign_id, String email) {
+        email = String.escapeSingleQuotes(email);
         Map<Id, Campaign> potential_children = new Map<Id, Campaign>([SELECT Name, Description, StartDate, Status,
                                                                      ParentId, Id, MaxCapacity__c FROM Campaign 
                                                                      WHERE ParentId=:campaign_id OR Id=:campaign_id]);
@@ -96,14 +89,10 @@ global with sharing class CheckInController{
     // Checking in attendees for checkin page
     @RemoteAction
     global static void check_in_multiple(String CampaignMemberId) {
-        if (Schema.sObjectType.Contact.fields.Email.isUpdateable()) {
-            // login person that has specific attributes above
-            CampaignMember event_attendee = [SELECT status FROM CampaignMember WHERE id = :CampaignMemberId];
-            event_attendee.status = Event.checkedInStatus;
-            update event_attendee;
-        else {
-            throw new ProfilePermissionException('Profile does not have update permission');
-        }
+        // login person that has specific attributes above
+        CampaignMember event_attendee = [SELECT status FROM CampaignMember WHERE id = :CampaignMemberId];
+        event_attendee.status = Event.checkedInStatus;
+        update event_attendee;
     }
 
     // Checking in attendees for checkin page
@@ -121,6 +110,5 @@ global with sharing class CheckInController{
     }
 
     public class CapacityException extends Exception {}
-    public class ProfilePermissionException extends Exception {}
 
 }
