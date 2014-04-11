@@ -181,7 +181,7 @@
         <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();line_chart_info(); activate(2);initialize();">
           <p> Statistics </p>
         </a>
-        <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3);'>
+        <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3); clearInput();'>
           <p> Attendees </p>
         </a>
         <div id="checkinLink" onclick="javascript:sforce.one.navigateToURL('/apex/checkin?event_id={!event.cId}'); activate(4);">
@@ -555,6 +555,7 @@
     }
 
     function clearInput() {
+       $("#attendee_list").scrollTop(0);
        $("#field").val('');
     }
     function maxCapacityCheck() {
