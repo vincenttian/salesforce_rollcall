@@ -1,307 +1,253 @@
 <apex:page docType="html-5.0"
-  sidebar="false"
-  showheader="false"
-  standardStylesheets="false"
-  Controller="EventController"
-  applyHtmlTag="false"
-  applyBodyTag="false"
-  id="todo"
-  >
-  <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
-      <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
-      <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/scroll.js')}"/>
-      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'd3/d3.min.js')}"/>
-      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'd3/gauge.js')}"/>
-      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
-      <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'jquery/jquery-2.0.3.min.js')}"/>
-      <title>RollCall</title>
+sidebar="false"
+showheader="false"
+standardStylesheets="false"
+Controller="EventController"
+applyHtmlTag="false"
+applyBodyTag="false"
+id="todo"
+>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:600"/>
+  <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
+  <script type="text/javascript" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/scroll.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'd3/d3.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'd3/gauge.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'jquery/jquery-2.0.3.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scrollfix/scrollfix.js')}"/>
+  <title>RollCall</title>
 
-      <!-- Dynamic styling -->
-      <style>
-        p, input, li {
-          font-family: Source Sans Pro, sans-serif;
-          font-weight: 600;
-        }
+  <!-- Dynamic styling -->
+  <style>
+  p, input, li {
+    font-family: Source Sans Pro, sans-serif;
+    font-weight: 600;
+  }
 
-        .ellipses {
-            text-overflow:ellipsis;
-            display: inline-block;
-            overflow: hidden;
-            white-space: nowrap;
-            width: 500px;
-        }
+  .ellipses {
+    text-overflow:ellipsis;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 500px;
+  }
 
-        #phone {
-          padding: 75px;
-          padding-bottom: 0px;
-          display: none;
-        }
+  #phone {
+    padding: 75px;
+    padding-bottom: 0px;
+    display: none;
+  }
 
-        @media (max-width: 900px) {
-          .ellipses {
-            width: 270px;
-          }
-        }
+  @media (max-width: 900px) {
+    .ellipses {
+      width: 270px;
+    }
+  }
 
-        .disabled {
-          opacity: 0.5;
-        }
+  .disabled {
+    opacity: 0.5;
+  }
 
-        body {
-          background: #fff;
-        }
-        
-        .registered {
-          float: left;
-          margin-top: 10px;
-          width: 100px;
-          height: 100px;
-          background: url(checkin.svg);
-          background-size: contain;
-          background-repeat: no-repeat;
-        }
+  body {
+    background: #fff;
+  }
 
-        .axis path,
-        .axis line {
-          fill: none;
-          stroke: #CCC;
-        }
+  .registered {
+    float: left;
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    background: url(checkin.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 
-        .line {
-          fill: none;
-          stroke: #ff009d;
-          stroke-width: 3px;
-        }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #CCC;
+  }
 
-        .y {
-            display: none;
-        }    
+  .line {
+    fill: none;
+    stroke: #ff009d;
+    stroke-width: 3px;
+  }
 
-        .active_tab {
-          background: #EEEEEE;
-        }
+  .y {
+    display: none;
+  }    
 
-        @media (max-width: 641px) {
+  .active_tab {
+    background: #EEEEEE;
+  }
 
-        p, input, li {
-          font-size: 0.5em;
-        }
-
-        #flow_title {
-          margin-left: 0px;
-        }
-
-        .checked {
-          float: none;
-          position: relative;
-          top: 15px;
-        }
-
-        #navbar_title {
-          width: 160px;
-        }
-
-        .ellipses {
-          text-overflow:ellipsis;
-            display: inline-block;
-            overflow: hidden;
-            white-space: nowrap;
-            width: 100px;
-        }
-
-        #navbar {
-            left: -150px;
-            width: 160px;
-            height: 100%;
-            font-size: 1em;
-            transition: 1s;
-            -webkit-transition: 1s;
-        }
-
-        .tab {
-          width: 160px;
-          height: 70px;
-        }
-
-        #page_two {
-          padding-left: 1px;
-        }
-
-        #phone {
-          display: inline-block;
-        }
-
-        #navbar:hover{
-            left: 0px;
-        }
-
-        #field {
-          width: 200px;
-        }
-
-        .page {
-          padding-left: 0px;
-          width: 100%;
-          overflow-y: scroll;
-          overflow-scrolling: touch;
-        }
-
-        #remove_flow, #chart_one {
-          display:none;
-        }
-      }
-      </style>
-    <script>
-      function activate(id)
-      {
-          $(".active_tab").removeClass("active_tab");
-          if (id == 1) {
-            $("#tab_one").addClass("active_tab");
-          } else if (id == 2) {
-            $("#tab_two").addClass("active_tab");
-          }  else if (id == 3) {
-            $("#tab_three").addClass("active_tab");
-          } else {
-            $("#tab_four").addClass("active_tab");
-          }
-      }
-    </script>
-    </head>
-    <body>
-      <div id="navbar">
-        <div id="navbar_title">
-          <p> You are now managing: <br></br> <span class="blue_text">
-            {!event.name}
-            </span>
-          </p>
+  </style>
+  <script>
+  function activate(id)
+  {
+    $(".active_tab").removeClass("active_tab");
+    if (id == 1) {
+      $("#tab_one").addClass("active_tab");
+    } else if (id == 2) {
+      $("#tab_two").addClass("active_tab");
+    }  else if (id == 3) {
+      $("#tab_three").addClass("active_tab");
+    } else {
+      $("#tab_four").addClass("active_tab");
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="navbar">
+    <div id="navbar_title">
+      <p> You are now managing: <br></br> <span class="blue_text">
+        {!event.name}
+      </span>
+    </p>
+  </div>
+  <a id="tab_one" class="tab blue_border hover_blue_text active_tab" data-section="one" href="#" onclick='activate(1);'>
+    <p> Information </p>
+  </a>
+  <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();line_chart_info(); activate(2);initialize();">
+    <p> Statistics </p>
+  </a>
+  <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3); clearInput();'>
+    <p> Attendees </p>
+  </a>
+  <div id="checkinLink" onclick="javascript:sforce.one.navigateToURL('/apex/checkin?event_id={!event.cId}'); activate(4);">
+    <div id="tab_four" class="tab red_border hover_red_text">
+      <p> Check In </p>
+    </div>
+  </div>
+  <!--div id="return" onclick="javascript:sforce.one.navigateToURL('/apex/index');"></div-->
+</div>
+<div id="container">
+  <!-- Event Information -->
+  <section id="one" class="active">
+    <div class="page" >
+      <div id="event">
+        <div class="information">
+          <p class="blue_text"> Name: </p>
+          <p> {!event.name} </p>
+          <p class="blue_text"> Description: </p>
+          <p> {!event.description} </p>
+          <p class="blue_text"> Date: </p>
+          <p> {!event.start} </p>
+          <p class="blue_text"> Number Registered: </p>
+          <p id="event_registered"> {!event.registered} </p>
+          <p class="blue_text"> Number Checked In: </p>
+          <p id="event_checkedIn"> {!event.checkedIn} </p>
+          <p class="blue_text"> Max Capacity: </p>
+          <p> {!event.maxCapacity} </p>
         </div>
-        <a id="tab_one" class="tab blue_border hover_blue_text active_tab" data-section="one" href="#" onclick='activate(1);'>
-          <p> Information </p>
-        </a>
-        <a id="tab_two" class="tab magenta_border hover_magenta_text" data-section="two" href="#" onclick="clearDom();line_chart_info(); activate(2);initialize();">
-          <p> Statistics </p>
-        </a>
-        <a id="tab_three" class="tab green_border hover_green_text" data-section="three" href="#" onclick='clearInput(); getAttendees(false); activate(3); clearInput();'>
-          <p> Attendees </p>
-        </a>
-        <div id="checkinLink" onclick="javascript:sforce.one.navigateToURL('/apex/checkin?event_id={!event.cId}'); activate(4);">
-          <div id="tab_four" class="tab red_border hover_red_text">
-            <p> Check In </p>
-          </div>
-        </div>
-        <!--div id="return" onclick="javascript:sforce.one.navigateToURL('/apex/index');"></div-->
       </div>
-      <div id="container">
-        <!-- Event Information -->
-        <section id="one" class="active">
-          <div class="page" >
-            <div id="event">
-              <div class="information">
-                <p class="blue_text"> Name: </p>
-                <p> {!event.name} </p>
-                <p class="blue_text"> Description: </p>
-                <p> {!event.description} </p>
-                <p class="blue_text"> Date: </p>
-                <p> {!event.start} </p>
-                <p class="blue_text"> Number Registered: </p>
-                <p id="event_registered"> {!event.registered} </p>
-                <p class="blue_text"> Number Checked In: </p>
-                <p id="event_checkedIn"> {!event.checkedIn} </p>
-                <p class="blue_text"> Max Capacity: </p>
-                <p> {!event.maxCapacity} </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <!-- Event Statistics -->
-        <section id="two">
-          <div class="page" id="page_two">
-            <p class="chart_title" id="flow_title"> Check-in Flow </p>
-              <p id="phone"> Chart unavailable on smaller screen sizes </p>
-              <p id="remove_flow"> Rotate device to see <span class="magenta_text"> Check-in Flow </span> </p>
-              <div id="chart_one">
-              </div>
-              <div id="chart_two">
-                  <p class="chart_title"> Attendance </p>
-                  <p class="chart_info"> Checked In:
-                    <span class="blue_text" id='pie_checkedin'>
-
-                    </span>
-                    <br></br>
-                    Registered:
-                    <span class="gray_text" id='pie_registered'>
-
-                    </span>
-                  </p>
-                  <p id="percentage"> </p>
-              </div>
-              <div id="chart_three">
-                  <p class="chart_title"> Capacity </p>
-                  <p class="chart_info"> Checked In: <span class="orange_text" id='gauge_checkedin'> </span> <br></br> Capacity: <span id="pie_capacity" class="gray_text"></span> </p>
-                  <span id="testGaugeContainer"></span>
-              </div>
-          </div>
-        </section>
-        <!-- Event Attendees -->
-        <section id="three">
-          <div class="page" style="overflow-x: hidden;" onscroll='blurrer();'>
-            <div class="information" id="attendee_list" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;" >
-              <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
-              <div id="attendee_container" style="text-overflow: auto;">
-               <p class="green_text"> <br></br>Attendee List </p>
-                <ul id="the_list"></ul>
-               <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
-                  <span class="glyphicon glyphicon-cloud-download"></span> Show More
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+    </div>
+  </section>
+  <!-- Event Statistics -->
+  <section id="two">
+    <div class="page" id="page_two">
+      <p class="chart_title" id="flow_title"> Check-in Flow </p>
+      <p id="phone"> Chart unavailable on smaller screen sizes </p>
+      <p id="remove_flow"> Rotate device to see <span class="magenta_text"> Check-in Flow </span> </p>
+      <div id="chart_one">
       </div>
-    </body>
-    <script type="text/javascript">
-      function blurrer(){               
-             $("#field").blur();
-             window.focus();
-      }
-      window.onkeydown = function(e){
-          window.focus();
-          $("#field").focus();
-      }    
-    </script>
-    <script>
-        var gauges = [];
-        function createGauge(name, label, min, max) {
-            var config = {
-                size: 245,
-                label: label,
-                min: undefined != min ? min : 0,
-                max: undefined != max ? max : 100,
-                minorTicks: 5
-            }
-            var range = config.max - config.min;
-            config.greenZones = [{ from: config.min + range*0, to: config.min + range/3 }];
-            config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
-            config.redZones = [{ from: config.min + range*2/3, to: config.max }];
-            gauges[name] = new Gauge(name + "GaugeContainer", config);
-            gauges[name].render();
-        }
+      <div id="chart_two">
+        <p class="chart_title"> Attendance </p>
+        <p class="chart_info"> Checked In:
+          <span class="blue_text" id='pie_checkedin'>
 
-        function initialize() {
-                update_stats();
-        }
+          </span>
+          <br></br>
+          Registered:
+          <span class="gray_text" id='pie_registered'>
+
+          </span>
+        </p>
+        <p id="percentage"> </p>
+      </div>
+      <div id="chart_three">
+        <p class="chart_title"> Capacity </p>
+        <p class="chart_info"> Checked In: <span class="orange_text" id='gauge_checkedin'> </span> <br></br> Capacity: <span id="pie_capacity" class="gray_text"></span> </p>
+        <span id="testGaugeContainer"></span>
+      </div>
+    </div>
+  </section>
+  <!-- Event Attendees -->
+  <section id="three">
+    <div class="page" style="overflow-x: hidden;" onscroll='blurrer();'>
+      <div class="information" id="attendee_list" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;" >
+          <input type="text" id="field" name="bar" class="input form-control object-search-input normal" onkeyup="getAttendees(false);" autocorrect="off" autocomplete="off" placeholder="Search"/>
+          <div id="attendee_container" style="text-overflow: auto;">
+           <p class="green_text"> <br></br>Attendee List </p>
+           <ul id="the_list"></ul>
+           <button id="search" class="btn btn-info loading hidden" onclick="getAttendees(true);">
+            <span class="glyphicon glyphicon-cloud-download"></span> Show More
+          </button>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+</body>
+<script>
+/* Add ScrollFix */
+var scrollingHomeContent = document.getElementById("content");
+new ScrollFix(scrollingHomeContent);
+
+/* Prevent Header & Footer From Showing Browser Chrome */
+document.addEventListener('touchmove', function(event) {
+ if(event.target.parentNode.className.indexOf('noBounce') != -1 || event.target.className.indexOf('noBounce') != -1) {
+  event.preventDefault(); }
+}, false);
+
+/* Content contains all of the major parts of the app and is bound to ScrollFix */
+$('.information').css('min-height', $(window).height() + 'px');
+</script>
+<script type="text/javascript">
+function blurrer(){               
+ $("#field").blur();
+ window.focus();
+}
+window.onkeydown = function(e){
+  window.focus();
+  $("#field").focus();
+}    
+</script>
+<script>
+var gauges = [];
+function createGauge(name, label, min, max) {
+  var config = {
+    size: 245,
+    label: label,
+    min: undefined != min ? min : 0,
+    max: undefined != max ? max : 100,
+    minorTicks: 5
+  }
+  var range = config.max - config.min;
+  config.greenZones = [{ from: config.min + range*0, to: config.min + range/3 }];
+  config.yellowZones = [{ from: config.min + range/3, to: config.min + range*2/3 }];
+  config.redZones = [{ from: config.min + range*2/3, to: config.max }];
+  gauges[name] = new Gauge(name + "GaugeContainer", config);
+  gauges[name].render();
+}
+
+function initialize() {
+  update_stats();
+}
 
         // javascript remoting for realtime updates
         function update_stats() {
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.EventController.update_stats}',
-                '{!event.cid}',
-                function(result, event){
-                    if (event.status) {
+          Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.EventController.update_stats}',
+            '{!event.cid}',
+            function(result, event){
+              if (event.status) {
 
                         // Update event information in information tab
                         $("#event_checkedIn").text(result.checkedIn);
@@ -317,9 +263,9 @@
                         }
 
                         if (result.maxCapacity != 'Unlimited'){
-                            createGauge("test", "Test", 0, result.maxCapacity );
-                              var value = result.checkedIn;
-                              gauges["test"].redraw(value);
+                          createGauge("test", "Test", 0, result.maxCapacity );
+                          var value = result.checkedIn;
+                          gauges["test"].redraw(value);
                         }
 
                         // Pie Chart
@@ -331,250 +277,250 @@
                         document.getElementById('percentage').innerHTML = Math.round(checked_in/registered * 100) + "%"
 
                         var data = [ {name: "attended", value: result.checkedIn},
-                                {name: "absent", value:  math} ];
+                        {name: "absent", value:  math} ];
 
                         var width = 362,
-                            height = 384,
-                            radius = Math.min(width, height) / 2;
+                        height = 384,
+                        radius = Math.min(width, height) / 2;
 
                         var chart = d3.select("#chart_two")
-                                        .append('svg')
-                                        .attr("width", width)
-                                        .attr("height", height)
-                                       .append("g")
-                                        .attr("transform", "translate(" + width / 2 + "," + 96 + ")");
+                        .append('svg')
+                        .attr("width", width)
+                        .attr("height", height)
+                        .append("g")
+                        .attr("transform", "translate(" + width / 2 + "," + 96 + ")");
 
                         var radius = Math.min(width, height) / 2;
 
                         var color = d3.scale.ordinal()
-                            .range(["#0096ff", "#CCC"]);
+                        .range(["#0096ff", "#CCC"]);
 
                         var arc = d3.svg.arc()
-                            .outerRadius(radius - 85)
-                            .innerRadius(radius - 110);
+                        .outerRadius(radius - 85)
+                        .innerRadius(radius - 110);
 
                         var pie = d3.layout.pie()
-                            .sort(null)
-                            .startAngle(1.1*Math.PI)
-                            .endAngle(3.1*Math.PI)
-                            .value(function(d) { return d.value; });
+                        .sort(null)
+                        .startAngle(1.1*Math.PI)
+                        .endAngle(3.1*Math.PI)
+                        .value(function(d) { return d.value; });
 
 
                         var g = chart.selectAll(".arc")
-                          .data(pie(data))
+                        .data(pie(data))
                         .enter().append("g")
-                          .attr("class", "arc");
+                        .attr("class", "arc");
 
                         g.append("path")
-                          .style("fill", function(d) { return color(d.data.name); })
-                          .style("stroke", "#fff")
-                          .style("stroke-width", "3px")
-                          .transition().delay(function(d, i) { return i * 500; }).duration(1000)
-                          .attrTween('d', function(d) {
-                               var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-                               return function(t) {
-                                   d.endAngle = i(t);
-                                 return arc(d);
-                               }
-                          });
-                    } else if (event.type === 'exception') {
+                        .style("fill", function(d) { return color(d.data.name); })
+                        .style("stroke", "#fff")
+                        .style("stroke-width", "3px")
+                        .transition().delay(function(d, i) { return i * 500; }).duration(1000)
+                        .attrTween('d', function(d) {
+                         var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+                         return function(t) {
+                           d.endAngle = i(t);
+                           return arc(d);
+                         }
+                       });
+                      } else if (event.type === 'exception') {
                         // should never go here
-                    } else {
+                      } else {
                         document.getElementById("test").innerHTML +=event.message;
-                    }
-                },
-            {escape: true}
-            );
-        }
-        </script>
-        <script>
+                      }
+                    },
+                    {escape: true}
+                    );
+}
+</script>
+<script>
     // Flow Chart of attendees
     function line_chart_info() {
-        Visualforce.remoting.Manager.invokeAction(
+      Visualforce.remoting.Manager.invokeAction(
         '{!$RemoteAction.EventController.get_checkedin_times}',
         '{!event.cid}',
         function(result, event){
-            if (event.status) {
+          if (event.status) {
                 // Get DOM IDs for HTML and Visualforce elements like this
-              if (result.length == 0){
+                if (result.length == 0){
                   $('#chart_one').append('<p class="chart_info" style="top:150px;">No one has checked in yet</p>');
-                   return;
-              }
+                  return;
+                }
 
-              var width = 624,
-                  height = 214;
-              var x = d3.time.scale()
-                  .range([0, width - 100]);
-              var y = d3.scale.linear()
-                  .range([height, 0]);
-              var xAxis = d3.svg.axis()
-                  .scale(x)
-                  .ticks(4)
-                  .orient("bottom");
-              var yAxis = d3.svg.axis()
-                  .scale(y)
-                  .orient("left");
-              var line = d3.svg.line()
-                  .x(function(d) { return x(d.date); })
-                  .y(function(d) { return y(d.close); });
-              var svg = d3.select("#chart_one").append("svg")
-                  .attr("width", width + 100)
-                  .attr("height", height + 100)
+                var width = 624,
+                height = 214;
+                var x = d3.time.scale()
+                .range([0, width - 100]);
+                var y = d3.scale.linear()
+                .range([height, 0]);
+                var xAxis = d3.svg.axis()
+                .scale(x)
+                .ticks(4)
+                .orient("bottom");
+                var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+                var line = d3.svg.line()
+                .x(function(d) { return x(d.date); })
+                .y(function(d) { return y(d.close); });
+                var svg = d3.select("#chart_one").append("svg")
+                .attr("width", width + 100)
+                .attr("height", height + 100)
                 .append("g")
-                  .attr("transform", "translate(" + 100 + "," + 75 + ")");
+                .attr("transform", "translate(" + 100 + "," + 75 + ")");
             // Formatting response to JSON object
             var data = '{"close": [';
             for (var i=0; i<result.length - 1; i++) {
-                data += (i + 1) + ",";
+              data += (i + 1) + ",";
             }
             data += (i+1) + '], "date": ["';
             date_format = d3.time.format("%a %b %e %H:%M:%S:%p %Y");
             // date_format = d3.time.format("%c");
             for (var i=0; i<result.length - 1; i++) {
-                temp_date = new Date(result[i]);
+              temp_date = new Date(result[i]);
                 // CHANGE THE DATE FORMAT HERE
                 temp_date = date_format(temp_date);
                 data += temp_date + '", "';
-            }
-            temp_date = new Date(result[result.length-1]);
-            temp_date = date_format(temp_date);
-            data += temp_date + '"]}';
-            data = jQuery.parseJSON(data);
-            var date_list = [];
-            data = d3.zip(data.close, data.date).map(function(d) {
-              close = d[0];
-              date_format = d3.time.format("%a %b %e %H:%M:%S:%p %Y").parse;
+              }
+              temp_date = new Date(result[result.length-1]);
+              temp_date = date_format(temp_date);
+              data += temp_date + '"]}';
+              data = jQuery.parseJSON(data);
+              var date_list = [];
+              data = d3.zip(data.close, data.date).map(function(d) {
+                close = d[0];
+                date_format = d3.time.format("%a %b %e %H:%M:%S:%p %Y").parse;
               // date_format = d3.time.format("%c").parse;
               date = date_format(d[1]);
               return {close: close, date: date};
             });
-            x.domain(d3.extent(data, function(d) {
-              return d.date;
-            }));
-            y.domain(d3.extent(data, function(d) {
-              return d.close;
-            }));
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + 214 + ")")
-                .call(xAxis)
-                .style("font-family", "'Hammersmith One', sans-serif");
+              x.domain(d3.extent(data, function(d) {
+                return d.date;
+              }));
+              y.domain(d3.extent(data, function(d) {
+                return d.close;
+              }));
+              svg.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + 214 + ")")
+              .call(xAxis)
+              .style("font-family", "'Hammersmith One', sans-serif");
 
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis)
-                .style("font-family", "'Hammersmith One', sans-serif");
+              svg.append("g")
+              .attr("class", "y axis")
+              .call(yAxis)
+              .style("font-family", "'Hammersmith One', sans-serif");
 
-            svg.append("path")
-                .datum(data)
-                .attr("class", "line")
-                .attr("d", line);
+              svg.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("d", line);
             } else if (event.type === 'exception') {
-                document.getElementById("responseErrors").innerHTML = event.message + "<br/>\n<pre>" + event.where + "</pre>";
+              document.getElementById("responseErrors").innerHTML = event.message + "<br/>\n<pre>" + event.where + "</pre>";
             } else {
-                document.getElementById("responseErrors").innerHTML = event.message;
+              document.getElementById("responseErrors").innerHTML = event.message;
             }
-        },
-        {escape: true}
-        );
-    }
-    </script>
+          },
+          {escape: true}
+          );
+}
+</script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-    var page_offset = 50;
-    var page = 0;
-    function createListElement(attendee) {
-        var element = document.createElement("li");
-        element.onclick = function() {
-            sforce.one.navigateToSObject(attendee.id);
+var page_offset = 50;
+var page = 0;
+function createListElement(attendee) {
+  var element = document.createElement("li");
+  element.onclick = function() {
+    sforce.one.navigateToSObject(attendee.id);
+  }
+  var status = document.createElement('div');
+  var f = document.createElement('p');
+  var e = document.createElement('p');
+  $(f).addClass("ellipses");
+  $(e).addClass("ellipses");
+  $(status).addClass("checked");
+  f.innerHTML = attendee.name;
+  if (attendee.email) {
+    e.innerHTML = attendee.email;
+  } else {
+    e.innerHTML = '<br></br>';
+  }
+  if (attendee.company) {
+    f.innerHTML += ', ' + attendee.company;
+  }
+  if (attendee.status) {
+    element.appendChild(status);
+  }
+  element.appendChild(f);
+  element.appendChild(e);
+  return element;
+}
+function getAttendees(paginate, searchTerm) {
+  var searchName = searchTerm ? searchTerm : document.getElementById("field").value;
+  var offset = 0;
+  if(paginate){
+    page += 1;
+    offset = page*page_offset;
+  }
+  else{
+    page = 0;
+  }
+  Visualforce.remoting.Manager.invokeAction(
+    '{!$RemoteAction.EventController.attendee_search}',
+    '{!event.cid}', searchName, offset,
+    function(result, event){
+      var objlist = document.getElementById("the_list");
+      var fragment = document.createDocumentFragment();
+      if (event.status) {
+        if(!paginate){
+          while (objlist.hasChildNodes()) {
+            objlist.removeChild(objlist.lastChild);
+          }
         }
-        var status = document.createElement('div');
-        var f = document.createElement('p');
-        var e = document.createElement('p');
-        $(f).addClass("ellipses");
-        $(e).addClass("ellipses");
-        $(status).addClass("checked");
-        f.innerHTML = attendee.name;
-        if (attendee.email) {
-            e.innerHTML = attendee.email;
+        for (var i = 0; i < result.length; i += 1) {
+          fragment.appendChild(createListElement(result[i]));
+        }
+        if (result.length < 50){
+          document.getElementById("search").hidden='hidden';
         } else {
-            e.innerHTML = '<br></br>';
+          document.getElementById("search").hidden='';
         }
-        if (attendee.company) {
-            f.innerHTML += ', ' + attendee.company;
-        }
-        if (attendee.status) {
-            element.appendChild(status);
-        }
-        element.appendChild(f);
-        element.appendChild(e);
-        return element;
-    }
-    function getAttendees(paginate, searchTerm) {
-        var searchName = searchTerm ? searchTerm : document.getElementById("field").value;
-        var offset = 0;
-        if(paginate){
-            page += 1;
-            offset = page*page_offset;
-        }
-        else{
-            page = 0;
-        }
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.EventController.attendee_search}',
-            '{!event.cid}', searchName, offset,
-            function(result, event){
-                var objlist = document.getElementById("the_list");
-                var fragment = document.createDocumentFragment();
-                if (event.status) {
-                    if(!paginate){
-                        while (objlist.hasChildNodes()) {
-                            objlist.removeChild(objlist.lastChild);
-                        }
-                    }
-                    for (var i = 0; i < result.length; i += 1) {
-                        fragment.appendChild(createListElement(result[i]));
-                    }
-                    if (result.length < 50){
-                        document.getElementById("search").hidden='hidden';
-                    } else {
-                        document.getElementById("search").hidden='';
-                    }
-                    objlist.appendChild(fragment);
-                } else if (event.type === 'exception') {
-                    document.getElementById("responseErrors").innerHTML =
-                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                } else {
-                    document.getElementById("responseErrors").innerHTML = event.message;
-                }
-            },
-            {escape: true}
-        );
-    }
+        objlist.appendChild(fragment);
+      } else if (event.type === 'exception') {
+        document.getElementById("responseErrors").innerHTML =
+        event.message + "<br/>\n<pre>" + event.where + "</pre>";
+      } else {
+        document.getElementById("responseErrors").innerHTML = event.message;
+      }
+    },
+    {escape: true}
+    );
+}
 
-    function clearDom() {
-        document.getElementById("chart_one").innerHTML ="";
-        document.getElementById("testGaugeContainer").innerHTML = "";
-    }
+function clearDom() {
+  document.getElementById("chart_one").innerHTML ="";
+  document.getElementById("testGaugeContainer").innerHTML = "";
+}
 
-    function clearInput() {
-       $("#attendee_list").scrollTop(0);
-       $("#field").val('');
-    }
-    function maxCapacityCheck() {
-        var checkins = {!event.checkedIn};
-        var maxc_string = '{!event.maxCapacity}';
+function clearInput() {
+ $("#attendee_list").scrollTop(0);
+ $("#field").val('');
+}
+function maxCapacityCheck() {
+  var checkins = {!event.checkedIn};
+  var maxc_string = '{!event.maxCapacity}';
 
-        if (maxc_string != 'Unlimited' && checkins >= parseInt(maxc_string)) {
-            $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab hover_red_text disabled"> <p> Check In (Capacity Reached) </p> </div> </div>');
-        }
-    }
+  if (maxc_string != 'Unlimited' && checkins >= parseInt(maxc_string)) {
+    $('#checkinLink').replaceWith('<div id="checkinLink"><div id="tab_four" class="tab hover_red_text disabled"> <p> Check In (Capacity Reached) </p> </div> </div>');
+  }
+}
 
-    $(document).ready(function() {
-        maxCapacityCheck();
-        FastClick.attach(document.body);
-    });
-    </script>
-  </html>
+$(document).ready(function() {
+  maxCapacityCheck();
+  FastClick.attach(document.body);
+});
+</script>
+</html>
 </apex:page>

@@ -78,12 +78,6 @@
               #update {width: 70%; height: 70px; margin-bottom: 10px; margin-top: 380px;}
             }
         </style>
-        <script>
-          document.ontouchmove = function(e) {
-              if (!($(e).hasClass("scrollable")))
-                e.preventDefault();
-          };
-        </script>
     </head>
 
     <body>
@@ -107,12 +101,12 @@
             </select>
             <div>
                 <input class="custom-file-input" style="padding:0px; margin-top: 20px;" type="file" id="photoFile" accept="image/*"/>
-                <img id="uploadPreview" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Background_Img}"/>
+                <img id="uploadPreview" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:200px" src="{!$Resource.RollCall_Background_Img}"/>
             </div>
             <!-- Logo -->
             <div>
                 <input class="custom-file-input" style="padding:0px;" type="file" id="photoFileLogo" accept="image/*"/>
-                <img id="uploadPreviewLogo" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
+                <img id="uploadPreviewLogo" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:200px" src="{!$Resource.RollCall_Logo_Img}"/>
             </div>
          </div>
          <a id="update" onclick="update_settings();"><p> Update </p></a>    
