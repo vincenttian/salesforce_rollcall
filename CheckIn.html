@@ -29,12 +29,14 @@ applyBodyTag="false">
       #clear {
         position: relative;
         left: 250px;
-        top: -58px;
-        width: 25px;
-        height: 25px;
+        top: -73px;
+        width: 55px;
+        height: 55px;
         background-image: url({!URLFOR($Resource.RollCallAssets, 'front_end_assets/ClearX.png')});
-        background-color: white;
-        background-size: cover;
+        background-color: transparent;
+        background-size: 25px 25px;
+        background-position: center center;
+        background-repeat: no-repeat;
         border: 0px;
         box-shadow: none;
         opacity: 0.5;
@@ -42,6 +44,31 @@ applyBodyTag="false">
 
       #clear:focus {
         opacity: 1;
+      }
+
+      @media (max-width: 641px) {
+        #email {
+          width: 70%;
+        }
+
+        #submit, #confirm, #update, .checkin_end {
+          width: 80%;
+        }
+
+        #clear {
+          left: 160px;
+        }
+
+        .input {
+            width: 80%;
+        }
+
+        .label {
+          text-overflow:ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          width: 200px;
+        }
       }
   </style>
 </head>
@@ -58,8 +85,8 @@ applyBodyTag="false">
       <input class="normal"  type="email" name="email" id="email" autocorrect="off" autocomplete="off" onclick='clear_error("email")'/>
       <br></br>
       <button id="clear" onclick="clearInput();"></button>
-      <p id="email_error" style="margin-top: -10px"> Please enter a valid email </p>
-      <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();" style="margin-top: 15px"> <p> Check In </p> </div>
+      <p id="email_error" style="margin-top: -40px; margin-bottom: 37px;"> Please enter a valid email </p>
+      <div id="submit" onclick="check_in_attendee(); window.focus(); $(':focus').blur();" style="margin-top: -22px;"> <p> Check In </p> </div>
     </div>
   </section>
   <!-- Confirmation Page -->
@@ -93,7 +120,7 @@ applyBodyTag="false">
     <div class="checkin" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;">
       <div class="column">
         <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
-          <p class="label"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
+          <p class="label" style="height: 51px;"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
           <p id="Contact_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
         </apex:repeat>
         <p class="label"> *Email: </p>

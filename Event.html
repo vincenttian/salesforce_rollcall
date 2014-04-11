@@ -35,6 +35,12 @@
             width: 500px;
         }
 
+        #phone {
+          padding: 75px;
+          padding-bottom: 0px;
+          display: none;
+        }
+
         @media (max-width: 900px) {
           .ellipses {
             width: 270px;
@@ -78,6 +84,36 @@
         .active_tab {
           background: #EEEEEE;
         }
+
+        @media (max-width: 641px) {
+        #navbar {
+            left: -290px;
+            transition: 1s;
+            -webkit-transition: 1s;
+        }
+
+        #page_two {
+          padding-left: 15px;
+          overflow: scroll;
+          overflow-scrolling: touch;
+        }
+
+        #phone {
+          display: inline-block;
+        }
+
+        #navbar:hover {
+            left: 0px;
+        }
+
+        .page {
+            padding-left: 0px;
+        }
+
+        #remove_flow, #chart_one {
+          display:none;
+        }
+      }
       </style>
     <script>
       function activate(id)
@@ -145,6 +181,7 @@
         <section id="two">
           <div class="page" id="page_two">
             <p class="chart_title" id="flow_title"> Check-in Flow </p>
+              <p id="phone"> Statistics unavailable on smaller screen sizes </p>
               <p id="remove_flow"> Rotate device to see <span class="magenta_text"> Check-in Flow </span> </p>
               <div id="chart_one">
               </div>
