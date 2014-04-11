@@ -47,6 +47,10 @@
 
             @media (max-width: 641px) {
 
+            p, input, li {
+              font-size: 0.5em;
+            }
+
             body {
                 width: 100%;
                 background: #CCCCCC;
@@ -73,13 +77,17 @@
               display: block; 
               float:left;
               white-space: nowrap;
-              width: 80%;
+              width: 250px;
             }
 
             .card {
-                width: 100%;
-                height: 150px;
+                float: left;
+                text-align: center;
                 border-radius: 0px;
+                background: #FFFFFF;
+                overflow: hidden;
+                width: 100%;
+                height: 120px;
                 margin: 0px;
                 box-shadow: none;
                 border-top: 1px solid #CCCCCC;
@@ -116,6 +124,13 @@
          <title>RollCall</title>
       </head>
       <body style="background-image: url({!$Resource.RollCall_Background_Img}); background-size: cover;">
+        <style>
+         @media (max-width: 641px) {
+            body {
+                background: #CCCCCC;
+            }
+          }
+         </style>
          <div id="animation"></div>
          <div id="select_event">
             <div id="rollcall" style="background: url({!$Resource.RollCall_Logo_Img}); background-size: cover; z-index: 2;"></div>
@@ -126,7 +141,6 @@
          </div>
          <div id="list_events">
             <apex:repeat value="{!events}" var="event" id="theRepeat">
-               <!--a href="/apex/event?event_id={!event.cId}"-->
                <a href="javascript:sforce.one.navigateToURL('/apex/event?event_id={!event.cId}');">
                   <div class="card">
                      <div class="{!event.titlecolor}">

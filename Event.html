@@ -86,28 +86,64 @@
         }
 
         @media (max-width: 641px) {
+
+        p, input, li {
+          font-size: 0.5em;
+        }
+
+        .checked {
+          float: none;
+          position: relative;
+          top: 15px;
+        }
+
+        #navbar_title {
+          width: 160px;
+        }
+
+        .ellipses {
+          text-overflow:ellipsis;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100px;
+        }
+
         #navbar {
-            left: -290px;
+            left: -150px;
+            width: 160px;
+            height: 100%;
+            font-size: 1em;
             transition: 1s;
             -webkit-transition: 1s;
         }
 
+        .tab {
+          width: 160px;
+          height: 70px;
+        }
+
         #page_two {
-          padding-left: 15px;
-          overflow: scroll;
-          overflow-scrolling: touch;
+          padding-left: 1px;
         }
 
         #phone {
           display: inline-block;
         }
 
-        #navbar:hover {
+        #navbar:hover{
             left: 0px;
         }
 
+        #field {
+          width: 200px;
+        }
+
         .page {
-            padding-left: 0px;
+          padding-left: 0px;
+          width: 100%;
+          overflow-y: scroll;
+          overflow-scrolling: touch;
         }
 
         #remove_flow, #chart_one {
