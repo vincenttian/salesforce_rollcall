@@ -1,5 +1,6 @@
 global class Member implements Comparable{
     
+    public String id {get;set;}
     public String name {get;set;}
     public String company {get;set;}
     public String email {get;set;}
@@ -7,7 +8,8 @@ global class Member implements Comparable{
     
    
     /** Main constructor for an event. */ 
-    public Member (String memberName, String memberCompany, String memberEmail, boolean checkedIn) {
+    public Member (String recId, String memberName, String memberCompany, String memberEmail, boolean checkedIn) {
+        id = recId;
         name = memberName;
         company = memberCompany;
         email = memberEmail;
