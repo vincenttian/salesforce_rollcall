@@ -17,38 +17,38 @@ applyBodyTag="false">
   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
   <title>RollCall</title>
   <style type="text/css">
-      p, input, li {
-        font-family: Source Sans Pro, sans-serif;
-        font-weight: 600;
-      }
-      .errorStyle{
-        display: none;
-        color: #ff4040;
-      }
+  p, input, li {
+    font-family: Source Sans Pro, sans-serif;
+    font-weight: 600;
+  }
+  .errorStyle{
+    display: none;
+    color: #ff4040;
+  }
 
-      .phone_label {
-        display: none;
-      }
+  .phone_label {
+    display: none;
+  }
 
-      #clear {
-        position: relative;
-        left: 250px;
-        top: -73px;
-        width: 55px;
-        height: 55px;
-        background-image: url({!URLFOR($Resource.RollCallAssets, 'front_end_assets/ClearX.png')});
-        background-color: transparent;
-        background-size: 25px 25px;
-        background-position: center center;
-        background-repeat: no-repeat;
-        border: 0px;
-        box-shadow: none;
-        opacity: 0.5;
-      }
+  #clear {
+    position: relative;
+    left: 250px;
+    top: -73px;
+    width: 55px;
+    height: 55px;
+    background-image: url({!URLFOR($Resource.RollCallAssets, 'front_end_assets/ClearX.png')});
+    background-color: transparent;
+    background-size: 25px 25px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 0px;
+    box-shadow: none;
+    opacity: 0.5;
+  }
 
-      #clear:focus {
-        opacity: 1;
-      }
+  #clear:focus {
+    opacity: 1;
+  }
 
   </style>
 </head>
@@ -96,197 +96,197 @@ applyBodyTag="false">
     </div>
   </section>
   <!-- Update Contact Attendee Information -->
-  <section id="four_Contact">
-    <div class="checkin" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;">
+  <section id="four_Contact" style="position: absolute; overflow:auto; -webkit-overflow-scrolling: touch;">
+    <div class="checkin" id="inner_Contact" style="overflow:auto; -webkit-overflow-scrolling: touch;">
       <div class="column" id="labels">
         <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
-          <p class="label" style="height: 51px;"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
-          <p id="Contact_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
-        </apex:repeat>
-        <p class="label"> *Email: </p>
-      </div>
-      <div class="column" style="margin-bottom: 50px;">
-        <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
-          <p class="phone_label"> <br></br> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: <br></br> </p>
-          <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" isRequired="{!f.Required}"/>
-          <p id="Contact_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
-        </apex:repeat>
-        <p class="phone_label"> *Email: </p>
-        <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
-      </div>
-      <button id="update" style="margin-bottom: 50px;" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
-      <div id="Contact_error"> </div>  <!-- A div for injecting tests into -->
+        <p class="label" style="height: 51px;"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
+        <p id="Contact_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
+      </apex:repeat>
+      <p class="label"> *Email: </p>
     </div>
-  </section>
-  <!-- Update Lead Attendee Information -->  
-  <section id="four_Lead">
-    <div class="checkin" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;">
-      <div class="column">
-        <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
-          <p class="label"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
-          <p id="Lead_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
-        </apex:repeat>
-        <p class="label"> *Email: </p>
-      </div>
-      <div class="column" style="margin-bottom: 50px;">
-        <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
-          <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" isRequired="{!f.Required}"/>
-          <p id="Lead_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
-        </apex:repeat>
-        <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
-      </div>
-      <button id="update"  style="margin-bottom: 50px;" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
-      <div id="Lead_error"> </div>  <!-- A div for injecting tests into -->
-    </div>
-  </section>
+    <div class="column" style="margin-bottom: 50px;">
+      <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
+      <p class="phone_label"> <br></br> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: <br></br> </p>
+      <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" isRequired="{!f.Required}"/>
+      <p id="Contact_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
+    </apex:repeat>
+    <p class="phone_label"> *Email: </p>
+    <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
+  </div>
+  <button id="update" style="margin-bottom: 50px;" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
+  <div id="Contact_error"> </div>  <!-- A div for injecting tests into -->
+</div>
+</section>
+<!-- Update Lead Attendee Information -->  
+<section id="four_Lead">
+  <div class="checkin" id="inner_Lead" style="overflow:auto; -webkit-overflow-scrolling: touch;">
+    <div class="column">
+      <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
+      <p class="label"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
+      <p id="Lead_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
+    </apex:repeat>
+    <p class="label"> *Email: </p>
+  </div>
+  <div class="column" style="margin-bottom: 50px;">
+    <apex:repeat value="{!$ObjectType.Lead.FieldSets.RollCall}" var="f">
+    <input id="Lead_{!f.FieldPath}" type="{!f.Type}" name="Lead_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Lead_{!f.FieldPath}')" isRequired="{!f.Required}"/>
+    <p id="Lead_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
+  </apex:repeat>
+  <input id="Lead_Email" type="text" name="Lead_Email" class="input normal" placeholder="" readonly="readonly"/>
+</div>
+<button id="update"  style="margin-bottom: 50px;" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
+<div id="Lead_error"> </div>  <!-- A div for injecting tests into -->
+</div>
+</section>
 
-  <!-- Haven't registered page -->
-  <section id="five">
-    <div class="checkin">
-      <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/help_alt.svg')}"> </img>
-      <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
-      <a class="checkin_end" data-section="four_Contact" href="#" onclick="clear_attendee_info();window.focus(); $(':focus').blur();">
-          <p> Register </p>
-      </a>
-      <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
+<!-- Haven't registered page -->
+<section id="five">
+  <div class="checkin">
+    <img class="checkin_icon" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/help_alt.svg')}"> </img>
+    <p id="checkin_confirmation"> Seems like you haven't <span class="blue_text"> registered. </span> </p>
+    <a class="checkin_end" data-section="four_Contact" href="#" onclick="clear_attendee_info();window.focus(); $(':focus').blur();">
+      <p> Register </p>
+    </a>
+    <p id="register_end"> If you remember registering, please <a class="blue_text" data-section="one" href="#"> retry</a> checking in. </p>
+  </div>
+</section>
+<!-- Multiple Logins -->
+<section id="six">
+  <div class="checkin" style="padding-top: 75px;">
+    <p id="multiple"> </p>
+    <div id="account_container">
+      <style> #multipleAttendees {margin-left: 212px;} 
+      @media (max-width: 900px) {
+        #multipleAttendees {margin-left: 88px;}
+      }
+      </style>
+      <div id="multipleAttendees"></div>
     </div>
-  </section>
-  <!-- Multiple Logins -->
-  <section id="six">
-    <div class="checkin" style="padding-top: 75px;">
-        <p id="multiple"> </p>
-        <div id="account_container">
-          <style> #multipleAttendees {margin-left: 212px;} 
-            @media (max-width: 900px) {
-              #multipleAttendees {margin-left: 88px;}
-            }
-          </style>
-          <div id="multipleAttendees"></div>
-        </div>
-        <p id="confirm_end"> If none of these are you then please <a class="blue_text" data-section="one" href="#"> retry</a> </p>
-    </div>
-  </section>
-  <!-- Future Max Capacity page -->
-  <section id="seven">
-    <div class="checkin">
-        <p style="padding: 100px; font-size: 2em; color: #AAAAAA;"> Sorry, our event is at <span class="blue_text" id='max_reg_count'> max capacity. </span> <br></br>There can be no more sign ins. 
-        </p>
-    </div>
-  </section>
+    <p id="confirm_end"> If none of these are you then please <a class="blue_text" data-section="one" href="#"> retry</a> </p>
+  </div>
+</section>
+<!-- Future Max Capacity page -->
+<section id="seven">
+  <div class="checkin">
+    <p style="padding: 100px; font-size: 2em; color: #AAAAAA;"> Sorry, our event is at <span class="blue_text" id='max_reg_count'> max capacity. </span> <br></br>There can be no more sign ins. 
+    </p>
+  </div>
+</section>
 </div>
 
 <script>          
     // Return is equivalent to form submission
     window.onkeydown = function(e){
-        var $focused = $(':focus');
-            window.focus();
-            $focused.focus();
-        var code = e.keyCode || e.which;
-        if(code == 13) {
-            if ($('.active').attr('id') == 'one') {
-                check_in_attendee();
-                $("#email").blur();
-            } else {
-                update_attendee();
-                var allInputs = $(":input");
-                for (var i=0; i<allInputs.length; i++) {
-                    allInputs[i].blur();
-                }
-            }
+      var $focused = $(':focus');
+      window.focus();
+      $focused.focus();
+      var code = e.keyCode || e.which;
+      if(code == 13) {
+        if ($('.active').attr('id') == 'one') {
+          check_in_attendee();
+          $("#email").blur();
+        } else {
+          update_attendee();
+          var allInputs = $(":input");
+          for (var i=0; i<allInputs.length; i++) {
+            allInputs[i].blur();
+          }
         }
+      }
     }
-</script>
-</body>
+    </script>
+  </body>
 
-<script>
-    $(document).ready(function() {
-        FastClick.attach(document.body);
-        $('a').on('click', function(event) {
-            event.preventDefault();
-            var sectionId = $(this).attr("data-section");
+  <script>
+  $(document).ready(function() {
+    FastClick.attach(document.body);
+    $('a').on('click', function(event) {
+      event.preventDefault();
+      var sectionId = $(this).attr("data-section");
 
-            if (sectionId == 'four'){
-               sectionId = sectionId + '_' + attendeeType;
-            }
+      if (sectionId == 'four'){
+       sectionId = sectionId + '_' + attendeeType;
+     }
 
-            if (sectionId == 'one'){
-                $("#email").val('');
-                $('#email').removeClass('error');
-                $("#one").find('input').each(function() {
-                    $(this).prop('disabled', false);
-                });
-                $("#four_Contact").find('input').each(function() {
-                    $(this).prop('disabled', true);
-                });
-                $("#four_Lead").find('input').each(function() {
-                    $(this).prop('disabled', true);
-                });
-            }
-            else if (sectionId == 'four_Contact'){
-                $("#one").find('input').each(function() {
-                    $(this).prop('disabled', true);
-                });
-                $("#four_Lead").find('input').each(function() {
-                    $(this).prop('disabled', true);
-                });
-                $("#four_Contact").find('input').each(function() {
-                    $(this).prop('disabled', false);
-                });
-            }
-            else if (sectionId == 'four_Lead'){
-                $("#one").find('input').each(function() {
-                    $(this).prop('disabled', true);
-                });
-                $("#four_Contact").find('input').each(function() {
-                    $(this).prop('disabled', true);
-                });
-                $("#four_Lead").find('input').each(function() {
-                    $(this).prop('disabled', false);
-                });
-            }
+     if (sectionId == 'one'){
+      $("#email").val('');
+      $('#email').removeClass('error');
+      $("#one").find('input').each(function() {
+        $(this).prop('disabled', false);
+      });
+      $("#four_Contact").find('input').each(function() {
+        $(this).prop('disabled', true);
+      });
+      $("#four_Lead").find('input').each(function() {
+        $(this).prop('disabled', true);
+      });
+    }
+    else if (sectionId == 'four_Contact'){
+      $("#one").find('input').each(function() {
+        $(this).prop('disabled', true);
+      });
+      $("#four_Lead").find('input').each(function() {
+        $(this).prop('disabled', true);
+      });
+      $("#four_Contact").find('input').each(function() {
+        $(this).prop('disabled', false);
+      });
+    }
+    else if (sectionId == 'four_Lead'){
+      $("#one").find('input').each(function() {
+        $(this).prop('disabled', true);
+      });
+      $("#four_Contact").find('input').each(function() {
+        $(this).prop('disabled', true);
+      });
+      $("#four_Lead").find('input').each(function() {
+        $(this).prop('disabled', false);
+      });
+    }
 
-            $toSlide= $("#container section#"+sectionId);
-            $fromSlide= $('.active');
-            if (!($toSlide.hasClass("active"))) {
-                $fromSlide.animate({"left":"-100%"},100,'linear')
-                $toSlide.animate({"left":"0%"},100,'linear',function() {
-                    $fromSlide.css("left","100%");
-                    $fromSlide.removeClass("active");
-                    $toSlide.addClass("active");
-                });
-            }
-        });
-    });
+    $toSlide= $("#container section#"+sectionId);
+    $fromSlide= $('.active');
+    if (!($toSlide.hasClass("active"))) {
+      $fromSlide.animate({"left":"-100%"},100,'linear')
+      $toSlide.animate({"left":"0%"},100,'linear',function() {
+        $fromSlide.css("left","100%");
+        $fromSlide.removeClass("active");
+        $toSlide.addClass("active");
+      });
+    }
+  });
+});
 </script>
 
 <script type="text/javascript">
-    var attendee;
-    var attendeeType;
+var attendee;
+var attendeeType;
 
-    var mult_email;
+var mult_email;
 
-    function clear_error(id) {
-        $('#'+id).removeClass('error');
-        var spacer = $('#'+id+'_spacer');
-        if (spacer != null){
-          spacer.css("display","none");
-        }
- 
-        var error = $('#'+id+'_error');
-        if (error != null){ 
-          error.css("display","none");
-        }
-    }
+function clear_error(id) {
+  $('#'+id).removeClass('error');
+  var spacer = $('#'+id+'_spacer');
+  if (spacer != null){
+    spacer.css("display","none");
+  }
 
-    function check_in_attendee() {
+  var error = $('#'+id+'_error');
+  if (error != null){ 
+    error.css("display","none");
+  }
+}
+
+function check_in_attendee() {
         // Email Validation
         var email = document.getElementById("email").value;
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (email == '' || re.test(email) == false) {
-            var error = document.getElementById('email_error');
-            error.style.display = 'block';
-            $('#email').addClass('error');
-            return;
+          var error = document.getElementById('email_error');
+          error.style.display = 'block';
+          $('#email').addClass('error');
+          return;
         }
         var error = document.getElementById('email_error');
         error.style.display = 'none';
@@ -296,37 +296,37 @@ applyBodyTag="false">
         $("#Lead_Email").val($("#email").val());
 
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.CheckInController.check_in_attendee}',
-            document.getElementById('event_id').value,
-            document.getElementById("email").value,
-            function(result, event){
-                if (event.status) {
+          '{!$RemoteAction.CheckInController.check_in_attendee}',
+          document.getElementById('event_id').value,
+          document.getElementById("email").value,
+          function(result, event){
+            if (event.status) {
                     if (result.length == 1) { // successfully found match in database !
-                        var company;
-                        if (result[0].ContactId == null) {
-                            attendee = result[0].Lead;
-                            attendeeType = 'Lead';
-                            if (attendee.Company != null && typeof attendee.Company != 'undefined'){
-                              company = attendee.Company;
-                            }else{
-                              company = '';
-                            }
-                        } else {
-                            attendee = result[0].Contact;
-                            attendeeType = 'Contact';
-                            if (attendee.Company__c != null && typeof attendee.Company__c != 'undefined') {
-                                company = attendee.Company__c;
-                            } else {
-                                company = '';
-                            }
+                      var company;
+                      if (result[0].ContactId == null) {
+                        attendee = result[0].Lead;
+                        attendeeType = 'Lead';
+                        if (attendee.Company != null && typeof attendee.Company != 'undefined'){
+                          company = attendee.Company;
+                        }else{
+                          company = '';
                         }
-                        document.getElementById('error').innerHTML = "<p></p>";
-                        document.getElementById("checkin_email").innerHTML = document.getElementById("email").value;
-                        document.getElementById("checkin_name").innerHTML = attendee.Name;
-                        document.getElementById("checkin_company").innerHTML = company;
-                        setSection($("#container section#"+"#two"), $('.active'));
-                    } else if (result.length == 0){ // no match in DB - Register page
+                      } else {
+                        attendee = result[0].Contact;
                         attendeeType = 'Contact';
+                        if (attendee.Company__c != null && typeof attendee.Company__c != 'undefined') {
+                          company = attendee.Company__c;
+                        } else {
+                          company = '';
+                        }
+                      }
+                      document.getElementById('error').innerHTML = "<p></p>";
+                      document.getElementById("checkin_email").innerHTML = document.getElementById("email").value;
+                      document.getElementById("checkin_name").innerHTML = attendee.Name;
+                      document.getElementById("checkin_company").innerHTML = company;
+                      setSection($("#container section#"+"#two"), $('.active'));
+                    } else if (result.length == 0){ // no match in DB - Register page
+                      attendeeType = 'Contact';
                         // javascript escape
                         var entityMap = {
                           "&": "&amp;",
@@ -346,167 +346,167 @@ applyBodyTag="false">
                         clear_attendee_info();
                         setSection($("#container section#"+"#five"), $('.active'));
                     } else { // could not find match in database
-                        mult_email = document.getElementById("email").value;
-                        document.getElementById("multiple").innerHTML = "There seem to be multiple " + mult_email + "'s. Which of these do you want to check in as?";
-                         $("#multipleAttendees").empty();
-                        var company; 
-                        for(var i=0;i<result.length;i++){
-                           if (result[i].ContactId == null) {
-                              attendee = result[i].Lead;
-                              attendeeType = 'Lead';
-                              if (attendee.Company != null && typeof attendee.Company != 'undefined'){
-                                company = attendee.Company;
-                              }else{
-                                company = '';
-                              }
-                            } else {
-                              attendee = result[i].Contact;
-                              attendeeType = 'Contact';
-                              if (attendee.Company != null && typeof attendee.Company__c != 'undefined') {
-                                  company = attendee.Company__c;
-                              } else {
-                                  company = '';
-                              }
-                            }
-                            var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + attendee.Name + " " + company + "</p></a>");
-                            newA.appendTo("#multipleAttendees");
-                            document.getElementById("checkin_email").innerHTML = mult_email;
+                      mult_email = document.getElementById("email").value;
+                      document.getElementById("multiple").innerHTML = "There seem to be multiple " + mult_email + "'s. Which of these do you want to check in as?";
+                      $("#multipleAttendees").empty();
+                      var company; 
+                      for(var i=0;i<result.length;i++){
+                       if (result[i].ContactId == null) {
+                        attendee = result[i].Lead;
+                        attendeeType = 'Lead';
+                        if (attendee.Company != null && typeof attendee.Company != 'undefined'){
+                          company = attendee.Company;
+                        }else{
+                          company = '';
                         }
-                        setSection($("#container section#"+"#six"), $('.active'));
+                      } else {
+                        attendee = result[i].Contact;
+                        attendeeType = 'Contact';
+                        if (attendee.Company != null && typeof attendee.Company__c != 'undefined') {
+                          company = attendee.Company__c;
+                        } else {
+                          company = '';
+                        }
+                      }
+                      var newA = $("<a class='checkin_end' data-section='two' href='#' onclick='checkInMultiple(\""+ result[i].Id +"\");'><p>" + attendee.Name + " " + company + "</p></a>");
+                      newA.appendTo("#multipleAttendees");
+                      document.getElementById("checkin_email").innerHTML = mult_email;
                     }
+                    setSection($("#container section#"+"#six"), $('.active'));
+                  }
                 } else if (event.type === 'exception') {
-                    setSection($("#container section#"+"#seven"), $('.active'));
+                  setSection($("#container section#"+"#seven"), $('.active'));
                 } else {
-                    document.getElementById("test").innerHTML +=event.message;
+                  document.getElementById("test").innerHTML +=event.message;
                 }
-            },
+              },
+              {escape: true}
+              );
+}
+
+function update_attendee() {
+
+  var requiredCheckPassed = true;
+  var fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+  if (attendeeType == 'Lead') {
+    fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+  } 
+  fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+  for (var i = 0; i < fieldset.length; i++) {
+    var key = fieldset[i];        
+    var inputElement = $('#'+attendeeType+'_'+key);
+
+    if (inputElement!= null && inputElement.length != 0){
+      var value = inputElement.val().trim();
+        // html escape
+        var entityMap = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': '&quot;',
+          "'": '&#39;',
+          "/": '&#x2F;'
+        };
+        function escapeHtml(string) {
+          return String(string).replace(/[&<>"'\/]/g, function (s) {
+            return entityMap[s];
+          });
+        }
+        value = escapeHtml(value);
+        if (inputElement.attr("isRequired") == "true" &&  value == ''){                  
+          requiredCheckPassed = false;
+          var error = $('#'+attendeeType+'_'+key+'_error');
+          var spacer = $('#'+attendeeType+'_'+key+'_spacer');
+          error.css("display","block");
+          spacer.css("display","block");
+          inputElement.addClass('error');
+        } else{
+          attendee[key] = value;
+        }
+      }
+    }
+    if (!requiredCheckPassed){
+      return;
+    }
+
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.CheckInController.update_attendee}',
+      document.getElementById('event_id').value,
+      attendee,
+      function(result, event){
+        if (event.status) {
+          setSection($("#container section#"+"#three"), $('.active'));
+        } else if (event.type === 'exception') {
+          $("#" + attendeeType + "_error").text(event.message + event.where);
+        } else {
+          document.getElementById("test").innerHTML +=event.message;
+        }
+      },
+      {escape: true}
+      );
+  }
+
+  function update_attendee_info() {
+    var fieldset;
+    if (attendeeType == 'Contact') {
+      fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+    } else {
+      fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+    }
+    fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+    for (var i = 0; i < fieldset.length; i++) {
+      var key = fieldset[i]; 
+      var inputElement = document.getElementById(attendeeType+'_'+key);
+      if (inputElement!= null && typeof inputElement != 'undefined'){
+        if (attendee[key] != null && typeof attendee[key] != 'undefined'){
+          inputElement.value = attendee[key];
+        }else{
+          inputElement.value = '';
+        }
+      }
+    }
+  }
+
+  function clear_attendee_info() {
+    var fieldset;
+    if (attendeeType == 'Contact') {
+      fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
+    } else {
+      fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
+    }
+    fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
+    for (var i = 0; i < fieldset.length; i++) {
+      var key = fieldset[i]; 
+      var inputElement = document.getElementById('Contact'+'_'+key);
+      if (inputElement!= null && typeof inputElement != 'undefined'){
+        inputElement.value = '';
+      }
+    }
+    document.getElementById('Contact_Email').value = document.getElementById("email").value;
+  }
+
+  function checkInMultiple(campaignMemberId) {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.CheckInController.check_in_multiple}',
+      campaignMemberId,
+      function(result, event){
+        if (event.status) {
+          setSection($("#container section#"+"#three"), $('.active'));
+        } else if (event.type === 'exception') {
+            //
+          } else {
+            document.getElementById("test").innerHTML +=event.message;
+          }
+        },
         {escape: true}
         );
-    }
+  }
 
-    function update_attendee() {
+  function clearInput() {
+    $("#email").val('');
+    $("#email").focus();        
+  }
 
-        var requiredCheckPassed = true;
-        var fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
-        if (attendeeType == 'Lead') {
-            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
-        } 
-        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
-        for (var i = 0; i < fieldset.length; i++) {
-            var key = fieldset[i];        
-            var inputElement = $('#'+attendeeType+'_'+key);
-
-            if (inputElement!= null && inputElement.length != 0){
-                var value = inputElement.val().trim();
-                // html escape
-                var entityMap = {
-                  "&": "&amp;",
-                  "<": "&lt;",
-                  ">": "&gt;",
-                  '"': '&quot;',
-                  "'": '&#39;',
-                  "/": '&#x2F;'
-                };
-                function escapeHtml(string) {
-                  return String(string).replace(/[&<>"'\/]/g, function (s) {
-                    return entityMap[s];
-                  });
-                }
-                value = escapeHtml(value);
-                if (inputElement.attr("isRequired") == "true" &&  value == ''){                  
-                  requiredCheckPassed = false;
-                  var error = $('#'+attendeeType+'_'+key+'_error');
-                  var spacer = $('#'+attendeeType+'_'+key+'_spacer');
-                  error.css("display","block");
-                  spacer.css("display","block");
-                  inputElement.addClass('error');
-                } else{
-                    attendee[key] = value;
-                }
-            }
-        }
-        if (!requiredCheckPassed){
-          return;
-        }
-
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.CheckInController.update_attendee}',
-            document.getElementById('event_id').value,
-            attendee,
-                function(result, event){
-                    if (event.status) {
-                        setSection($("#container section#"+"#three"), $('.active'));
-                    } else if (event.type === 'exception') {
-                        $("#" + attendeeType + "_error").text(event.message + event.where);
-                    } else {
-                        document.getElementById("test").innerHTML +=event.message;
-                    }
-                },
-            {escape: true}
-        );
-    }
-
-    function update_attendee_info() {
-        var fieldset;
-        if (attendeeType == 'Contact') {
-            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
-        } else {
-            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
-        }
-        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
-        for (var i = 0; i < fieldset.length; i++) {
-            var key = fieldset[i]; 
-            var inputElement = document.getElementById(attendeeType+'_'+key);
-            if (inputElement!= null && typeof inputElement != 'undefined'){
-              if (attendee[key] != null && typeof attendee[key] != 'undefined'){
-                inputElement.value = attendee[key];
-              }else{
-                inputElement.value = '';
-              }
-            }
-        }
-    }
-
-    function clear_attendee_info() {
-        var fieldset;
-        if (attendeeType == 'Contact') {
-            fieldset = "{!$ObjectType.Contact.FieldSets.RollCall}";
-        } else {
-            fieldset = "{!$ObjectType.Lead.FieldSets.RollCall}";
-        }
-        fieldset = fieldset.substring(1,fieldset.length-1).split(', ');
-        for (var i = 0; i < fieldset.length; i++) {
-            var key = fieldset[i]; 
-            var inputElement = document.getElementById('Contact'+'_'+key);
-            if (inputElement!= null && typeof inputElement != 'undefined'){
-                inputElement.value = '';
-            }
-        }
-        document.getElementById('Contact_Email').value = document.getElementById("email").value;
-    }
-
-    function checkInMultiple(campaignMemberId) {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.CheckInController.check_in_multiple}',
-            campaignMemberId,
-            function(result, event){
-                if (event.status) {
-                    setSection($("#container section#"+"#three"), $('.active'));
-                } else if (event.type === 'exception') {
-                    //
-                } else {
-                    document.getElementById("test").innerHTML +=event.message;
-                }
-            },
-            {escape: true}
-        );
-    }
-
-    function clearInput() {
-        $("#email").val('');
-        $("#email").focus();        
-    }
-
-</script>
-</html>
+  </script>
+  </html>
 </apex:page>
