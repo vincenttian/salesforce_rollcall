@@ -1,155 +1,189 @@
 <apex:page docType="html-5.0"
-   sidebar="false"
-   showheader="false"
-   standardStylesheets="false"
-   Controller="RollCall"
-   applyHtmlTag="false"
-   applyBodyTag="false"
-   id="todo"
-   >
-   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600"/>
-   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Oswald"/>
-   <apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
-   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
-   <html>
-      <head>
-         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-         <style>
-            p, input, li {
-              font-family: Source Sans Pro, sans-serif;
-              font-weight: 600;
-            }
+sidebar="false"
+showheader="false"
+standardStylesheets="false"
+Controller="RollCall"
+applyHtmlTag="false"
+applyBodyTag="false"
+id="todo"
+>
+<apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600"/>
+<apex:stylesheet value="https://fonts.googleapis.com/css?family=Oswald"/>
+<apex:stylesheet value="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/style.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'scrollfix/scrollfix.js')}"/>
 
-            .card {
-              height: 277px;
-            }
+<html>
+<head>
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+ <style>
+ body {
+  background: transparent;
+}
 
-            .titletext {
-              text-overflow:ellipsis;
-              overflow: hidden;
-              display: block; 
-              float:left;
-              white-space: nowrap;
-              width: 200px;
-            }
+p, input, li {
+  font-family: Source Sans Pro, sans-serif;
+  font-weight: 600;
+}
 
-            #animation {
-               position: fixed;
-               z-index: 2;
-               top: 50%;
-               left: 50%;
-               bottom: 50%;
-               right: 50%;
-               background: #fff;
-               margin: 0px;
-               padding: 0px;
-            }
+#content {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+}
 
-            @media (max-width: 641px) {
+.card {
+  height: 277px;
+}
 
-            p, input, li {
-              font-size: 0.5em;
-            }
+.titletext {
+  text-overflow:ellipsis;
+  overflow: hidden;
+  display: block; 
+  float:left;
+  white-space: nowrap;
+  width: 200px;
+}
 
-            body {
-                width: 100%;
-                background: #CCCCCC;
-            }
+#animation {
+ position: fixed;
+ z-index: 2;
+ top: 50%;
+ left: 50%;
+ bottom: 50%;
+ right: 50%;
+ background: #fff;
+ margin: 0px;
+ padding: 0px;
+}
 
-            #select_event {
-                width: 100%;
-                color: #FFFFFF;
-                background: #333;
-                padding-bottom: 50px;
-                margin-bottom: 0px;
-            }
+@media (max-width: 641px) {
 
-            .title {
-                height: 150px;
-                font-size: 2em;
-                background: #fff;
-                color: #666666;
-            }
+  p, input, li {
+    font-size: 0.5em;
+  }
 
-            .titletext {
-              text-overflow:ellipsis;
-              overflow: hidden;
-              display: block; 
-              float:left;
-              white-space: nowrap;
-              width: 250px;
-            }
+  body {
+    width: 100%;
+    background: #CCCCCC;
+  }
 
-            .card {
-                float: left;
-                text-align: center;
-                border-radius: 0px;
-                background: #FFFFFF;
-                overflow: hidden;
-                width: 100%;
-                height: 120px;
-                margin: 0px;
-                box-shadow: none;
-                border-top: 1px solid #CCCCCC;
-            }
+  #select_event {
+    width: 100%;
+    color: #FFFFFF;
+    background: #333;
+    padding-bottom: 50px;
+    margin-bottom: 0px;
+  }
 
-            .card:hover {
-                box-shadow: none;
-            }
+  .title {
+    height: 150px;
+    font-size: 2em;
+    background: #fff;
+    color: #666666;
+  }
 
-            }
+  .titletext {
+    text-overflow:ellipsis;
+    overflow: hidden;
+    display: block; 
+    float:left;
+    white-space: nowrap;
+    width: 250px;
+  }
 
-         </style>
-         <script>
-            $(document).ready(function(){
+  .card {
+    float: left;
+    text-align: center;
+    border-radius: 0px;
+    background: #FFFFFF;
+    overflow: hidden;
+    width: 100%;
+    height: 120px;
+    margin: 0px;
+    box-shadow: none;
+    border-top: 1px solid #CCCCCC;
+  }
+
+  .card:hover {
+    box-shadow: none;
+  }
+
+}
+
+</style>
+<script>
+$(document).ready(function(){
               /* NOT WORKING
               var scrollingHomeContent = document.getElementById("content");
               new ScrollFix(scrollingHomeContent);*/
-                FastClick.attach(document.body);
-                $('a').click(function(e){
-                    redirect = $(this).attr('href');
-                    e.preventDefault();
-                    $('#animation').animate({"top":"0%"}, { queue: false, duration: 125 }, 'linear')
-                    $('#animation').animate({"left":"0%"},{ queue: false, duration: 125 }, 'linear')
-                    $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 125 }, 'linear')
-                    $('#animation').animate({"right":"0%"},{ queue: false, duration: 125 }, 'linear')
-                    $('#animation').animate({"opacity":"1"},125,'linear',function(){
-                        document.location.href = redirect
-                    });
+              FastClick.attach(document.body);
+              $('a').click(function(e){
+                redirect = $(this).attr('href');
+                e.preventDefault();
+                $('#animation').animate({"top":"0%"}, { queue: false, duration: 125 }, 'linear')
+                $('#animation').animate({"left":"0%"},{ queue: false, duration: 125 }, 'linear')
+                $('#animation').animate({"bottom":"0%"},{ queue: false, duration: 125 }, 'linear')
+                $('#animation').animate({"right":"0%"},{ queue: false, duration: 125 }, 'linear')
+                $('#animation').animate({"opacity":"1"},125,'linear',function(){
+                  document.location.href = redirect
                 });
+              });
             })
 
-         </script>
-         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
-         <title>RollCall</title>
-      </head>
-      <body style="background-image: url({!$Resource.RollCall_Background_Img}); background-size: cover;">
-         <div id="animation"></div>
-         <div id="select_event">
-            <div id="rollcall" style="background: url({!$Resource.RollCall_Logo_Img}); background-size: cover; z-index: 2;"></div>
-            <p> Select An Event </p>
-            <a href="javascript:sforce.one.navigateToURL('/apex/settings');">
-            <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/help.svg')}" style="padding: 10px; top: 15px; right: 15px;"></img>
-            </a>
-         </div>
-         <div id="list_events">
-            <apex:repeat value="{!events}" var="event" id="theRepeat">
-               <a href="javascript:sforce.one.navigateToURL('/apex/event?event_id={!event.cId}');">
-                  <div class="card">
-                     <div class="{!event.titlecolor}">
-                        <p class="titletext" style="">
-                           {!event.Name}
-                        </p>
-                     </div>
-                     <div class="info">
-                        <p>Capacity: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
-                        <p>Registered: <span class="{!event.textcolor}">{!event.registered}</span></p>
-                     </div>
-                     <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>
-                  </div>
-               </a>
-            </apex:repeat>
-         </div>
-      </body>
-   </html>
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<title>RollCall</title>
+</head>
+<body>
+  <div id="content" style="background: #fff">
+    <div id="inner_content" style="background-image: url({!$Resource.RollCall_Background_Img}); background-size: cover;">
+     <div id="animation"></div>
+     <div id="select_event">
+      <div id="rollcall" style="background: url({!$Resource.RollCall_Logo_Img}); background-size: cover; z-index: 2;"></div>
+      <p> Select An Event </p>
+      <a href="javascript:sforce.one.navigateToURL('/apex/settings');">
+        <img class="action" id="plus" src="{!URLFOR($Resource.RollCallAssets, 'front_end_assets/help.svg')}" style="padding: 10px; top: 15px; right: 15px;"></img>
+      </a>
+    </div>
+    <div id="list_events">
+      <apex:repeat value="{!events}" var="event" id="theRepeat">
+      <a href="javascript:sforce.one.navigateToURL('/apex/event?event_id={!event.cId}');">
+        <div class="card">
+         <div class="{!event.titlecolor}">
+          <p class="titletext" style="">
+           {!event.Name}
+         </p>
+       </div>
+       <div class="info">
+        <p>Capacity: <span class="{!event.textcolor}">{!event.maxCapacity}</span> </p>
+        <p>Registered: <span class="{!event.textcolor}">{!event.registered}</span></p>
+      </div>
+      <div class="{!event.cal}"><p class="{!event.picData}"> {!event.start} </p></div>
+    </div>
+  </a>
+</apex:repeat>
+</div>
+</div>
+</div>
+<script>
+/* Add ScrollFix */
+var scrollingHomeContent = document.getElementById("content");
+new ScrollFix(scrollingHomeContent);
+
+/* Prevent Header & Footer From Showing Browser Chrome */
+document.addEventListener('touchmove', function(event) {
+ if(event.target.parentNode.className.indexOf('noBounce') != -1 || event.target.className.indexOf('noBounce') != -1) {
+  event.preventDefault(); }
+}, false);
+
+/* Content contains all of the major parts of the app and is bound to ScrollFix */
+$('#innercontent').css('min-height', $(window).height() + 'px');
+</script>
+</body>
+</html>
 </apex:page>
