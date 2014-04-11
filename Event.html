@@ -410,7 +410,7 @@
     function createListElement(attendee) {
         var element = document.createElement("li");
         element.onclick = function() {
-            sforce.one.navigateToSObject(attendee.Id);
+            sforce.one.navigateToSObject(attendee.id);
         }
         var status = document.createElement('div');
         var f = document.createElement('p');
