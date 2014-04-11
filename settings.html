@@ -20,6 +20,7 @@
               font-weight: 600;
             }
             .custom-file-input {
+              margin-top: 25px;
               color: transparent;
             }
             .custom-file-input::-webkit-file-upload-button {
@@ -50,14 +51,31 @@
             .custom-file-input:active::before {
               background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
             }
+            .label {
+              font-size: 1em;
+            }
 
             @media (max-width: 900px) {
               .input {width: 300px;}
             }
 
             @media (max-width: 641px) {
-              .input {width: 200px;}
-              #update {width: 70%;}
+              .checkin {
+                overflow-y: scroll;
+                overflow-scrolling: touch;
+              }
+              p, input, .label, .input, li {
+                font-size: 0.5em;
+                line-height: 1em;
+              }
+              .label {
+                height: 30px;
+              }
+              .input {width: 120px; height: 20px; margin-top: 20px;}
+              .custom-file-input {
+              margin-top: 5px;
+              }
+              #update {width: 70%; height: 70px; margin-bottom: 10px; margin-top: 380px;}
             }
         </style>
         <script>
@@ -73,11 +91,11 @@
     <div class="checkin">
         <p class="chart_title"> RollCall Settings </p>
         <div class="column" >
-            <p class="label" style="font-size:1em;"> Campaign Members status for <br></br> <span class="blue_text">Registered</span> attendees </p>
-            <p class="label" style="font-size:1em;"> Campaign Members status for <br></br> <span class="blue_text">Checked-in</span> attendees </p>
-            <p class="label" style="font-size:1em;"> Show Parent Campaigns of <span class="blue_text">Type</span> </p>
-            <p class="label" style="font-size:1em;"> Background Image (optional) </p>
-            <p class="label" style="font-size:1em; margin-top:10px;"> Logo (optional) </p>            
+            <p class="label"> Campaign Members status for <br></br> <span class="blue_text">Registered</span> attendees </p>
+            <p class="label"> Campaign Members status for <br></br> <span class="blue_text">Checked-in</span> attendees </p>
+            <p class="label"> Show Parent Campaigns of <span class="blue_text">Type</span> </p>
+            <p class="label"> Background Image (optional) </p>
+            <p class="label" style="margin-top:10px;"> Logo (optional) </p>            
         </div> 
         <div class="column" style="padding-left:60px;">
             <input class="input normal" type="text" name="register" autocorrect="off" autocomplete="off" id="register"/>
@@ -88,12 +106,12 @@
                 </apex:repeat>
             </select>
             <div>
-                <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFile" accept="image/*"/>
+                <input class="custom-file-input" style="padding:0px; margin-top: 20px;" type="file" id="photoFile" accept="image/*"/>
                 <img id="uploadPreview" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Background_Img}"/>
             </div>
             <!-- Logo -->
             <div>
-                <input class="custom-file-input input" style="padding:0px;" type="file" id="photoFileLogo" accept="image/*"/>
+                <input class="custom-file-input" style="padding:0px;" type="file" id="photoFileLogo" accept="image/*"/>
                 <img id="uploadPreviewLogo" style="width: 40px; height: 40px;float:left; margin-top:-50px; margin-left:150px" src="{!$Resource.RollCall_Logo_Img}"/>
             </div>
          </div>

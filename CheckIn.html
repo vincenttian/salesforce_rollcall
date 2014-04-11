@@ -52,8 +52,16 @@ applyBodyTag="false">
           line-height: 1em;
         }
 
-        .label {
+        .phone_label {
+          display: inline;
+        }
+
+        #labels {
           width: 100px;
+        }
+
+        .label {
+          display: none;
         }
 
         #email {
@@ -61,12 +69,23 @@ applyBodyTag="false">
           height: 30px;
         }
 
-        #checkin_title {
+        #checkin_title, #confirm_end, #checkin_end, #register_end, #multiple {
           font-size: 1em;
+          line-height: 1em;
         }
 
         .checkin_icon {
           display: none;
+        }
+
+        #checkin_confirmation {
+          margin-top: 150px;
+          font-size: 1em;
+          line-height: 1em;
+        }
+
+        #account_container {
+          height: 250px;
         }
 
         #submit, #confirm, #update, .checkin_end {
@@ -144,7 +163,7 @@ applyBodyTag="false">
   <!-- Update Contact Attendee Information -->
   <section id="four_Contact">
     <div class="checkin" style="height: 100%; overflow:auto; -webkit-overflow-scrolling: touch;">
-      <div class="column">
+      <div class="column" id="labels">
         <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
           <p class="label" style="height: 51px;"> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: </p>
           <p id="Contact_{!f.FieldPath}_spacer" style="display:none;"> <br></br> </p>
@@ -153,9 +172,11 @@ applyBodyTag="false">
       </div>
       <div class="column" style="margin-bottom: 50px;">
         <apex:repeat value="{!$ObjectType.Contact.FieldSets.RollCall}" var="f">
+          <p class="phone_label"> <br></br> <apex:outputText rendered="{!f.Required}"> *</apex:outputText>{!f.Label}: <br></br> </p>
           <input id="Contact_{!f.FieldPath}" type="{!f.Type}" name="Contact_{!f.FieldPath}" class="input normal" placeholder="" autocorrect="off" autocomplete="off" disabled="disabled" onclick="clear_error('Contact_{!f.FieldPath}')" isRequired="{!f.Required}"/>
           <p id="Contact_{!f.FieldPath}_error" class="errorStyle"> Please enter a {!f.Label} </p>
         </apex:repeat>
+        <p class="phone_label"> *Email: </p>
         <input id="Contact_Email" type="text" name="Contact_Email" class="input normal" placeholder="" readonly="readonly"/>
       </div>
       <button id="update" style="margin-bottom: 50px;" onclick="update_attendee(); window.focus(); $(':focus').blur();"><p> Confirm </p></button>
