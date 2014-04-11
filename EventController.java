@@ -36,13 +36,13 @@ global with sharing class EventController {
             Member[] registered2 = new Member[]{};
             for (CampaignMember cm : registered) {
                 if (cm.ContactID != null) { 
-                    Member m = new Member(cm.Contact.name, cm.Contact.Company__c, cm.Contact.Email, false);
+                    Member m = new Member(cm.Contact.Id, cm.Contact.name, cm.Contact.Company__c, cm.Contact.Email, false);
                     if (cm.Status == Event.checkedInStatus) {
                         m.Status = true;
                     }
                     registered2.add(m);
                 } else {
-                    Member m = new Member(cm.Lead.name, cm.Lead.Company, cm.Lead.Email, false);
+                    Member m = new Member(cm.Lead.Id, cm.Lead.name, cm.Lead.Company, cm.Lead.Email, false);
                     if (cm.Status == Event.checkedInStatus) {
                         m.Status = true;
                     }
